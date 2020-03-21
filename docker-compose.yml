@@ -1,0 +1,12 @@
+version: "2.1"
+services:
+  postgres:
+    image: postgres:9.4
+    ports:
+      - 0.0.0.0:5432:5432
+    healthcheck:
+      test: "exit 0"
+    volumes:
+      - "~/.docker-volumes/core/db-94:/var/lib/postgresql"
+    environment:
+      - POSTGRES_PASSWORD=password
