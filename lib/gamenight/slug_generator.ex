@@ -1,5 +1,5 @@
 defmodule SlugGenerator do
-  @chars "ABCDEFGHIJKLMNOPQRSTUVWXYZ" |> String.split("")
+  @chars "ABCDEFGHIJKLMNOPQRSTUVWXYZ" |> String.split("", trim: true)
   @length 4
 
   def new_slug do
