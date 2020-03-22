@@ -11,9 +11,10 @@ defmodule Gamenight.Application do
       # Start the Ecto repository
       Gamenight.Repo,
       # Start the endpoint when the application starts
-      GamenightWeb.Endpoint
+      GamenightWeb.Endpoint,
       # Starts a worker by calling: Gamenight.Worker.start_link(arg)
       # {Gamenight.Worker, arg},
+      {Registry, [keys: :unique, name: Gamenight.Registry]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
@@ -27,5 +28,9 @@ defmodule Gamenight.Application do
   def config_change(changed, _new, removed) do
     GamenightWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  def service_name(service_id) do
+    {:via, Registry, {Gamenight.Registry, service_id}}
   end
 end
