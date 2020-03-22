@@ -1,1 +1,5 @@
-show game
+Game: <%= @game_id %>
+
+<script>
+  window.Game.connect('<%= @game_id %>');
+</script>

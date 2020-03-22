@@ -8,7 +8,7 @@ defmodule GamenightWeb.GameController do
   def create(conn, _params) do
   end
 
-  def show(conn, _params) do
-    render(conn, "show.html")
+  def show(conn, %{"id" => game_id}) do
+    render(conn, "show.html", game_id: game_id)
   end
 end
