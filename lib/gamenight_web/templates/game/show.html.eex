@@ -1,5 +1,5 @@
-Game: <%= @game_id %>
+<div id="react-root"></div>
 
 <script>
-  window.Game.connect('<%= @game_id %>');
+  window.Game.connect('<%= @game_id %>', 'react-root');
 </script>
