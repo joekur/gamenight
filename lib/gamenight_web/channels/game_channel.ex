@@ -22,6 +22,11 @@ defmodule GamenightWeb.GameChannel do
     {:noreply, socket}
   end
 
+  def handle_in("request_join", payload, socket) do
+    broadcast_from socket, "player_joined", payload
+    {:reply, {:ok, payload}, socket}
+  end
+
   # Add authorization logic here as required.
   defp authorized?(_payload) do
     true
