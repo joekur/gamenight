@@ -23,8 +23,13 @@ defmodule GamenightWeb.GameChannel do
   end
 
   def handle_in("request_join", payload, socket) do
+    player_id = UUID.uuid4()
     broadcast_from socket, "player_joined", payload
-    {:reply, {:ok, payload}, socket}
+    response = %{
+      player_id: player_id,
+      name: payload["name"],
+    }
+    {:reply, {:ok, response}, socket}
   end
 
   # Add authorization logic here as required.

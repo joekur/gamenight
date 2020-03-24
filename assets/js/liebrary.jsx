@@ -6,10 +6,13 @@ export default class Liebrary extends React.Component {
 
     this.state = {
       gameStatus: 'lobby',
+      playerId: null,
+      name: null,
     };
 
     this.input = React.createRef();
     this.handleSubmitJoinGame = this.handleSubmitJoinGame.bind(this);
+    this.handleJoinSuccess = this.handleJoinSuccess.bind(this);
   }
 
   componentDidMount() {
@@ -17,12 +20,11 @@ export default class Liebrary extends React.Component {
   }
 
   joinChannel() {
-    console.log('lets join this channel');
     const topic = `game:${this.props.gameId}`;
     this.channel = window.socket.channel(topic, {});
     this.channel.join()
-      .receive("ok", resp => { console.log(`Joined '${topic}' successfully`, resp) })
-      .receive("error", resp => { console.log("Unable to join", resp) });
+      .receive('ok', resp => { console.log(`Joined '${topic}' successfully`, resp) })
+      .receive('error', resp => { console.log('Unable to join', resp) });
 
     this.channel.on('player_joined', payload => {
       console.log(`${payload.name} joined`);
@@ -30,14 +32,26 @@ export default class Liebrary extends React.Component {
   }
 
   isPlayer() {
-    return false;
+    return !!this.state.playerId;
   }
 
   handleSubmitJoinGame(e) {
     e.preventDefault();
     const name = this.input.current.value;
 
-    this.channel.push('request_join', { name });
+    this.channel.push('request_join', { name })
+      .receive('ok', this.handleJoinSuccess)
+      .receive('error', this.handleUnknownError)
+      .receive('timeout', this.handleUnknownError);
+  }
+
+  handleJoinSuccess(response) {
+    console.log('join success', response);
+    this.setState({ playerId: response.player_id, name: response.name });
+  }
+
+  handleUnknownError(response) {
+    console.error('UnknownError', response);
   }
 
   renderJoinGame() {
@@ -51,13 +65,21 @@ export default class Liebrary extends React.Component {
     );
   }
 
+  renderLobbyPlayerView() {
+    return (
+      <div>
+        <b>Joined!</b> - {this.state.name}
+      </div>
+    );
+  }
+
   renderLobby() {
     return (
       <div>
         <div>
           Game: {this.props.gameId}
         </div>
-        {this.isPlayer() ? '' : this.renderJoinGame()}
+        {this.isPlayer() ? this.renderLobbyPlayerView() : this.renderJoinGame()}
       </div>
     );
   }
