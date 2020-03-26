@@ -10,6 +10,11 @@ defmodule Gamenight.Liebrary.Game do
     current_round: 1,
   ]
 
+  def find_game(game_id) do
+    Registry.lookup(Gamenight.Registry, game_id)
+      |> Enum.at(0)
+  end
+
   def start_game(game_id) do
     state = %Game{game_id: game_id}
     GenServer.start_link(__MODULE__, state, name: service_name(game_id))

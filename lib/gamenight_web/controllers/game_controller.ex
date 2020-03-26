@@ -9,6 +9,11 @@ defmodule GamenightWeb.GameController do
   end
 
   def show(conn, %{"id" => game_id}) do
-    render(conn, "show.html", game_id: game_id)
+    case Gamenight.Liebrary.Game.find_game(game_id) do
+      {pid, _} ->
+        render(conn, "show.html", game_id: game_id)
+      _ ->
+        redirect(conn, to: "/")
+    end
   end
 end
