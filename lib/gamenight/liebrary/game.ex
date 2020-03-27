@@ -9,6 +9,7 @@ defmodule Gamenight.Liebrary.Game do
     status: :lobby,
     players: %{},
     current_round: 1,
+    current_book: nil,
   ]
 
   @min_players 2
@@ -26,6 +27,8 @@ defmodule Gamenight.Liebrary.Game do
   end
 
   def get_state(game_id) do
+    # TODO we may not want to expose some of the state,
+    # such as the current book's actual title
     try_call(game_id, :get_state)
   end
 
@@ -72,6 +75,7 @@ defmodule Gamenight.Liebrary.Game do
         {:reply, error_response("Not enough players"), state}
       true ->
         state = %{state | status: :in_progress}
+                |> setup_round()
         {:reply, :ok, state}
     end
   end
@@ -91,6 +95,22 @@ defmodule Gamenight.Liebrary.Game do
       {pid, _} ->
         GenServer.call(pid, message)
     end
+  end
+
+  defp setup_round(state) do
+    Map.put(state, :current_book, random_book())
+  end
+
+  defp random_book() do
+    # TODO make sure we don't repeat, don't read the file
+    # each time we call this
+    {:ok, book} = Path.expand("./books.csv", __DIR__)
+                  |> File.stream!
+                  |> CSV.decode(headers: true)
+                  |> Enum.take_random(1)
+                  |> List.first
+
+    book
   end
 
   defp service_name(game_id), do:
