@@ -10,6 +10,8 @@ interface IProps {
 
 interface IState {
   gameState: IGameState,
+  playerId: string,
+  name: string,
 }
 
 export default class Root extends React.Component<IProps, IState> {
@@ -23,6 +25,8 @@ export default class Root extends React.Component<IProps, IState> {
       gameState: {
         gameStatus: EGameStatus.Lobby,
       },
+      playerId: '',
+      name: '',
     };
   }
 
@@ -43,6 +47,8 @@ export default class Root extends React.Component<IProps, IState> {
     this.channel.on('player_joined', payload => {
       console.log(`${payload.name} joined`);
     });
+
+    this.channel.on('game_updated', this.handleGameUpdated);
   }
 
   @bind
@@ -56,8 +62,12 @@ export default class Root extends React.Component<IProps, IState> {
   @bind
   handleJoinSuccess(response: any) {
     console.log('join success', response);
+    this.setState({ playerId: response.player_id, name: response.name });
+  }
 
-    this.updateGameState({ playerId: response.player_id, myName: response.name });
+  @bind
+  handleGameUpdated(gameState: any) {
+    console.log('game updated', gameState);
   }
 
   @bind

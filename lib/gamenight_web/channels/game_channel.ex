@@ -3,6 +3,7 @@ defmodule GamenightWeb.GameChannel do
 
   def join("game:" <> game_id, payload, socket) do
     if authorized?(payload) do
+      socket = assign(socket, :game_id, game_id)
       {:ok, socket}
     else
       {:error, %{reason: "unauthorized"}}
@@ -23,13 +24,16 @@ defmodule GamenightWeb.GameChannel do
   end
 
   def handle_in("request_join", payload, socket) do
-    player_id = UUID.uuid4()
-    broadcast_from socket, "player_joined", payload
-    response = %{
-      player_id: player_id,
-      name: payload["name"],
-    }
-    {:reply, {:ok, response}, socket}
+    msg = Gamenight.Liebrary.Game.request_join(socket.assigns.game_id, payload["name"])
+
+    broadcast_game_updated(socket)
+
+    {:reply, msg, socket}
+  end
+
+  defp broadcast_game_updated(socket) do
+    game_state = Gamenight.Liebrary.Game.get_state(socket.assigns.game_id)
+    broadcast socket, "game_updated", game_state
   end
 
   # Add authorization logic here as required.
