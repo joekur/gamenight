@@ -3,30 +3,43 @@ export enum EGameStatus {
   InProgress = 'in_progress',
 }
 
+export interface IPlayersMap {
+  [playerId: string] : string;
+}
+
 export interface IGameState {
-  gameStatus: EGameStatus,
-  playerId?: string,
-  myName?: string,
+  status: EGameStatus,
+  players: IPlayersMap,
 }
 
 export class Game {
   id: string
+  playerId: string | null
   state: IGameState
 
-  constructor(id: string, state: IGameState) {
+  constructor(id: string, playerId: string | null, state: IGameState) {
     this.id = id;
+    this.playerId = playerId;
     this.state = state;
   }
 
-  get gameStatus() {
-    return this.state.gameStatus;
+  get status() {
+    return this.state.status;
   }
 
-  get myName() {
-    return this.state.myName;
+  get myName(): string | null {
+    if (this.amPlayer) {
+      return this.state.players[this.playerId!];
+    }
+
+    return null;
   }
 
-  amPlayer() {
-    return !!this.state.playerId;
+  get amPlayer() {
+    return !!this.playerId;
+  }
+
+  get playerNames() {
+    return Object.values(this.state.players);
   }
 }

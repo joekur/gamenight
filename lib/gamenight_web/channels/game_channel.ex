@@ -4,7 +4,9 @@ defmodule GamenightWeb.GameChannel do
   def join("game:" <> game_id, payload, socket) do
     if authorized?(payload) do
       socket = assign(socket, :game_id, game_id)
-      {:ok, socket}
+      game_state = Gamenight.Liebrary.Game.get_state(socket.assigns.game_id)
+
+      {:ok, game_state, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end

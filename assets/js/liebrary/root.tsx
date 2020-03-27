@@ -9,9 +9,9 @@ interface IProps {
 }
 
 interface IState {
-  gameState: IGameState,
-  playerId: string,
-  name: string,
+  connected: boolean,
+  gameState?: IGameState,
+  playerId: string | null,
 }
 
 export default class Root extends React.Component<IProps, IState> {
@@ -21,12 +21,8 @@ export default class Root extends React.Component<IProps, IState> {
     super(props);
 
     this.state = {
-      // TODO game state should be loaded from the server
-      gameState: {
-        gameStatus: EGameStatus.Lobby,
-      },
-      playerId: '',
-      name: '',
+      connected: false,
+      playerId: null,
     };
   }
 
@@ -38,17 +34,20 @@ export default class Root extends React.Component<IProps, IState> {
     const topic = `game:${this.props.gameId}`;
 
     this.channel = (window as any).socket.channel(topic, {}) as Channel;
-    console.log('channel', this.channel);
 
     this.channel.join()
-      .receive('ok', resp => { console.log(`Joined '${topic}' successfully`, resp) })
+      .receive('ok', this.handleJoinedChannel)
       .receive('error', resp => { console.log('Unable to join', resp) });
 
-    this.channel.on('player_joined', payload => {
-      console.log(`${payload.name} joined`);
-    });
-
     this.channel.on('game_updated', this.handleGameUpdated);
+  }
+
+  @bind
+  handleJoinedChannel(response: any) {
+    console.log('Joined channel successfully', response);
+
+    this.updateGameState(response);
+    this.setState({ connected: true });
   }
 
   @bind
@@ -62,12 +61,15 @@ export default class Root extends React.Component<IProps, IState> {
   @bind
   handleJoinSuccess(response: any) {
     console.log('join success', response);
-    this.setState({ playerId: response.player_id, name: response.name });
+
+    this.setState({ playerId: response.player_id });
   }
 
   @bind
   handleGameUpdated(gameState: any) {
     console.log('game updated', gameState);
+
+    this.updateGameState(gameState);
   }
 
   @bind
@@ -82,14 +84,16 @@ export default class Root extends React.Component<IProps, IState> {
     });
   }
 
-  get game(): Game {
-    return new Game(this.props.gameId, this.state.gameState);
-  }
-
   render() {
-    if (this.game.gameStatus === EGameStatus.Lobby) {
+    if (!this.state.connected) {
+      return 'loading...';
+    }
+
+    const game = new Game(this.props.gameId, this.state.playerId, this.state.gameState!);
+
+    if (game.status === EGameStatus.Lobby) {
       return <Lobby
-        game={this.game}
+        game={game}
         onRequestJoinGame={this.handleRequestJoinGame}
         />
     }

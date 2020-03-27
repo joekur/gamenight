@@ -6,7 +6,7 @@ defmodule Gamenight.Liebrary.Game do
   @derive Jason.Encoder
   defstruct [
     game_id: nil,
-    status: :wait_for_players,
+    status: :lobby,
     players: %{},
     current_round: 1,
   ]
@@ -46,7 +46,7 @@ defmodule Gamenight.Liebrary.Game do
 
   def handle_call({:request_join, player_name}, _from, state) do
     cond do
-      state.status != :wait_for_players ->
+      state.status != :lobby ->
         {:reply, error_response("Game has already started"), state}
       num_players(state) >= max_players ->
         {:reply, error_response("No more players allowed"), state}

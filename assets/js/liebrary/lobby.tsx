@@ -58,12 +58,20 @@ export default class Lobby extends React.Component<IProps, IState> {
   }
 
   render() {
+    const game = this.props.game;
+
     return (
       <div>
         <div>
-          Game: {this.props.game.id}
+          Game: {game.id}
         </div>
-        {this.props.game.amPlayer() ? this.renderActivePlayerView() : this.renderJoinGame()}
+        {game.amPlayer ? this.renderActivePlayerView() : this.renderJoinGame()}
+        <div>
+          <h3>Players</h3>
+          <ul>
+            {game.playerNames.map(name => (<li>{name}</li>))}
+          </ul>
+        </div>
       </div>
     );
   }
