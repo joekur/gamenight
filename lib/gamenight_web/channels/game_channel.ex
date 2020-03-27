@@ -33,6 +33,14 @@ defmodule GamenightWeb.GameChannel do
     {:reply, msg, socket}
   end
 
+  def handle_in("start_game", _payload, socket) do
+    msg = Gamenight.Liebrary.Game.start_game(socket.assigns.game_id)
+
+    broadcast_game_updated(socket)
+
+    {:reply, msg, socket}
+  end
+
   defp broadcast_game_updated(socket) do
     game_state = Gamenight.Liebrary.Game.get_state(socket.assigns.game_id)
     broadcast socket, "game_updated", game_state

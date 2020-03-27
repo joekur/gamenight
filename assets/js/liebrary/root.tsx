@@ -52,8 +52,15 @@ export default class Root extends React.Component<IProps, IState> {
 
   @bind
   handleRequestJoinGame(name: string) {
-    this.channel?.push('request_join', { name })
+    this.channel!.push('request_join', { name })
       .receive('ok', this.handleJoinSuccess)
+      .receive('error', this.handleUnknownError)
+      .receive('timeout', this.handleUnknownError);
+  }
+
+  @bind
+  handleStartGame() {
+    this.channel!.push('start_game', {})
       .receive('error', this.handleUnknownError)
       .receive('timeout', this.handleUnknownError);
   }
@@ -95,7 +102,8 @@ export default class Root extends React.Component<IProps, IState> {
       return <Lobby
         game={game}
         onRequestJoinGame={this.handleRequestJoinGame}
-        />
+        onStartGame={this.handleStartGame}
+      />
     }
 
     return 'game started';

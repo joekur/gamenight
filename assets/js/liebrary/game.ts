@@ -42,4 +42,8 @@ export class Game {
   get playerNames() {
     return Object.values(this.state.players);
   }
+
+  get numPlayers() {
+    return Object.keys(this.state.players).length;
+  }
 }

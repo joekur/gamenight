@@ -5,11 +5,14 @@ import { Game } from './game';
 interface IProps {
   game: Game,
   onRequestJoinGame: (name: string) => void,
+  onStartGame: () => void,
 }
 
 interface IState {
   nameInput: string;
 }
+
+const minPlayers = 2;
 
 export default class Lobby extends React.Component<IProps, IState> {
   constructor(props: IProps) {
@@ -57,21 +60,48 @@ export default class Lobby extends React.Component<IProps, IState> {
     );
   }
 
+  renderPlayerList() {
+    const { game } = this.props;
+
+    return (
+      <div>
+        <h3>Players</h3>
+        <ul>
+          {game.playerNames.map(name => (<li>{name}</li>))}
+        </ul>
+      </div>
+    );
+  }
+
+  renderStartGame() {
+    const { game } = this.props;
+
+    if (game.numPlayers < minPlayers) {
+      return null;
+    }
+
+    return (
+      <div>
+        <button onClick={this.props.onStartGame}>
+          Start Game
+        </button>
+      </div>
+    );
+  }
+
   render() {
-    const game = this.props.game;
+    const { game } = this.props;
 
     return (
       <div>
         <div>
           Game: {game.id}
         </div>
+
         {game.amPlayer ? this.renderActivePlayerView() : this.renderJoinGame()}
-        <div>
-          <h3>Players</h3>
-          <ul>
-            {game.playerNames.map(name => (<li>{name}</li>))}
-          </ul>
-        </div>
+
+        {this.renderPlayerList()}
+        {this.renderStartGame()}
       </div>
     );
   }

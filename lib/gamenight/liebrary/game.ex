@@ -11,12 +11,15 @@ defmodule Gamenight.Liebrary.Game do
     current_round: 1,
   ]
 
+  @min_players 2
+  @max_players 8
+
   def find_game(game_id) do
     Registry.lookup(Gamenight.Registry, game_id)
       |> Enum.at(0)
   end
 
-  def start_game(game_id) do
+  def create_game(game_id) do
     state = %Game{game_id: game_id}
 
     GenServer.start_link(__MODULE__, state, name: service_name(game_id))
@@ -30,7 +33,11 @@ defmodule Gamenight.Liebrary.Game do
     try_call(game_id, {:request_join, player_name})
   end
 
-  def max_players, do: 8
+  def start_game(game_id) do
+    try_call(game_id, :start_game)
+  end
+
+  # Server
 
   def init(init_arg) do
     {:ok, init_arg}
@@ -48,7 +55,7 @@ defmodule Gamenight.Liebrary.Game do
     cond do
       state.status != :lobby ->
         {:reply, error_response("Game has already started"), state}
-      num_players(state) >= max_players ->
+      num_players(state) >= @max_players ->
         {:reply, error_response("No more players allowed"), state}
       true ->
         player_id = UUID.uuid4()
@@ -59,12 +66,22 @@ defmodule Gamenight.Liebrary.Game do
     end
   end
 
+  def handle_call(:start_game, _from, state) do
+    cond do
+      num_players(state) < @min_players ->
+        {:reply, error_response("Not enough players"), state}
+      true ->
+        state = %{state | status: :in_progress}
+        {:reply, :ok, state}
+    end
+  end
+
   defp num_players(state) do
     state.players |> Map.keys |> length
   end
 
   defp error_response(message) do
-    {:error, %{message: "Game does not exist"}}
+    {:error, %{message: message}}
   end
 
   defp try_call(game_id, message) do
