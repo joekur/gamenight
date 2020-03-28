@@ -8,9 +8,14 @@ export interface IPlayersMap {
   [playerId: string] : string;
 }
 
+interface IRound {
+  lies: IPlayersMap,
+}
+
 export interface IGameState {
   status: EGameStatus,
   players: IPlayersMap,
+  round: IRound,
 }
 
 export class Game {
@@ -44,7 +49,23 @@ export class Game {
     return Object.values(this.state.players);
   }
 
+  get playerIds() {
+    return Object.keys(this.state.players);
+  }
+
   get numPlayers() {
     return Object.keys(this.state.players).length;
+  }
+
+  get alreadySubmittedLie() {
+    return !!this.state.round.lies[this.playerId!];
+  }
+
+  nameFor(playerId: string) {
+    return this.state.players[playerId];
+  }
+
+  hasSubmittedLie(playerId: string) {
+    return !!this.state.round.lies[playerId];
   }
 }

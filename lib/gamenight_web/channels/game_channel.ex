@@ -34,10 +34,9 @@ defmodule GamenightWeb.GameChannel do
 
     case msg do
       {:ok, %{player_id: player_id}} ->
-        socket = assign(socket, :player_id, player_id)
         broadcast_game_updated(socket)
 
-        {:reply, msg, socket}
+        {:reply, msg, assign(socket, :player_id, player_id)}
       _ ->
         {:reply, msg, socket}
     end
@@ -57,6 +56,8 @@ defmodule GamenightWeb.GameChannel do
       socket.assigns.player_id,
       payload["lie"]
     )
+
+    broadcast_game_updated(socket)
 
     {:reply, msg, socket}
   end

@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { Game, IGameState, EGameStatus } from './game';
 import { Channel } from 'phoenix';
-import Lobby from './lobby';
 import bind from 'bind-decorator';
+
+import Lobby from './lobby';
+import RoundLies from './round_lies';
+import RoundVoting from './round_voting';
 
 interface IProps {
   gameId: string,
@@ -73,6 +76,13 @@ export default class Root extends React.Component<IProps, IState> {
   }
 
   @bind
+  handleSubmitLie(lie: string) {
+    this.channel!.push('submit_lie', { lie })
+      .receive('error', this.handleUnknownError)
+      .receive('timeout', this.handleUnknownError);
+  }
+
+  @bind
   handleGameUpdated(gameState: any) {
     console.log('game updated', gameState);
 
@@ -103,9 +113,18 @@ export default class Root extends React.Component<IProps, IState> {
         game={game}
         onRequestJoinGame={this.handleRequestJoinGame}
         onStartGame={this.handleStartGame}
-      />
+      />;
+    } else if (game.status === EGameStatus.RoundLies) {
+      return <RoundLies
+        game={game}
+        onSubmitLie={this.handleSubmitLie}
+      />;
+    } else if (game.status === EGameStatus.RoundVoting) {
+      return <RoundVoting
+        game={game}
+      />;
     }
 
-    return 'game started';
+    return 'Unhandled state';
   }
 }

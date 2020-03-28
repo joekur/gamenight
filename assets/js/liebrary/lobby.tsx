@@ -67,7 +67,7 @@ export default class Lobby extends React.Component<IProps, IState> {
       <div>
         <h3>Players</h3>
         <ul>
-          {game.playerNames.map(name => (<li>{name}</li>))}
+          {game.playerIds.map(playerId => (<li key={playerId}>{game.nameFor(playerId)}</li>))}
         </ul>
       </div>
     );
