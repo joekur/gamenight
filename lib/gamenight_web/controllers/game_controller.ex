@@ -2,8 +2,7 @@ defmodule GamenightWeb.GameController do
   use GamenightWeb, :controller
 
   def new(conn, _params) do
-    game_id = SlugGenerator.new_slug # TODO what about random collisions?
-    Gamenight.Liebrary.Game.create_game(game_id) # TODO what if it's already started or theres an error?
+    {:ok, game_id} = Gamenight.Liebrary.Game.create_game # TODO what if it's already started or theres an error?
 
     redirect(conn, to: "/games/#{game_id}")
   end

@@ -1,6 +1,7 @@
 export enum EGameStatus {
   Lobby = 'lobby',
-  InProgress = 'in_progress',
+  RoundLies = 'round_lies',
+  RoundVoting = 'round_voting',
 }
 
 export interface IPlayersMap {

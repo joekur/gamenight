@@ -3,7 +3,7 @@ use Mix.Config
 # Configure your database
 config :gamenight, Gamenight.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "password",
   database: "gamenight_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox

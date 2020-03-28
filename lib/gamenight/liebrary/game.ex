@@ -8,8 +8,7 @@ defmodule Gamenight.Liebrary.Game do
     game_id: nil,
     status: :lobby,
     players: %{},
-    current_round: 1,
-    current_book: nil,
+    round: %{}, # TODO use a struct or a typed map here?
   ]
 
   @min_players 2
@@ -20,10 +19,13 @@ defmodule Gamenight.Liebrary.Game do
       |> Enum.at(0)
   end
 
-  def create_game(game_id) do
+  def create_game do
+    game_id = Gamenight.SlugGenerator.new_slug # TODO what about random collisions?
     state = %Game{game_id: game_id}
 
-    GenServer.start_link(__MODULE__, state, name: service_name(game_id))
+    {:ok, _pid} = GenServer.start_link(__MODULE__, state, name: service_name(game_id))
+
+    {:ok, game_id}
   end
 
   def get_state(game_id) do
@@ -40,6 +42,18 @@ defmodule Gamenight.Liebrary.Game do
     try_call(game_id, :start_game)
   end
 
+  def submit_lie(game_id, player_id, lie) do
+    try_call(game_id, {:submit_lie, player_id, lie})
+  end
+
+  def player_ids(game_id) do
+    case get_state(game_id) do
+      {:ok, state} ->
+        {:ok, state.players |> Map.keys}
+      resp -> resp
+    end
+  end
+
   # Server
 
   def init(init_arg) do
@@ -47,7 +61,7 @@ defmodule Gamenight.Liebrary.Game do
   end
 
   def handle_call(:get_state, _from, state) do
-    {:reply, state, state}
+    {:reply, {:ok, state}, state}
   end
 
   def handle_call(:status, _from, state) do
@@ -74,10 +88,18 @@ defmodule Gamenight.Liebrary.Game do
       num_players(state) < @min_players ->
         {:reply, error_response("Not enough players"), state}
       true ->
-        state = %{state | status: :in_progress}
-                |> setup_round()
+        state = %{state | status: :round_lies}
+                |> setup_first_round()
         {:reply, :ok, state}
     end
+  end
+
+  def handle_call({:submit_lie, player_id, lie}, _from, state) do
+    # TODO handle cases where you can't submit a lie right now
+    state = put_in(state.round.lies[player_id], lie)
+            |> check_submissions_complete
+
+    {:reply, :ok, state}
   end
 
   defp num_players(state) do
@@ -97,8 +119,24 @@ defmodule Gamenight.Liebrary.Game do
     end
   end
 
-  defp setup_round(state) do
-    Map.put(state, :current_book, random_book())
+  defp check_submissions_complete(state) do
+    lie_count = state.round.lies |> Map.keys |> length
+
+    if lie_count == num_players(state) do
+      %{state | status: :round_voting}
+    else
+      state
+    end
+  end
+
+  defp setup_first_round(state) do
+    number = (state.round[:number] || 0) + 1
+    round = %{
+      number: number,
+      lies: %{},
+      book: random_book(),
+    }
+    %{state | round: round}
   end
 
   defp random_book() do

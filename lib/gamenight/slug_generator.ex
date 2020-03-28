@@ -1,4 +1,4 @@
-defmodule SlugGenerator do
+defmodule Gamenight.SlugGenerator do
   @chars "ABCDEFGHIJKLMNOPQRSTUVWXYZ" |> String.split("", trim: true)
   @length 4
 

@@ -4,9 +4,13 @@ defmodule GamenightWeb.GameChannel do
   def join("game:" <> game_id, payload, socket) do
     if authorized?(payload) do
       socket = assign(socket, :game_id, game_id)
-      game_state = Gamenight.Liebrary.Game.get_state(socket.assigns.game_id)
-
-      {:ok, game_state, socket}
+      # TODO handle games that don't exist
+      case Gamenight.Liebrary.Game.get_state(socket.assigns.game_id) do
+        {:ok, game_state} ->
+          {:ok, game_state, socket}
+        {:error, resp} ->
+          {:error, resp}
+      end
     else
       {:error, %{reason: "unauthorized"}}
     end
@@ -28,9 +32,15 @@ defmodule GamenightWeb.GameChannel do
   def handle_in("request_join", payload, socket) do
     msg = Gamenight.Liebrary.Game.request_join(socket.assigns.game_id, payload["name"])
 
-    broadcast_game_updated(socket)
+    case msg do
+      {:ok, %{player_id: player_id}} ->
+        socket = assign(socket, :player_id, player_id)
+        broadcast_game_updated(socket)
 
-    {:reply, msg, socket}
+        {:reply, msg, socket}
+      _ ->
+        {:reply, msg, socket}
+    end
   end
 
   def handle_in("start_game", _payload, socket) do
@@ -41,8 +51,18 @@ defmodule GamenightWeb.GameChannel do
     {:reply, msg, socket}
   end
 
+  def handle_in("submit_lie", payload, socket) do
+    msg = Gamenight.Liebrary.Game.submit_lie(
+      socket.assigns.game_id,
+      socket.assigns.player_id,
+      payload["lie"]
+    )
+
+    {:reply, msg, socket}
+  end
+
   defp broadcast_game_updated(socket) do
-    game_state = Gamenight.Liebrary.Game.get_state(socket.assigns.game_id)
+    {:ok, game_state} = Gamenight.Liebrary.Game.get_state(socket.assigns.game_id)
     broadcast socket, "game_updated", game_state
   end
 
