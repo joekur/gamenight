@@ -4,6 +4,8 @@ defmodule GamenightWeb.GameChannel do
   def join("game:" <> game_id, payload, socket) do
     if authorized?(payload) do
       socket = assign(socket, :game_id, game_id)
+      socket = assign(socket, :player_id, payload["player_id"])
+
       # TODO handle games that don't exist
       case Gamenight.Liebrary.Game.get_state(socket.assigns.game_id) do
         {:ok, game_state} ->

@@ -6,6 +6,7 @@ import bind from 'bind-decorator';
 import Lobby from './lobby';
 import RoundLies from './round_lies';
 import RoundVoting from './round_voting';
+import { setCookie, getCookie } from '../cookies';
 
 interface IProps {
   gameId: string,
@@ -30,13 +31,19 @@ export default class Root extends React.Component<IProps, IState> {
   }
 
   componentDidMount() {
-    this.joinChannel();
+    const playerId = getCookie(this.playerIdCookieName());
+    if (!!playerId) {
+      this.setState({ playerId });
+    }
+
+    this.joinChannel(playerId);
   }
 
-  joinChannel() {
+  joinChannel(playerId: string | null) {
     const topic = `game:${this.props.gameId}`;
+    const payload = { player_id: playerId };
 
-    this.channel = (window as any).socket.channel(topic, {}) as Channel;
+    this.channel = (window as any).socket.channel(topic, payload) as Channel;
 
     this.channel.join()
       .receive('ok', this.handleJoinedChannel)
@@ -72,6 +79,8 @@ export default class Root extends React.Component<IProps, IState> {
   handleJoinSuccess(response: any) {
     console.log('join success', response);
 
+    setCookie(this.playerIdCookieName(), response.player_id, 1);
+
     this.setState({ playerId: response.player_id });
   }
 
@@ -93,6 +102,10 @@ export default class Root extends React.Component<IProps, IState> {
   handleUnknownError(response: any) {
     // TODO
     console.error('UnknownError', response);
+  }
+
+  playerIdCookieName(): string {
+    return `${this.props.gameId}-playerId`;
   }
 
   updateGameState(newState: Partial<IGameState>) {
