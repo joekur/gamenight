@@ -34,17 +34,13 @@ defmodule Gamenight.Liebrary.Game do
     try_call(game_id, :get_state)
   end
 
-  def request_join(game_id, player_name) do
-    try_call(game_id, {:request_join, player_name})
-  end
+  def request_join(game_id, player_name), do: try_call(game_id, {:request_join, player_name})
 
-  def start_game(game_id) do
-    try_call(game_id, :start_game)
-  end
+  def start_game(game_id), do: try_call(game_id, :start_game)
 
-  def submit_lie(game_id, player_id, lie) do
-    try_call(game_id, {:submit_lie, player_id, lie})
-  end
+  def submit_lie(game_id, player_id, lie), do: try_call(game_id, {:submit_lie, player_id, lie})
+
+  def submit_vote(game_id, player_id, vote_id), do: try_call(game_id, {:submit_vote, player_id, vote_id})
 
   def player_ids(game_id) do
     case get_state(game_id) do
@@ -102,6 +98,20 @@ defmodule Gamenight.Liebrary.Game do
     {:reply, :ok, state}
   end
 
+  def handle_call({:submit_vote, player_id, vote_id}, _from, state) do
+    # TODO check valid player_id
+    # TODO check valid vote_id
+    # TODO check if all votes in to progress game
+    cond do
+      state.round.votes |> Map.has_key?(player_id)->
+        {:reply, error_response("You have already voted"), state}
+      true ->
+        state = put_in(state.round.votes[player_id], vote_id)
+                |> check_voting_complete
+        {:reply, :ok, state}
+    end
+  end
+
   defp num_players(state) do
     state.players |> Map.keys |> length
   end
@@ -124,9 +134,42 @@ defmodule Gamenight.Liebrary.Game do
 
     if lie_count == num_players(state) do
       %{state | status: :round_voting}
+      |> setup_voting_lists
     else
       state
     end
+  end
+
+  defp setup_voting_lists(state) do
+    # Each player gets a uniquely-ordered list of submissions to vote
+    # on, designated by a list of player_id's and including on extra
+    # uuid designated for the real first line of the book.
+    real_uuid = UUID.uuid4()
+    player_ids = state |> get_player_ids()
+    all_ids = [real_uuid | player_ids]
+
+    voting_lists = Enum.reduce(player_ids, %{}, fn player_id, acc ->
+      list = List.delete(all_ids, player_id) |> Enum.shuffle
+      Map.put(acc, player_id, list)
+    end)
+
+    put_in(state.round.voting_lists, voting_lists)
+  end
+
+  defp check_voting_complete(state) do
+    vote_count = state.round.votes |> Map.keys |> length
+
+    if vote_count == num_players(state) do
+      %{state | status: :round_results}
+      |> calculate_points
+    else
+      state
+    end
+  end
+
+  defp calculate_points(state) do
+    # TODO actually calculate
+    state
   end
 
   defp setup_first_round(state) do
@@ -135,6 +178,8 @@ defmodule Gamenight.Liebrary.Game do
       number: number,
       lies: %{},
       book: random_book(),
+      votes: %{},
+      voting_lists: %{},
     }
     %{state | round: round}
   end
@@ -149,6 +194,10 @@ defmodule Gamenight.Liebrary.Game do
                   |> List.first
 
     book
+  end
+
+  defp get_player_ids(state) do
+    state.players |> Map.keys
   end
 
   defp service_name(game_id), do:
