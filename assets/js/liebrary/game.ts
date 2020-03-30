@@ -5,11 +5,26 @@ export enum EGameStatus {
 }
 
 export interface IPlayersMap {
-  [playerId: string] : string;
+  [playerId: string] : string,
+}
+
+interface IVotingList {
+  [playerId: string] : string[],
+}
+
+interface IBook {
+  title: string,
+  author: string,
+  year: string,
+  first_line: string,
 }
 
 interface IRound {
   lies: IPlayersMap,
+  votes: IPlayersMap,
+  voting_lists: IVotingList,
+  book: IBook,
+  real_id: string,
 }
 
 export interface IGameState {
@@ -59,6 +74,25 @@ export class Game {
 
   get alreadySubmittedLie() {
     return !!this.state.round.lies[this.playerId!];
+  }
+
+  get votingList() {
+    const ids = this.state.round.voting_lists[this.playerId!];
+
+    return ids.map(id => {
+      const line = id === this.state.round.real_id ?
+        this.state.round.book.first_line :
+        this.state.round.lies[id];
+
+      return {
+        id,
+        firstLine: line,
+      };
+    });
+  }
+
+  get alreadyVoted() {
+    return !!this.state.round.votes[this.playerId!];
   }
 
   nameFor(playerId: string) {

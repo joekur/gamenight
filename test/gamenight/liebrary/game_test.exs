@@ -112,6 +112,7 @@ defmodule Gamenight.Liebrary.GameTest do
     assert state.round.voting_lists[player_2_id] |> length == 2
     assert !Enum.member?(state.round.voting_lists[player_1_id], player_1_id)
     assert Enum.member?(state.round.voting_lists[player_1_id], player_2_id)
+    assert state.round.real_id |> String.length > 1
   end
 
   test "once everyone votes, it progresses to round_results status" do

@@ -153,7 +153,8 @@ defmodule Gamenight.Liebrary.Game do
       Map.put(acc, player_id, list)
     end)
 
-    put_in(state.round.voting_lists, voting_lists)
+    state = put_in(state.round.voting_lists, voting_lists)
+    put_in(state.round.real_id, real_uuid)
   end
 
   defp check_voting_complete(state) do
@@ -180,6 +181,7 @@ defmodule Gamenight.Liebrary.Game do
       book: random_book(),
       votes: %{},
       voting_lists: %{},
+      real_id: nil,
     }
     %{state | round: round}
   end

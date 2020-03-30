@@ -92,6 +92,13 @@ export default class Root extends React.Component<IProps, IState> {
   }
 
   @bind
+  handleVote(id: string) {
+    this.channel!.push('submit_vote', { id })
+      .receive('error', this.handleUnknownError)
+      .receive('timeout', this.handleUnknownError);
+  }
+
+  @bind
   handleGameUpdated(gameState: any) {
     console.log('game updated', gameState);
 
@@ -135,6 +142,7 @@ export default class Root extends React.Component<IProps, IState> {
     } else if (game.status === EGameStatus.RoundVoting) {
       return <RoundVoting
         game={game}
+        onVote={this.handleVote}
       />;
     }
 
