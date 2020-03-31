@@ -85,6 +85,18 @@ export default class RoundLies extends React.Component<IProps, IState> {
     );
   }
 
+  renderBook() {
+    const book = this.props.game.currentBook;
+
+    return (
+      <div>
+        <div>Title: {book.title}</div>
+        <div>Author: {book.author}</div>
+        <div>Year: {book.year}</div>
+      </div>
+    );
+  }
+
   render() {
     const { game } = this.props;
 
@@ -92,6 +104,11 @@ export default class RoundLies extends React.Component<IProps, IState> {
       return this.renderWaitingForOthers();
     }
 
-    return this.renderLieForm();
+    return (
+      <div>
+        {this.renderBook()}
+        {this.renderLieForm()}
+      </div>
+    );
   }
 }

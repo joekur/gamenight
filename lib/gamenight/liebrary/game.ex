@@ -189,7 +189,7 @@ defmodule Gamenight.Liebrary.Game do
   defp random_book() do
     # TODO make sure we don't repeat, don't read the file
     # each time we call this
-    {:ok, book} = Path.expand("./books.csv", __DIR__)
+    {:ok, book} = "#{:code.priv_dir(:gamenight)}/data/liebrary_books.csv"
                   |> File.stream!
                   |> CSV.decode(headers: true)
                   |> Enum.take_random(1)

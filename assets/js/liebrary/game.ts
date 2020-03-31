@@ -95,6 +95,10 @@ export class Game {
     return !!this.state.round.votes[this.playerId!];
   }
 
+  get currentBook(): IBook {
+    return this.state.round.book;
+  }
+
   nameFor(playerId: string) {
     return this.state.players[playerId];
   }
