@@ -97,20 +97,22 @@ export class Game {
     };
   }
 
+  findAnswer(id: string): IAnswerChoice {
+    return {
+      id,
+      text: this.state.round.answers[id],
+    };
+  }
+
   get answerList(): IAnswerChoice[] {
     const ids = this.state.round.answer_ids;
 
-    return ids.map(id => {
-      return {
-        id,
-        text: this.state.round.answers[id],
-      };
-    });
+    return ids.map(id => this.findAnswer(id));
   }
 
   get otherActivePlayers(): IPlayer[] {
     const ids = this.state.round.active_players;
-    const others = ids.filter(id => id === this.playerId);
+    const others = ids.filter(id => id !== this.playerId);
 
     return others.map(id => {
       return {

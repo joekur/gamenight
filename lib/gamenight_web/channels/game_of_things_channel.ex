@@ -76,6 +76,19 @@ defmodule GamenightWeb.GameOfThingsChannel do
     {:reply, msg, socket}
   end
 
+  def handle_in("guess", payload, socket) do
+    msg = Gamenight.GameOfThings.Game.guess(
+      socket.assigns.game_id,
+      socket.assigns.player_id,
+      payload["answer_id"],
+      payload["player_id"]
+    )
+
+    broadcast_game_updated(socket)
+
+    {:reply, msg, socket}
+  end
+
   defp broadcast_game_updated(socket) do
     {:ok, game_state} = Gamenight.GameOfThings.Game.get_state(socket.assigns.game_id)
     broadcast socket, "game_updated", game_state

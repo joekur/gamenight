@@ -110,10 +110,10 @@ defmodule Gamenight.GameOfThings.Game do
     {:reply, :ok, state}
   end
 
-  def handle_call({:guess, player_id, prompt_id, guess_id}, _from, state) do
+  def handle_call({:guess, player_id, answer_id, guessed_player_id}, _from, state) do
     cond do
-      prompt_id == guess_id ->
-        state = handle_correct_guess(player_id, guess_id, state)
+      answer_id == guessed_player_id ->
+        state = handle_correct_guess(player_id, guessed_player_id, state)
                 |> check_round_complete()
         {:reply, :ok, state}
       true ->

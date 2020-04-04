@@ -5,6 +5,7 @@ import AnswerList from './answer_list';
 
 interface IProps {
   game: Game,
+  onSubmitGuess: (answerId: string, playerId: string) => void,
 }
 
 interface IState {
@@ -34,15 +35,20 @@ export default class MyTurn extends React.Component<IProps, IState> {
     this.setState({ selectedPlayerId: id });
   }
 
-  renderSubmitChoice() {
-    return (
-      <div>
-        <button
-        >
+  @bind
+  handleSubmit(e: any) {
+    e.preventDefault();
 
-        </button>
-      </div>
+    this.props.onSubmitGuess(
+      this.state.selectedAnswerId!,
+      this.state.selectedPlayerId!
     );
+  }
+
+  @bind
+  handleCancelAnswerSelection(e: any) {
+    e.preventDefault();
+    this.setState({ selectedAnswerId: null });
   }
 
   renderAnswerList() {
@@ -56,8 +62,13 @@ export default class MyTurn extends React.Component<IProps, IState> {
   }
 
   renderPlayerChoice(player: IPlayer) {
+    const classes = `choose-player__choice ${player.id === this.state.selectedPlayerId && 'choose-player__choice--selected'}`;
     return (
-      <li key={`player-choice-${player.id}`}>
+      <li
+        key={`player-choice-${player.id}`}
+        className={classes}
+        onClick={() => { this.handleSelectPlayer(player.id) }}
+      >
         {player.name}
       </li>
     );
@@ -71,10 +82,23 @@ export default class MyTurn extends React.Component<IProps, IState> {
 
     return (
       <div>
-        <h3>Players</h3>
+        <div>
+          <p>{game.findAnswer(this.state.selectedAnswerId!).text}</p>
+          <a
+            href="#"
+            onClick={this.handleCancelAnswerSelection}
+          >Choose a different answer</a>
+        </div>
+        <h3>Now choose who you think said it:</h3>
         <ul>
           {players.map(player => this.renderPlayerChoice(player))}
         </ul>
+        <button
+          disabled={!this.state.selectedPlayerId}
+          onClick={this.handleSubmit}
+        >
+          Submit
+        </button>
       </div>
     );
   }

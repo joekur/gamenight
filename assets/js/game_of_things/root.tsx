@@ -85,6 +85,14 @@ export default class Root extends React.Component<IProps, IState> {
   }
 
   @bind
+  handleSubmitGuess(answerId: string, playerId: string) {
+    this.pushChannel('guess', {
+      answer_id: answerId,
+      player_id: playerId,
+    });
+  }
+
+  @bind
   handleJoinSuccess(response: any) {
     console.log('join success', response);
 
@@ -144,6 +152,7 @@ export default class Root extends React.Component<IProps, IState> {
       if (game.isMyTurn) {
         return <MyTurn
           game={game}
+          onSubmitGuess={this.handleSubmitGuess}
         />;
       }
 
