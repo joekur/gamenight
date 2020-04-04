@@ -62,7 +62,7 @@ export default class MyTurn extends React.Component<IProps, IState> {
   }
 
   renderPlayerChoice(player: IPlayer) {
-    const classes = `choose-player__choice ${player.id === this.state.selectedPlayerId && 'choose-player__choice--selected'}`;
+    const classes = `choice-list__choice choice-list__choice--clickable ${player.id === this.state.selectedPlayerId && 'choice-list__choice--selected'}`;
     return (
       <li
         key={`player-choice-${player.id}`}
@@ -83,14 +83,17 @@ export default class MyTurn extends React.Component<IProps, IState> {
     return (
       <div>
         <div>
-          <p>{game.findAnswer(this.state.selectedAnswerId!).text}</p>
+          <p className="well">
+            {game.findAnswer(this.state.selectedAnswerId!).text}
+          </p>
           <a
             href="#"
             onClick={this.handleCancelAnswerSelection}
-          >Choose a different answer</a>
+          >←Choose a different answer</a>
         </div>
-        <h3>Now choose who you think said it:</h3>
-        <ul>
+
+        <h3 className="mt">Now choose who you think said it:</h3>
+        <ul className="choice-list">
           {players.map(player => this.renderPlayerChoice(player))}
         </ul>
         <button
