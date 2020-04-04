@@ -12,7 +12,8 @@ defmodule Gamenight.GameOfThings.Game do
     prompts: [],
   ]
 
-  @min_players 3
+  # TODO change back to 3
+  @min_players 2
   @min_prompts 1
 
   def find_game(game_id) do
@@ -112,7 +113,9 @@ defmodule Gamenight.GameOfThings.Game do
   def handle_call({:guess, player_id, prompt_id, guess_id}, _from, state) do
     cond do
       prompt_id == guess_id ->
-        {:reply, :ok, handle_correct_guess(player_id, guess_id, state)}
+        state = handle_correct_guess(player_id, guess_id, state)
+                |> check_round_complete()
+        {:reply, :ok, state}
       true ->
         {:reply, :ok, handle_wrong_guess(state)}
     end
@@ -122,6 +125,14 @@ defmodule Gamenight.GameOfThings.Game do
     state = update_in(state.scores[player_id], &(&1 + 1))
     state = update_in(state.round.active_players, &(List.delete(&1, guess_id)))
     update_in(state.round.answer_ids, &(List.delete(&1, guess_id)))
+  end
+
+  defp check_round_complete(state) do
+    if length(state.round.active_players) <= 1 do
+      start_round(state)
+    else
+      state
+    end
   end
 
   defp handle_wrong_guess(state) do
@@ -165,7 +176,6 @@ defmodule Gamenight.GameOfThings.Game do
     state
     |> Map.put(:prompts, prompts)
     |> Map.put(:scores, scores)
-    |> Map.put(:status, :round_answers)
   end
 
   defp start_round(state) do
@@ -176,6 +186,7 @@ defmodule Gamenight.GameOfThings.Game do
     state
     |> Map.put(:prompts, rest)
     |> Map.put(:round, round)
+    |> Map.put(:status, :round_answers)
   end
 
   defp check_all_answers_in(state) do

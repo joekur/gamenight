@@ -135,4 +135,22 @@ defmodule Gamenight.GameOfThings.GameTest do
     assert turns |> Enum.slice(3, 3) |> Enum.sort ==
       player_ids |> Enum.sort
   end
+
+  test "once all have been guessed but the last current player's, we move to the next round" do
+    game_id = game_in_guessing()
+
+    {:ok, state} = Game.get_state(game_id)
+    first_prompt = state.round.prompt
+    current_player = current_player(game_id)
+    other_players = player_ids(game_id) |> List.delete(current_player)
+
+    Enum.each(other_players, fn player_id ->
+      :ok = Game.guess(game_id, current_player, player_id, player_id)
+    end)
+
+    {:ok, state} = Game.get_state(game_id)
+    assert state.scores[current_player] == 2
+    assert state.status == :round_answers
+    assert state.round.prompt != first_prompt
+  end
 end

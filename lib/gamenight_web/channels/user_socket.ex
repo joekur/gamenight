@@ -2,7 +2,8 @@ defmodule GamenightWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  channel "game:*", GamenightWeb.GameChannel
+  channel "liebrary:*", GamenightWeb.LiebraryChannel
+  channel "game_of_things:*", GamenightWeb.GameOfThingsChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
