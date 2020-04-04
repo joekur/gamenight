@@ -96,8 +96,8 @@ export default class Lobby extends React.Component<IProps, IState> {
     const { game } = this.props;
 
     return (
-      <div>
-        <div>
+      <div className="lobby">
+        <div className="lobby__game-id">
           Game: {game.id}
         </div>
 

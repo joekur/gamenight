@@ -1,0 +1,11 @@
+/* This file is for your main application css. */
+
+@import "./phoenix.css";
+
+.lobby {
+  background: blue;
+
+  .lobby__game-id {
+    background: #eee;
+  }
+}
