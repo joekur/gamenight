@@ -4,6 +4,7 @@ import { Channel } from 'phoenix';
 import bind from 'bind-decorator';
 
 import Lobby from './lobby';
+import RoundAnswers from './round_answers';
 import { setCookie, getCookie } from '../cookies';
 
 interface IProps {
@@ -77,6 +78,11 @@ export default class Root extends React.Component<IProps, IState> {
   }
 
   @bind
+  handleSubmitAnswer(answer: string) {
+    this.pushChannel('submit_answer', { answer });
+  }
+
+  @bind
   handleJoinSuccess(response: any) {
     console.log('join success', response);
 
@@ -126,6 +132,11 @@ export default class Root extends React.Component<IProps, IState> {
         onRequestJoinGame={this.handleRequestJoinGame}
         onStartGame={this.handleStartGame}
         onAddPrompt={this.handleAddPrompt}
+      />;
+    } else if (game.status === EGameStatus.RoundAnswers) {
+      return <RoundAnswers
+        game={game}
+        onSubmitAnswer={this.handleSubmitAnswer}
       />;
     }
 

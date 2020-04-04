@@ -1,7 +1,7 @@
 export enum EGameStatus {
   Lobby = 'lobby',
-  RoundLies = 'round_answers',
-  RoundVoting = 'round_guessing',
+  RoundAnswers = 'round_answers',
+  RoundGuessing = 'round_guessing',
 }
 
 export interface IPlayersMap {
@@ -71,8 +71,12 @@ export class Game {
     return Object.keys(this.state.players).length;
   }
 
-  get alreadySubmittedAnswer() {
-    return !!this.state.round.answers[this.playerId!];
+  get alreadySubmittedAnswer(): boolean {
+    return this.hasSubmittedAnswer(this.playerId!);
+  }
+
+  hasSubmittedAnswer(playerId: string): boolean {
+    return !!this.state.round.answers[playerId];
   }
 
   get guessList() {
@@ -88,6 +92,10 @@ export class Game {
 
   get amStillInTheRound(): boolean {
     return this.state.round.active_players.includes(this.playerId!);
+  }
+
+  get currentPrompt(): string {
+    return this.state.round.prompt;
   }
 
   nameFor(playerId: string) {
