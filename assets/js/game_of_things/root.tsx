@@ -5,6 +5,8 @@ import bind from 'bind-decorator';
 
 import Lobby from './lobby';
 import RoundAnswers from './round_answers';
+import MyTurn from './my_turn';
+import RoundWaiting from './round_waiting';
 import { setCookie, getCookie } from '../cookies';
 
 interface IProps {
@@ -137,6 +139,16 @@ export default class Root extends React.Component<IProps, IState> {
       return <RoundAnswers
         game={game}
         onSubmitAnswer={this.handleSubmitAnswer}
+      />;
+    } else if (game.status === EGameStatus.RoundGuessing) {
+      if (game.isMyTurn) {
+        return <MyTurn
+          game={game}
+        />;
+      }
+
+      return <RoundWaiting
+        game={game}
       />;
     }
 

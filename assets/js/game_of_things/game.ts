@@ -32,6 +32,11 @@ export interface IPlayer {
   name: string,
 }
 
+interface IAnswerChoice {
+  id: string,
+  text: string,
+}
+
 export class Game {
   id: string
   playerId: string | null
@@ -67,7 +72,7 @@ export class Game {
     return Object.keys(this.state.players);
   }
 
-  get numPlayers() {
+  get numPlayers(): number {
     return Object.keys(this.state.players).length;
   }
 
@@ -79,13 +84,38 @@ export class Game {
     return !!this.state.round.answers[playerId];
   }
 
-  get guessList() {
-    const ids = this.state.round.active_players;
+  get isMyTurn(): boolean {
+    return this.state.round.current_player == this.playerId!;
+  }
+
+  get currentPlayer(): IPlayer {
+    const id = this.state.round.current_player;
+
+    return {
+      id,
+      name: this.nameFor(id),
+    };
+  }
+
+  get answerList(): IAnswerChoice[] {
+    const ids = this.state.round.answer_ids;
 
     return ids.map(id => {
       return {
         id,
         text: this.state.round.answers[id],
+      };
+    });
+  }
+
+  get otherActivePlayers(): IPlayer[] {
+    const ids = this.state.round.active_players;
+    const others = ids.filter(id => id === this.playerId);
+
+    return others.map(id => {
+      return {
+        id,
+        name: this.nameFor(id),
       };
     });
   }

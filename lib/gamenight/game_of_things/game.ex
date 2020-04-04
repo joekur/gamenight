@@ -203,7 +203,9 @@ defmodule Gamenight.GameOfThings.Game do
   defp setup_guessing(state) do
     round = state.round
 
+    # this is the order that players will take turns
     active_players = state |> get_player_ids |> Enum.shuffle
+    # this is the order we will show the answer list to players
     answer_ids = active_players |> Enum.shuffle
     current_player = active_players |> hd
 
