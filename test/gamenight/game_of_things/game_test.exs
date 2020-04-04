@@ -29,6 +29,22 @@ defmodule Gamenight.GameOfThings.GameTest do
     game_id
   end
 
+  def game_in_guessing do
+    game_id = started_game()
+    player_ids = player_ids(game_id)
+
+    Enum.each(player_ids, fn player_id ->
+      :ok = Game.submit_answer(game_id, player_id, "answer #{player_id}")
+    end)
+
+    game_id
+  end
+
+  def current_player(game_id) do
+    {:ok, state} = Game.get_state(game_id)
+    state.round.current_player
+  end
+
   test "it can create a new game" do
     {:ok, game_id} = Game.create_game
     {:ok, state} = Game.get_state(game_id)
@@ -72,5 +88,51 @@ defmodule Gamenight.GameOfThings.GameTest do
 
     {:ok, state} = Game.get_state(game_id)
     assert state.status == :round_guessing
+    assert state.round.active_players |> length == player_ids |> length
+    assert state.round.answer_ids |> length == player_ids |> length
+  end
+
+  test "guessing correctly removes that player and their answer from the active lists" do
+    game_id = started_game()
+    player_ids = player_ids(game_id)
+
+    Enum.each(player_ids, fn player_id ->
+      :ok = Game.submit_answer(game_id, player_id, "answer #{player_id}")
+    end)
+
+    {:ok, state} = Game.get_state(game_id)
+    current_player = state.round.current_player
+    other_player = state.round.active_players |> Enum.at(1)
+
+    :ok = Game.guess(game_id, current_player, other_player, other_player)
+
+    {:ok, state} = Game.get_state(game_id)
+    assert state.round.current_player == current_player
+    assert !Enum.member?(state.round.active_players, other_player)
+    assert !Enum.member?(state.round.answer_ids, other_player)
+    assert state.scores[current_player] == 1
+  end
+
+  test "guessing incorrectly moves the current player down the line" do
+    game_id = game_in_guessing()
+    player_ids = player_ids(game_id)
+
+    turns = Enum.reduce(0..6, [], fn _i, turns ->
+      current_player = current_player(game_id)
+      other_players = player_ids |> List.delete(current_player)
+      :ok = Game.guess(
+        game_id,
+        current_player,
+        other_players |> Enum.at(0),
+        other_players |> Enum.at(1)
+      )
+
+      [current_player | turns]
+    end)
+
+    assert turns |> Enum.slice(0, 3) |> Enum.sort ==
+      player_ids |> Enum.sort
+    assert turns |> Enum.slice(3, 3) |> Enum.sort ==
+      player_ids |> Enum.sort
   end
 end

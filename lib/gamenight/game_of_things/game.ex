@@ -43,6 +43,8 @@ defmodule Gamenight.GameOfThings.Game do
 
   def submit_answer(game_id, player_id, answer), do: try_call(game_id, {:submit_answer, player_id, answer})
 
+  def guess(game_id, player_id, prompt_id, guess_id), do: try_call(game_id, {:guess, player_id, prompt_id, guess_id})
+
   def player_ids(game_id) do
     case get_state(game_id) do
       {:ok, state} ->
@@ -107,6 +109,31 @@ defmodule Gamenight.GameOfThings.Game do
     {:reply, :ok, state}
   end
 
+  def handle_call({:guess, player_id, prompt_id, guess_id}, _from, state) do
+    cond do
+      prompt_id == guess_id ->
+        {:reply, :ok, handle_correct_guess(player_id, guess_id, state)}
+      true ->
+        {:reply, :ok, handle_wrong_guess(state)}
+    end
+  end
+
+  defp handle_correct_guess(player_id, guess_id, state) do
+    state = update_in(state.scores[player_id], &(&1 + 1))
+    state = update_in(state.round.active_players, &(List.delete(&1, guess_id)))
+    update_in(state.round.answer_ids, &(List.delete(&1, guess_id)))
+  end
+
+  defp handle_wrong_guess(state) do
+    current_player = state.round.current_player
+    current_player_index = state.round.active_players
+                           |> Enum.find_index(&(&1 == current_player))
+    next_index = current_player_index + 1
+    next_index = if (next_index >= length(state.round.active_players)), do: 0, else: next_index
+
+    put_in(state.round.current_player, state.round.active_players |> Enum.at(next_index))
+  end
+
   defp num_players(state) do
     state.players |> Map.keys |> length
   end
@@ -131,19 +158,20 @@ defmodule Gamenight.GameOfThings.Game do
   defp setup_game(state) do
     prompts = state.prompts |> Enum.shuffle
 
+    scores = Enum.reduce(state |> get_player_ids, %{}, fn player_id, acc ->
+      Map.put(acc, player_id, 0)
+    end)
+
     state
     |> Map.put(:prompts, prompts)
+    |> Map.put(:scores, scores)
     |> Map.put(:status, :round_answers)
   end
 
   defp start_round(state) do
     [prompt | rest] = state.prompts
 
-    scores = Enum.reduce(state |> get_player_ids, %{}, fn player_id, acc ->
-      Map.put(acc, player_id, 0)
-    end)
-
-    round = %{prompt: prompt, answers: %{}, scores: scores}
+    round = %{prompt: prompt, answers: %{}}
 
     state
     |> Map.put(:prompts, rest)
@@ -155,9 +183,25 @@ defmodule Gamenight.GameOfThings.Game do
 
     if answer_count == num_players(state) do
       %{state | status: :round_guessing}
+      |> setup_guessing()
     else
       state
     end
+  end
+
+  defp setup_guessing(state) do
+    round = state.round
+
+    active_players = state |> get_player_ids |> Enum.shuffle
+    answer_ids = active_players |> Enum.shuffle
+    current_player = active_players |> hd
+
+    round = round
+            |> Map.put(:active_players, active_players)
+            |> Map.put(:answer_ids, answer_ids)
+            |> Map.put(:current_player, current_player)
+
+    %{state | round: round}
   end
 
   defp get_player_ids(state) do
