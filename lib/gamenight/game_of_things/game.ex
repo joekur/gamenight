@@ -9,7 +9,8 @@ defmodule Gamenight.GameOfThings.Game do
     status: :lobby,
     players: %{},
     round: %{},
-    prompts: []
+    prompts: [],
+    scores: %{},
   ]
 
   # TODO change back to 3
@@ -45,6 +46,8 @@ defmodule Gamenight.GameOfThings.Game do
   def submit_answer(game_id, player_id, answer), do: try_call(game_id, {:submit_answer, player_id, answer})
 
   def guess(game_id, player_id, prompt_id, guess_id), do: try_call(game_id, {:guess, player_id, prompt_id, guess_id})
+
+  def start_next_round(game_id, player_id), do: try_call(game_id, {:start_next_round, player_id})
 
   def player_ids(game_id) do
     case get_state(game_id) do
@@ -121,6 +124,10 @@ defmodule Gamenight.GameOfThings.Game do
     end
   end
 
+  def handle_call({:start_next_round, _player_id}, _from, state) do
+    {:reply, :ok, state |> start_round}
+  end
+
   defp handle_correct_guess(player_id, guess_id, state) do
     state = update_in(state.scores[player_id], &(&1 + 1))
     state = update_in(state.round.active_players, &(List.delete(&1, guess_id)))
@@ -129,7 +136,7 @@ defmodule Gamenight.GameOfThings.Game do
 
   defp check_round_complete(state) do
     if length(state.round.active_players) <= 1 do
-      start_round(state)
+      %{state | status: :round_results}
     else
       state
     end

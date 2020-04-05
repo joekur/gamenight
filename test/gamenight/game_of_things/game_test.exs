@@ -150,6 +150,11 @@ defmodule Gamenight.GameOfThings.GameTest do
 
     {:ok, state} = Game.get_state(game_id)
     assert state.scores[current_player] == 2
+    assert state.status == :round_results
+
+    :ok = Game.start_next_round(game_id, current_player)
+
+    {:ok, state} = Game.get_state(game_id)
     assert state.status == :round_answers
     assert state.round.prompt != first_prompt
   end

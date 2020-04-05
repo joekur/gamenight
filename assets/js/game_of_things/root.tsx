@@ -7,6 +7,7 @@ import Lobby from './lobby';
 import RoundAnswers from './round_answers';
 import MyTurn from './my_turn';
 import RoundWaiting from './round_waiting';
+import RoundResults from './round_results';
 import { setCookie, getCookie } from '../cookies';
 
 interface IProps {
@@ -93,6 +94,11 @@ export default class Root extends React.Component<IProps, IState> {
   }
 
   @bind
+  handleNextRound() {
+    this.pushChannel('start_next_round', {});
+  }
+
+  @bind
   handleJoinSuccess(response: any) {
     console.log('join success', response);
 
@@ -158,6 +164,11 @@ export default class Root extends React.Component<IProps, IState> {
 
       return <RoundWaiting
         game={game}
+      />;
+    } else if (game.status === EGameStatus.RoundResults) {
+      return <RoundResults
+        game={game}
+        onNextRound={this.handleNextRound}
       />;
     }
 

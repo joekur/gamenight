@@ -2,6 +2,7 @@ export enum EGameStatus {
   Lobby = 'lobby',
   RoundAnswers = 'round_answers',
   RoundGuessing = 'round_guessing',
+  RoundResults = 'round_results',
 }
 
 export interface IPlayersMap {
@@ -30,6 +31,11 @@ export interface IGameState {
 export interface IPlayer {
   id: string,
   name: string,
+}
+
+export interface IPlayerPoint {
+  player: IPlayer,
+  points: number,
 }
 
 interface IAnswerChoice {
@@ -97,6 +103,13 @@ export class Game {
     };
   }
 
+  findPlayer(id: string): IPlayer {
+    return {
+      id,
+      name: this.nameFor(id),
+    };
+  }
+
   findAnswer(id: string): IAnswerChoice {
     return {
       id,
@@ -128,6 +141,15 @@ export class Game {
 
   get currentPrompt(): string {
     return this.state.round.prompt;
+  }
+
+  get playerPoints(): IPlayerPoint[] {
+    return Object.keys(this.state.scores).map(playerId => {
+      return {
+        player: this.findPlayer(playerId),
+        points: this.state.scores[playerId],
+      };
+    }).sort((a,b) => b.points - a.points);
   }
 
   nameFor(playerId: string) {
