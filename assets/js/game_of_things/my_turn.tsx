@@ -20,8 +20,13 @@ export default class MyTurn extends React.Component<IProps, IState> {
   };
 
   componentWillMount() {
+    this.resetState();
+  }
+
+  resetState() {
     this.setState({
-      selectedPlayerId: null
+      selectedAnswerId: null,
+      selectedPlayerId: null,
     });
   }
 
@@ -39,10 +44,13 @@ export default class MyTurn extends React.Component<IProps, IState> {
   handleSubmit(e: any) {
     e.preventDefault();
 
-    this.props.onSubmitGuess(
-      this.state.selectedAnswerId!,
-      this.state.selectedPlayerId!
-    );
+    if (this.state.selectedPlayerId && this.state.selectedPlayerId) {
+      this.props.onSubmitGuess(
+        this.state.selectedAnswerId!,
+        this.state.selectedPlayerId!
+      );
+      this.resetState();
+    }
   }
 
   @bind

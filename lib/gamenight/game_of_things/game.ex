@@ -9,7 +9,7 @@ defmodule Gamenight.GameOfThings.Game do
     status: :lobby,
     players: %{},
     round: %{},
-    prompts: [],
+    prompts: []
   ]
 
   # TODO change back to 3

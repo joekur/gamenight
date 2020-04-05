@@ -22,10 +22,22 @@ export default class RoundWaiting extends React.Component<IProps, IState> {
     );
   };
 
+  renderOutOfTheRound() {
+    const { game } = this.props;
+    if (game.amStillInTheRound) { return null; }
+
+    return (
+      <div className="notice">
+        You are out of this round :(
+      </div>
+    );
+  }
+
   render() {
     return (
       <div>
         {this.renderWhoseTurn()}
+        {this.renderOutOfTheRound()}
         <AnswerList
           game={this.props.game}
         />
