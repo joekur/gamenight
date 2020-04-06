@@ -11,9 +11,11 @@
 
     .choices__choice--clickable {
       cursor: pointer;
+      border: 2px dashed #ccc;
 
       &:hover {
-        border-color: #ccc;
+        border: 2px solid #ccc;
+        background: #ddd;
       }
     }
 

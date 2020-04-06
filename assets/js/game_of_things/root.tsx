@@ -42,6 +42,8 @@ export default class Root extends React.Component<IProps, IState> {
   }
 
   joinChannel(playerId: string | null) {
+    console.log('Joining channel with playerId:', playerId);
+
     const topic = `game_of_things:${this.props.gameId}`;
     const payload = { player_id: playerId };
 

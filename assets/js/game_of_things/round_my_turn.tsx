@@ -20,6 +20,7 @@ export default class RoundMyTurn extends React.Component<IProps, IState> {
     selectedPlayerId: null,
   };
 
+  // TODO dont use componentWillMount
   componentWillMount() {
     this.resetState();
   }
