@@ -72,6 +72,8 @@ defmodule Gamenight.GameOfThings.Game do
   end
 
   def handle_call({:request_join, player_name}, _from, state) do
+    player_name = player_name |> String.trim
+
     cond do
       state.status != :lobby ->
         {:reply, error_response("Game has already started"), state}
