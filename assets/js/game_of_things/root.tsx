@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Game, IGameState, EGameStatus } from './game';
-import { Channel } from 'phoenix';
+import { Channel, Socket } from 'phoenix';
 import bind from 'bind-decorator';
 
 import Lobby from './lobby';
@@ -21,6 +21,7 @@ interface IState {
 }
 
 export default class Root extends React.Component<IProps, IState> {
+  socket?: Socket
   channel?: Channel
 
   constructor(props: IProps) {
@@ -44,10 +45,15 @@ export default class Root extends React.Component<IProps, IState> {
   joinChannel(playerId: string | null) {
     console.log('Joining channel with playerId:', playerId);
 
-    const topic = `game_of_things:${this.props.gameId}`;
-    const payload = { player_id: playerId };
+    const params = { player_id: playerId };
+    this.socket = new Socket("/socket", {});
+    this.socket.connect();
+    (window as any).socket = this.socket;
 
-    this.channel = (window as any).socket.channel(topic, payload) as Channel;
+    const topic = `game_of_things:${this.props.gameId}`;
+
+    this.channel = this.socket.channel(topic, params) as Channel;
+    (window as any).channel = this.channel;
 
     this.channel.join()
       .receive('ok', this.handleJoinedChannel)
@@ -103,10 +109,13 @@ export default class Root extends React.Component<IProps, IState> {
   @bind
   handleJoinSuccess(response: any) {
     console.log('join success', response);
+    const playerId = response.player_id;
 
-    setCookie(this.playerIdCookieName(), response.player_id, 1);
+    setCookie(this.playerIdCookieName(), playerId, 1);
 
-    this.setState({ playerId: response.player_id });
+    (this.channel as any).joinPush.payload = () => ({ player_id: playerId });
+
+    this.setState({ playerId });
   }
 
   @bind

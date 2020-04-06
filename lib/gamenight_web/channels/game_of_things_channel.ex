@@ -44,6 +44,10 @@ defmodule GamenightWeb.GameOfThingsChannel do
     end
   end
 
+  def handle_in("force_reconnect", _payload, _socket) do
+    :ok = :error
+  end
+
   def handle_in("start_game", _payload, socket) do
     msg = Gamenight.GameOfThings.Game.start_game(socket.assigns.game_id)
 
