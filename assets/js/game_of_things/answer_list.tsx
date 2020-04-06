@@ -14,7 +14,7 @@ export default class AnswerList extends React.Component<IProps, {}> {
 
     return game.answerList.map(guess => {
       const isSelected = selectedId && selectedId === guess.id;
-      const classes = `choice-list__choice ${isSelected && 'choice-list__choice--selected'} ${this.props.onClick && 'choice-list__choice--clickable'}`;
+      const classes = `choices__choice ${isSelected && 'choices__choice--selected'} ${this.props.onClick && 'choices__choice--clickable'}`;
 
       return (
         <li
@@ -30,9 +30,12 @@ export default class AnswerList extends React.Component<IProps, {}> {
 
   render() {
     return (
-      <ul className="choice-list">
-        {this.renderAnswers()}
-      </ul>
+      <div className="choices">
+        <h3 className="header">Answers:</h3>
+        <ul className="choices__list">
+          {this.renderAnswers()}
+        </ul>
+      </div>
     );
   };
 }

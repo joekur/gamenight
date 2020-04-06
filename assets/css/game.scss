@@ -1,0 +1,90 @@
+.choices {
+  .choices__list {
+    list-style: none;
+
+    .choices__choice {
+      padding: 10px;
+      background: #eee;
+      margin-bottom: 5px;
+      border: 2px solid #eee;
+    }
+
+    .choices__choice--clickable {
+      cursor: pointer;
+
+      &:hover {
+        border-color: #ccc;
+      }
+    }
+
+    .choices__choice--selected {
+      &, &:hover {
+        border-color: green;
+      }
+    }
+  }
+}
+
+.header {
+  font-size: 1.7rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: $black;
+}
+
+.well {
+  margin: 0;
+  padding: 10px;
+  background: #eee;
+}
+
+.notice {
+  padding: 10px;
+  margin-bottom: 20px;
+  background: #c0f1fa;
+}
+
+.current-prompt {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  position: relative;
+  background: #f7f7f7;
+
+  .current-prompt__heading {
+    padding: 4px;
+    background: #ddd;
+    position: absolute;
+    top: -12px;
+    left: -8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+  }
+}
+
+.turn {
+  margin-bottom: 30px;
+
+  .turn__inner {
+    padding: 15px 60px;
+    margin-left: -50px;
+    margin-right: -50px;
+    background: #9e9e9e;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+
+    &.turn__inner--mine {
+      background: #81da6a;
+    }
+  }
+
+  .turn__out {
+    background: #f9b4ad;
+    text-align: center;
+    padding: 8px;
+  }
+}

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import bind from 'bind-decorator';
 import { Game } from './game';
+import CurrentPrompt from './current_prompt';
 
 interface IProps {
   game: Game,
@@ -33,14 +34,6 @@ export default class PromptForm extends React.Component<IProps, IState> {
     if (text && text.length > 0) {
       this.props.onSubmitAnswer(text);
     }
-  }
-
-  renderPrompt() {
-    const { game } = this.props;
-
-    return (
-      <p>{game.currentPrompt}</p>
-    );
   }
 
   renderPlayerStatusItems() {
@@ -87,7 +80,7 @@ export default class PromptForm extends React.Component<IProps, IState> {
 
     return (
       <div>
-        {this.renderPrompt()}
+        <CurrentPrompt game={game} />
         <form onSubmit={this.handleSubmit}>
           <label>Submit your answer</label>
           <textarea

@@ -5,7 +5,7 @@ import bind from 'bind-decorator';
 
 import Lobby from './lobby';
 import RoundAnswers from './round_answers';
-import MyTurn from './my_turn';
+import RoundMyTurn from './round_my_turn';
 import RoundWaiting from './round_waiting';
 import RoundResults from './round_results';
 import { setCookie, getCookie } from '../cookies';
@@ -135,9 +135,9 @@ export default class Root extends React.Component<IProps, IState> {
     });
   }
 
-  render() {
+  renderInner() {
     if (!this.state.connected) {
-      return 'loading...';
+      return <div className="loading-screen">Loading...</div>;
     }
 
     const game = new Game(this.props.gameId, this.state.playerId, this.state.gameState!);
@@ -156,7 +156,7 @@ export default class Root extends React.Component<IProps, IState> {
       />;
     } else if (game.status === EGameStatus.RoundGuessing) {
       if (game.isMyTurn) {
-        return <MyTurn
+        return <RoundMyTurn
           game={game}
           onSubmitGuess={this.handleSubmitGuess}
         />;
@@ -173,5 +173,13 @@ export default class Root extends React.Component<IProps, IState> {
     }
 
     return 'Unhandled state';
+  }
+
+  render() {
+    return (
+      <div className="game-of-things">
+        {this.renderInner()}
+      </div>
+    );
   }
 }

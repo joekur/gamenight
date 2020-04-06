@@ -2,6 +2,7 @@ import * as React from 'react';
 import bind from 'bind-decorator';
 import { Game, IPlayer } from './game';
 import AnswerList from './answer_list';
+import CurrentPrompt from './current_prompt';
 
 interface IProps {
   game: Game,
@@ -13,7 +14,7 @@ interface IState {
   selectedPlayerId: string | null,
 }
 
-export default class MyTurn extends React.Component<IProps, IState> {
+export default class RoundMyTurn extends React.Component<IProps, IState> {
   state = {
     selectedAnswerId: null,
     selectedPlayerId: null,
@@ -56,7 +57,7 @@ export default class MyTurn extends React.Component<IProps, IState> {
   @bind
   handleCancelAnswerSelection(e: any) {
     e.preventDefault();
-    this.setState({ selectedAnswerId: null });
+    this.resetState();
   }
 
   renderAnswerList() {
@@ -70,7 +71,7 @@ export default class MyTurn extends React.Component<IProps, IState> {
   }
 
   renderPlayerChoice(player: IPlayer) {
-    const classes = `choice-list__choice choice-list__choice--clickable ${player.id === this.state.selectedPlayerId && 'choice-list__choice--selected'}`;
+    const classes = `choices__choice choices__choice--clickable ${player.id === this.state.selectedPlayerId && 'choices__choice--selected'}`;
     return (
       <li
         key={`player-choice-${player.id}`}
@@ -91,6 +92,7 @@ export default class MyTurn extends React.Component<IProps, IState> {
     return (
       <div>
         <div>
+          <h3 className="header">You chose:</h3>
           <p className="well">
             {game.findAnswer(this.state.selectedAnswerId!).text}
           </p>
@@ -100,10 +102,14 @@ export default class MyTurn extends React.Component<IProps, IState> {
           >←Choose a different answer</a>
         </div>
 
-        <h3 className="mt">Now choose who you think said it:</h3>
-        <ul className="choice-list">
-          {players.map(player => this.renderPlayerChoice(player))}
-        </ul>
+        <h3 className="header mt">Who do you think wrote it?</h3>
+
+        <div className="choices">
+          <ul className="choices__list">
+            {players.map(player => this.renderPlayerChoice(player))}
+          </ul>
+        </div>
+
         <button
           disabled={!this.state.selectedPlayerId}
           onClick={this.handleSubmit}
@@ -117,7 +123,10 @@ export default class MyTurn extends React.Component<IProps, IState> {
   render() {
     return (
       <div>
-        <p>Your turn!</p>
+        <div className="turn">
+          <div className="turn__inner turn__inner--mine">Your turn!</div>
+        </div>
+        <CurrentPrompt game={this.props.game} />
         {this.renderAnswerList()}
         {this.renderPlayerList()}
       </div>

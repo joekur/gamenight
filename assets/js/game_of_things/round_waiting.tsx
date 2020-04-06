@@ -2,6 +2,7 @@ import * as React from 'react';
 import bind from 'bind-decorator';
 import { Game } from './game';
 import AnswerList from './answer_list';
+import CurrentPrompt from './current_prompt';
 
 interface IProps {
   game: Game,
@@ -16,9 +17,12 @@ export default class RoundWaiting extends React.Component<IProps, IState> {
     const player = game.currentPlayer;
 
     return (
-      <p>
-        It is {player.name}'s turn!
-      </p>
+      <div className="turn">
+        <div className="turn__inner">
+          {player.name} is guessing...
+        </div>
+        {this.renderOutOfTheRound()}
+      </div>
     );
   };
 
@@ -27,8 +31,8 @@ export default class RoundWaiting extends React.Component<IProps, IState> {
     if (game.amStillInTheRound) { return null; }
 
     return (
-      <div className="notice">
-        You are out of this round :(
+      <div className="turn__out">
+        You are out of this round 😔
       </div>
     );
   }
@@ -37,7 +41,7 @@ export default class RoundWaiting extends React.Component<IProps, IState> {
     return (
       <div>
         {this.renderWhoseTurn()}
-        {this.renderOutOfTheRound()}
+        <CurrentPrompt game={this.props.game} />
         <AnswerList
           game={this.props.game}
         />
