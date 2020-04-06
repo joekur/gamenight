@@ -37,8 +37,10 @@ export default class PromptForm extends React.Component<IProps, IState> {
   render() {
     return (
       <div>
+        <h3 className="header">Add prompts:</h3>
         <form onSubmit={this.handleSubmit}>
           <textarea
+            placeholder="A prompt everyone will answer, for example - 'Something you shouldn't do while naked'"
             value={this.state.promptInput}
             onChange={this.handleChange} />
           <button type="submit">Add Prompt</button>

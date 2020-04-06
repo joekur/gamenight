@@ -55,6 +55,7 @@ export default class Lobby extends React.Component<IProps, IState> {
         <form onSubmit={this.handleSubmitJoinGame}>
           <input
             type="text"
+            placeholder="Your Name"
             value={this.state.nameInput}
             onChange={this.handleChangeName} />
           <button type="submit">Join Game</button>
