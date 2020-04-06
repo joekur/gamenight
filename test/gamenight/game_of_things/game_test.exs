@@ -148,6 +148,24 @@ defmodule Gamenight.GameOfThings.GameTest do
       player_ids |> Enum.sort
   end
 
+  test "only the current player can guess" do
+    game_id = game_in_guessing()
+    current_player = current_player(game_id)
+
+    {status, resp} = Game.guess(game_id, nil, current_player, current_player)
+    assert status == :error
+    assert String.length(resp.message) > 1
+
+    {status, resp} = Game.guess(game_id, "bad player id", current_player, current_player)
+    assert status == :error
+    assert String.length(resp.message) > 1
+
+    waiting_player = player_ids(game_id) |> List.delete(current_player) |> List.first
+    {status, resp} = Game.guess(game_id, waiting_player, current_player, current_player)
+    assert status == :error
+    assert String.length(resp.message) > 1
+  end
+
   test "once all have been guessed but the last current player's, we move to the next round" do
     game_id = game_in_guessing()
 

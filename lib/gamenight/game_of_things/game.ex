@@ -113,13 +113,16 @@ defmodule Gamenight.GameOfThings.Game do
 
         {:reply, :ok, state}
       true ->
-        {:reply, error_response("Invalid player. Please reload the page and try again."), state}
+        {:reply, invalid_player_response(), state}
     end
-
   end
 
   def handle_call({:guess, player_id, answer_id, guessed_player_id}, _from, state) do
     cond do
+      !Enum.member?(get_player_ids(state), player_id) ->
+        {:reply, invalid_player_response(), state}
+      player_id != state.round.current_player ->
+        {:reply, error_response("Not your turn"), state}
       answer_id == guessed_player_id ->
         state = handle_correct_guess(player_id, guessed_player_id, state)
                 |> check_round_complete()
@@ -167,6 +170,10 @@ defmodule Gamenight.GameOfThings.Game do
 
   defp error_response(message) do
     {:error, %{message: message}}
+  end
+
+  defp invalid_player_response do
+    error_response("Invalid player. Please reload the page and try again.")
   end
 
   defp try_call(game_id, message) do
