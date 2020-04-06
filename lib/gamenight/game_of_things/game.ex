@@ -106,11 +106,16 @@ defmodule Gamenight.GameOfThings.Game do
   end
 
   def handle_call({:submit_answer, player_id, answer}, _from, state) do
-    # TODO handle cases where you can't submit an answer
-    state = put_in(state.round.answers[player_id], answer)
-            |> check_all_answers_in
+    cond do
+      Enum.member?(get_player_ids(state), player_id) ->
+        state = put_in(state.round.answers[player_id], answer)
+                |> check_all_answers_in
 
-    {:reply, :ok, state}
+        {:reply, :ok, state}
+      true ->
+        {:reply, error_response("Invalid player. Please reload the page and try again."), state}
+    end
+
   end
 
   def handle_call({:guess, player_id, answer_id, guessed_player_id}, _from, state) do

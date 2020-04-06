@@ -92,6 +92,18 @@ defmodule Gamenight.GameOfThings.GameTest do
     assert state.round.answer_ids |> length == player_ids |> length
   end
 
+  test "only valid player ids can submit answers" do
+    game_id = started_game()
+
+    {status, resp} = Game.submit_answer(game_id, nil, "my answer")
+    assert status == :error
+    assert String.length(resp.message) > 1
+
+    {status, resp} = Game.submit_answer(game_id, "bad_player_id", "my answer")
+    assert status == :error
+    assert String.length(resp.message) > 1
+  end
+
   test "guessing correctly removes that player and their answer from the active lists" do
     game_id = started_game()
     player_ids = player_ids(game_id)
