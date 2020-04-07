@@ -9,7 +9,9 @@ import RoundMyTurn from './round_my_turn';
 import RoundWaiting from './round_waiting';
 import RoundResults from './round_results';
 import Modal from './modal';
+import Popup from './Popup';
 import { setCookie, getCookie } from '../cookies';
+import { limitText } from '../utilities';
 
 interface IProps {
   gameId: string,
@@ -165,7 +167,6 @@ export default class Root extends React.Component<IProps, IState> {
 
     if (game.status !== EGameStatus.RoundGuessing) { return null; }
     if (!lastGuess || lastGuess.key === this.state.closedLastGuessKey) { return null; }
-    if (this.state.closedLastGuessKey === lastGuess.key) { return null; }
 
     if (game.lastGuessWasMine) {
       if (lastGuess.correct) {
@@ -188,10 +189,13 @@ export default class Root extends React.Component<IProps, IState> {
     }
 
     return (
-      <div>
+      <Popup
+        cssModifier={lastGuess.correct ? 'popup--success' : 'popup--error'}
+        onClose={this.handleCloseLastGuess}
+      >
         <b>{lastGuess.correct ? 'Correct!' : 'Wrong!'}</b><br/>
-        {lastGuess.player.name} guessed {lastGuess.guessedPlayer.name} said "{lastGuess.guessedAnswer.text}".
-      </div>
+        {lastGuess.player.name} guessed <span className="block-text">{lastGuess.guessedPlayer.name}</span> said <span className="block-text">{limitText(lastGuess.guessedAnswer.text, 150)}</span>
+      </Popup>
     );
   }
 

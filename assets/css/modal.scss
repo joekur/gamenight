@@ -28,3 +28,37 @@
     text-align: center;
   }
 }
+
+.popup {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  border-top: 1px solid #ddd;
+  box-shadow: 0 0 10px #33333330;
+
+  .popup__close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: $black;
+    line-height: 1;
+    padding: 15px;
+    cursor: pointer;
+
+    &:hover {
+      background: #eeeeee82;
+    }
+  }
+
+  &.popup--error {
+    background: $error-background;
+    border-top-color: $error-border;
+  }
+
+  &.popup--success {
+    background: $success-background;
+    border-top-color: $success-border;
+  }
+}
