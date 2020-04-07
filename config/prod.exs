@@ -11,8 +11,8 @@ use Mix.Config
 # before starting your production server.
 config :gamenight, GamenightWeb.Endpoint,
   url: [host: "gamenight.lol", port: 80],
-  cache_static_manifest: "priv/static/cache_manifest.json"
-  #check_origin: ["//*gamenight.lol", "//steelblue-blanchedalmond-gartersnake.gigalixirapp.com"]
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  check_origin: ["//gamenight.lol", "//*.gamenight.lol"]
 
 # Do not print debug messages in production
 config :logger, level: :info
