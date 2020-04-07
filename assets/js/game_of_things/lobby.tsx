@@ -43,15 +43,15 @@ export default class Lobby extends React.Component<IProps, IState> {
 
   renderActivePlayerView() {
     return (
-      <div>
-        <b>Joined!</b> - {this.props.game.myName}
+      <div className="lobby__joined">
+        <b>You've successfully joined the game!</b>
       </div>
     );
   }
 
   renderJoinGame() {
     return (
-      <div>
+      <div className="lobby__join">
         <form onSubmit={this.handleSubmitJoinGame}>
           <input
             type="text"
@@ -68,9 +68,9 @@ export default class Lobby extends React.Component<IProps, IState> {
     const { game } = this.props;
 
     return (
-      <div>
-        <h3>Players</h3>
-        <ul>
+      <div className="lobby__members">
+        <h3 className="lobby__members-header">Players</h3>
+        <ul className="lobby__members-list">
           {game.playerIds.map(playerId => (<li key={playerId}>{game.nameFor(playerId)}</li>))}
         </ul>
       </div>
@@ -85,7 +85,7 @@ export default class Lobby extends React.Component<IProps, IState> {
     }
 
     return (
-      <div>
+      <div className="lobby__start">
         <button onClick={this.props.onStartGame}>
           Start Game
         </button>
@@ -98,8 +98,8 @@ export default class Lobby extends React.Component<IProps, IState> {
 
     return (
       <div className="lobby">
-        <div className="lobby__game-id">
-          Game: {game.id}
+        <div className="lobby__game-id lobby__game-header">
+          Game room code: {game.id}
         </div>
 
         {game.amPlayer ? this.renderActivePlayerView() : this.renderJoinGame()}

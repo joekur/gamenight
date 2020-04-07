@@ -64,8 +64,8 @@ export default class PromptForm extends React.Component<IProps, IState> {
     const { game } = this.props;
 
     return (
-      <div>
-        <div>Just sit pretty...</div>
+      <div className="game-card">
+        <div>Just sit pretty while everyone submits their answers...</div>
         {this.renderPlayerStatuses()}
       </div>
     );
@@ -79,7 +79,7 @@ export default class PromptForm extends React.Component<IProps, IState> {
     }
 
     return (
-      <div>
+      <div className="game-card">
         <CurrentPrompt game={game} />
         <form onSubmit={this.handleSubmit}>
           <label>Submit your answer</label>

@@ -10,6 +10,7 @@
 
     <% # TODO move this back to the bottom of the page %>
     <script src="https://kit.fontawesome.com/c2212b4e6a.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700,900&display=swap" rel="stylesheet">
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
   <body>

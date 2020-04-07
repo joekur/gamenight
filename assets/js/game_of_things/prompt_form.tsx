@@ -36,7 +36,7 @@ export default class PromptForm extends React.Component<IProps, IState> {
 
   render() {
     return (
-      <div>
+      <div class="lobby__prompts">
         <h3 className="header">Add prompts:</h3>
         <form onSubmit={this.handleSubmit}>
           <textarea

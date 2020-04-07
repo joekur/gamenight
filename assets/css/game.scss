@@ -1,5 +1,19 @@
 .game-page {
-  padding: 10px;
+  background: #D6EDFF;
+  height: 100vh;
+  padding: 0 10px;
+  overflow: auto;
+}
+
+.game-card {
+  background: $white;
+  border-radius: 6px;
+  margin-top: 1em;
+  padding: 1em;
+
+  li {
+    list-style: none;
+  }
 }
 
 .loading-screen {
@@ -14,6 +28,60 @@
   justify-content: center;
   flex-direction: column;
   text-align: center;
+}
+
+.lobby__game-header {
+  background: #3985c7;
+  border-radius: 0 0 6px 6px;
+  color: $white;
+  font-weight: 600;
+  padding: .5em;
+  text-align: center;
+}
+
+.lobby__join {
+  background: $white;
+  border-radius: 6px;
+  margin-top: 1em;
+  padding: 1em;
+}
+
+.lobby__joined {
+  margin-top: 1em;
+  color: #3985c7;
+  text-align: center;
+}
+
+.lobby__members {
+  background: $white;
+  border-radius: 6px;
+  margin-top: 1em;
+  padding: 1em;
+}
+
+.lobby__members-header {
+  font-size: 1.1em;
+  font-weight: 600;
+  border-bottom: 1px dashed #3985c7;
+  padding-bottom: 1em;
+}
+
+.lobby__members-list {
+  margin: 0;
+
+  li {
+    &:last-child {
+      margin: 0;
+    }
+  }
+}
+
+.lobby__prompts,
+.lobby__start {
+  background: $white;
+  border-radius: 6px;
+  margin-top: 1em;
+  padding: 1em;
 }
 
 .choices {
