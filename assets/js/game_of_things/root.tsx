@@ -9,7 +9,7 @@ import RoundMyTurn from './round_my_turn';
 import RoundWaiting from './round_waiting';
 import RoundResults from './round_results';
 import Modal from './modal';
-import Popup from './Popup';
+import Popup from './popup';
 import { setCookie, getCookie } from '../cookies';
 import { limitText } from '../utilities';
 
