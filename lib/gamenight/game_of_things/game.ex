@@ -120,17 +120,31 @@ defmodule Gamenight.GameOfThings.Game do
   end
 
   def handle_call({:guess, player_id, answer_id, guessed_player_id}, _from, state) do
+    last_guess = %{
+      player_id: player_id,
+      guessed_answer_id: answer_id,
+      guessed_player_id: guessed_player_id,
+      key: UUID.uuid4(),
+    }
+
     cond do
       !Enum.member?(get_player_ids(state), player_id) ->
         {:reply, invalid_player_response(), state}
       player_id != state.round.current_player ->
         {:reply, error_response("Not your turn"), state}
       answer_id == guessed_player_id ->
+        last_guess = Map.put(last_guess, :correct, true)
         state = handle_correct_guess(player_id, guessed_player_id, state)
                 |> check_round_complete()
+        state = put_in(state.round.last_guess, last_guess)
+
         {:reply, :ok, state}
       true ->
-        {:reply, :ok, handle_wrong_guess(state)}
+        last_guess = Map.put(last_guess, :correct, false)
+        state = handle_wrong_guess(state)
+        state = put_in(state.round.last_guess, last_guess)
+
+        {:reply, :ok, state}
     end
   end
 
@@ -202,7 +216,7 @@ defmodule Gamenight.GameOfThings.Game do
   defp start_round(state) do
     [prompt | rest] = state.prompts
 
-    round = %{prompt: prompt, answers: %{}}
+    round = %{prompt: prompt, answers: %{}, last_guess: nil}
 
     state
     |> Map.put(:prompts, rest)

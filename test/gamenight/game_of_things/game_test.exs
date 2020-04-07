@@ -148,6 +148,37 @@ defmodule Gamenight.GameOfThings.GameTest do
       player_ids |> Enum.sort
   end
 
+  test "guessing records the last guess in the state" do
+    game_id = game_in_guessing()
+    current_player = current_player(game_id)
+
+    other_players = player_ids(game_id) |> List.delete(current_player)
+    guess_answer = other_players |> List.first
+    guess_player = guess_answer
+    :ok = Game.guess(game_id, current_player, guess_answer, guess_player)
+    {:ok, state} = Game.get_state(game_id)
+
+    last_guess = state.round.last_guess
+    assert last_guess.player_id == current_player
+    assert last_guess.guessed_answer_id == guess_answer
+    assert last_guess.guessed_player_id == guess_player
+    assert last_guess.correct == true
+    assert last_guess.key != nil
+
+    other_players = player_ids(game_id) |> List.delete(current_player)
+    guess_answer = current_player
+    guess_player = other_players |> List.first
+    :ok = Game.guess(game_id, current_player, guess_answer, guess_player)
+    {:ok, state} = Game.get_state(game_id)
+
+    last_guess = state.round.last_guess
+    assert last_guess.player_id == current_player
+    assert last_guess.guessed_answer_id == guess_answer
+    assert last_guess.guessed_player_id == guess_player
+    assert last_guess.correct == false
+    assert last_guess.key != nil
+  end
+
   test "only the current player can guess" do
     game_id = game_in_guessing()
     current_player = current_player(game_id)
