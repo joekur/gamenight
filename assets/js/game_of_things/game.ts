@@ -13,12 +13,29 @@ interface IScoreMap {
   [playerId: string] : number,
 }
 
+interface ILastGuessResponse {
+  player_id: string,
+  guessed_answer_id: string,
+  guessed_player_id: string,
+  correct: boolean,
+  key: string,
+}
+
+interface ILastGuess {
+  player: IPlayer,
+  guessedPlayer: IPlayer,
+  guessedAnswer: IAnswer,
+  correct: boolean,
+  key: string,
+}
+
 interface IRound {
   current_player: string,
   answers: IPlayersMap,
   prompt: string,
   active_players: string[],
   answer_ids: string[],
+  last_guess: ILastGuessResponse | null,
 }
 
 export interface IGameState {
@@ -38,7 +55,7 @@ export interface IPlayerPoint {
   points: number,
 }
 
-interface IAnswerChoice {
+interface IAnswer {
   id: string,
   text: string,
 }
@@ -110,14 +127,18 @@ export class Game {
     };
   }
 
-  findAnswer(id: string): IAnswerChoice {
+  nameFor(playerId: string) {
+    return this.state.players[playerId];
+  }
+
+  findAnswer(id: string): IAnswer {
     return {
       id,
       text: this.state.round.answers[id],
     };
   }
 
-  get answerList(): IAnswerChoice[] {
+  get answerList(): IAnswer[] {
     const ids = this.state.round.answer_ids;
 
     return ids.map(id => this.findAnswer(id));
@@ -152,7 +173,24 @@ export class Game {
     }).sort((a,b) => b.points - a.points);
   }
 
-  nameFor(playerId: string) {
-    return this.state.players[playerId];
+  get lastGuess(): ILastGuess | null {
+    if (this.state.round && this.state.round.last_guess) {
+      const guess = this.state.round.last_guess;
+      return {
+        player: this.findPlayer(guess.player_id),
+        guessedPlayer: this.findPlayer(guess.guessed_player_id),
+        guessedAnswer: this.findAnswer(guess.guessed_answer_id),
+        key: guess.key,
+        correct: guess.correct,
+      };
+    }
+
+    return null;
+  }
+
+  get lastGuessWasMine(): boolean {
+    return this.amPlayer
+      && !!this.lastGuess
+      && this.lastGuess.player.id === this.playerId;
   }
 }

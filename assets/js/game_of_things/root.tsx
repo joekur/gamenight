@@ -18,6 +18,7 @@ interface IState {
   connected: boolean,
   gameState?: IGameState,
   playerId: string | null,
+  closedLastGuessKey: string | null,
 }
 
 export default class Root extends React.Component<IProps, IState> {
@@ -30,6 +31,7 @@ export default class Root extends React.Component<IProps, IState> {
     this.state = {
       connected: false,
       playerId: null,
+      closedLastGuessKey: null,
     };
   }
 
@@ -66,7 +68,7 @@ export default class Root extends React.Component<IProps, IState> {
   handleJoinedChannel(response: any) {
     console.log('Joined channel successfully', response);
 
-    this.updateGameState(response);
+    this.updateGameState(response, this.handleCloseLastGuess);
     this.setState({ connected: true });
   }
 
@@ -119,6 +121,12 @@ export default class Root extends React.Component<IProps, IState> {
   }
 
   @bind
+  handleCloseLastGuess() {
+    const safeKey = this.game.lastGuess && this.game.lastGuess.key;
+    this.setState({ closedLastGuessKey: safeKey });
+  }
+
+  @bind
   handleGameUpdated(gameState: any) {
     console.log('game updated', gameState);
 
@@ -140,18 +148,60 @@ export default class Root extends React.Component<IProps, IState> {
     return `${this.props.gameId}-playerId`;
   }
 
-  updateGameState(newState: Partial<IGameState>) {
+  updateGameState(newState: Partial<IGameState>, callback?: () => void) {
     this.setState({
       gameState: Object.assign({}, this.state.gameState, newState)
-    });
+    }, callback);
+  }
+
+  get game() {
+    return new Game(this.props.gameId, this.state.playerId, this.state.gameState!);
+  }
+
+  renderLastGuess() {
+    const game = this.game;
+    const lastGuess = game.lastGuess;
+
+    if (game.status !== EGameStatus.RoundGuessing) { return null; }
+    if (!lastGuess || lastGuess.key === this.state.closedLastGuessKey) { return null; }
+    if (this.state.closedLastGuessKey === lastGuess.key) { return null; }
+
+    if (game.lastGuessWasMine) {
+      if (lastGuess.correct) {
+        return (
+          <div className="modal">
+            <a className="modal__close" onClick={this.handleCloseLastGuess}><i className="fas fa-times"></i></a>
+            <div className="modal__body">
+              <div className="large-icon mb-1">🙌</div>
+              <p>You guessed correctly!</p>
+              <button onClick={this.handleCloseLastGuess}>Keep Guessing!</button>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="modal">
+          <a className="modal__close" onClick={this.handleCloseLastGuess}><i className="fas fa-times"></i></a>
+          <div className="modal__body">
+            <div className="large-icon mb-1">🤦‍♀️</div>
+            <p>Wrong guess</p>
+            <button onClick={this.handleCloseLastGuess}>Oh well...</button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        <b>{lastGuess.correct ? 'Correct!' : 'Wrong!'}</b><br/>
+        {lastGuess.player.name} guessed {lastGuess.guessedPlayer.name} said "{lastGuess.guessedAnswer.text}".
+      </div>
+    );
   }
 
   renderInner() {
-    if (!this.state.connected) {
-      return <div className="loading-screen">Loading...</div>;
-    }
-
-    const game = new Game(this.props.gameId, this.state.playerId, this.state.gameState!);
+    const game = this.game;
 
     if (game.status === EGameStatus.Lobby) {
       return <Lobby
@@ -187,9 +237,17 @@ export default class Root extends React.Component<IProps, IState> {
   }
 
   render() {
+    if (!this.state.connected) {
+      return <div className="modal"><p>Loading...</p></div>;
+    }
+
     return (
       <div className="game-of-things">
-        {this.renderInner()}
+        <div className="game-page">
+          {this.renderInner()}
+        </div>
+
+        {this.renderLastGuess()}
       </div>
     );
   }

@@ -1,7 +1,25 @@
+$spacing: 10px;
+
 .mt {
   margin-top: 20px;
 }
-
 .mb {
   margin-bottom: 20px;
+}
+.mt-1 {
+  margin-top: $spacing;
+}
+.mb-1 {
+  margin-bottom: $spacing;
+}
+.mt-2 {
+  margin-top: $spacing * 2;
+}
+.mb-2 {
+  margin-bottom: $spacing * 2;
+}
+
+.large-icon {
+  font-size: 3rem;
+  line-height: 1;
 }

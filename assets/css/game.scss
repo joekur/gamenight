@@ -1,3 +1,21 @@
+.game-page {
+  padding: 10px;
+}
+
+.loading-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
 .choices {
   .choices__list {
     list-style: none;

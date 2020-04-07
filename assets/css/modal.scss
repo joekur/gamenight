@@ -1,0 +1,30 @@
+.modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  .modal__close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: $black;
+    line-height: 1;
+    padding: 15px;
+    cursor: pointer;
+
+    &:hover {
+      background: #eee;
+    }
+  }
+
+  .modal__body {
+    text-align: center;
+  }
+}

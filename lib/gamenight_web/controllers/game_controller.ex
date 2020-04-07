@@ -1,5 +1,6 @@
 defmodule GamenightWeb.GameController do
   use GamenightWeb, :controller
+  plug :put_layout, "game.html"
 
   def new(conn, _params) do
     {:ok, game_id} = Gamenight.GameOfThings.Game.create_game # TODO what if it's already started or theres an error?
