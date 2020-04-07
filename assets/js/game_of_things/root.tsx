@@ -8,6 +8,7 @@ import RoundAnswers from './round_answers';
 import RoundMyTurn from './round_my_turn';
 import RoundWaiting from './round_waiting';
 import RoundResults from './round_results';
+import Modal from './modal';
 import { setCookie, getCookie } from '../cookies';
 
 interface IProps {
@@ -169,26 +170,20 @@ export default class Root extends React.Component<IProps, IState> {
     if (game.lastGuessWasMine) {
       if (lastGuess.correct) {
         return (
-          <div className="modal">
-            <a className="modal__close" onClick={this.handleCloseLastGuess}><i className="fas fa-times"></i></a>
-            <div className="modal__body">
-              <div className="large-icon mb-1">🙌</div>
-              <p>You guessed correctly!</p>
-              <button onClick={this.handleCloseLastGuess}>Keep Guessing!</button>
-            </div>
-          </div>
+          <Modal onClose={this.handleCloseLastGuess}>
+            <div className="large-icon mb-1">🙌</div>
+            <p>You guessed correctly!</p>
+            <button onClick={this.handleCloseLastGuess}>Keep Guessing!</button>
+          </Modal>
         );
       }
 
       return (
-        <div className="modal">
-          <a className="modal__close" onClick={this.handleCloseLastGuess}><i className="fas fa-times"></i></a>
-          <div className="modal__body">
-            <div className="large-icon mb-1">🤦‍♀️</div>
-            <p>Wrong guess</p>
-            <button onClick={this.handleCloseLastGuess}>Oh well...</button>
-          </div>
-        </div>
+        <Modal onClose={this.handleCloseLastGuess}>
+          <div className="large-icon mb-1">🤦‍♀️</div>
+          <p>Wrong guess</p>
+          <button onClick={this.handleCloseLastGuess}>Oh well...</button>
+        </Modal>
       );
     }
 
@@ -238,7 +233,7 @@ export default class Root extends React.Component<IProps, IState> {
 
   render() {
     if (!this.state.connected) {
-      return <div className="modal"><p>Loading...</p></div>;
+      return <Modal>Loading...</Modal>;
     }
 
     return (
