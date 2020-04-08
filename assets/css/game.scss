@@ -99,7 +99,7 @@
       cursor: pointer;
       border: 2px dashed #ccc;
 
-      &:hover {
+      @include hover {
         border: 2px solid #ccc;
         background: #ddd;
       }
