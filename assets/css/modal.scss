@@ -19,7 +19,7 @@
     padding: 15px;
     cursor: pointer;
 
-    &:hover {
+    @include hover {
       background: #eee;
     }
   }
@@ -47,7 +47,7 @@
     padding: 15px;
     cursor: pointer;
 
-    &:hover {
+    @include hover {
       background: #eeeeee82;
     }
   }
