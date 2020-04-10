@@ -93,6 +93,7 @@ export default class Lobby extends React.Component<IProps, IState> {
 
   renderStartGame() {
     const { game } = this.props;
+    if (!game.amPlayer) { return null; }
 
     return (
       <div className="lobby__start">
@@ -101,6 +102,18 @@ export default class Lobby extends React.Component<IProps, IState> {
           Start Game
         </button>
       </div>
+    );
+  }
+
+  renderPromptForm() {
+    const { game } = this.props;
+    if (!game.amPlayer) { return null; }
+
+    return (
+      <PromptForm
+        onAddPrompt={this.props.onAddPrompt}>
+        <p className="condensed-note">We have a bunch of prompts ready to go, but you can create your own to play with here!</p>
+      </PromptForm>
     );
   }
 
@@ -116,10 +129,7 @@ export default class Lobby extends React.Component<IProps, IState> {
         {game.amPlayer ? this.renderActivePlayerView() : this.renderJoinGame()}
 
         {this.renderPlayerList()}
-        <PromptForm
-          onAddPrompt={this.props.onAddPrompt}>
-          <p className="condensed-note">We have a bunch of prompts ready to go, but you can create your own to play with here!</p>
-        </PromptForm>
+        {this.renderPromptForm()}
         {this.renderStartGame()}
       </div>
     );

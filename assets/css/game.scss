@@ -79,6 +79,8 @@ html, body, #react-root {
   margin: 0;
 
   li {
+    margin-bottom: 5px;
+
     &:last-child {
       margin: 0;
     }
@@ -100,7 +102,7 @@ html, body, #react-root {
 
     .choices__choice {
       padding: 10px;
-      background: #eee;
+      background: white;
       margin-bottom: 5px;
       border: 2px solid #eee;
     }
@@ -144,12 +146,12 @@ html, body, #react-root {
 
 .current-prompt {
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 2px solid #8a8a8a;
   border-radius: 5px;
   margin-top: 20px;
   margin-bottom: 20px;
   position: relative;
-  background: #f7f7f7;
+  background: white;
 
   .current-prompt__heading {
     padding: 4px 8px;
@@ -180,8 +182,8 @@ html, body, #react-root {
     text-align: center;
     color: white;
     font-weight: bold;
-    background: #9e9e9e;
-    border-bottom: 2px solid #656565;
+    background: #443171;
+    border-bottom: 2px solid #af8eff;
 
     &.turn__inner--mine {
       background: #81da6a;
