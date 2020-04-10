@@ -1,8 +1,16 @@
+html, body, #react-root {
+  height: 100%;
+}
+
 .game-page {
+  overflow: auto; // prevents margin collapsing
   background: #D6EDFF;
-  height: 100vh;
-  padding: 0 10px;
-  overflow: auto;
+  min-height: 100%;
+
+  .game-page__content {
+    padding: 0 10px;
+    padding-bottom: 30px;
+  }
 }
 
 .game-card {
@@ -143,8 +151,8 @@
 
   .current-prompt__heading {
     padding: 4px 8px;
-    color: #003154;
-    background: #c0e5ff;
+    color: white;
+    background: #ff7700;
     position: absolute;
     top: -12px;
     left: -8px;

@@ -108,7 +108,9 @@ export class Game {
   }
 
   get isMyTurn(): boolean {
-    return this.state.round.current_player == this.playerId!;
+    return !!this.state.round &&
+      !!this.playerId &&
+      this.state.round.current_player == this.playerId;
   }
 
   get currentPlayer(): IPlayer {

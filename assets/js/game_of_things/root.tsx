@@ -241,8 +241,8 @@ export default class Root extends React.Component<IProps, IState> {
     }
 
     return (
-      <div className="game-of-things">
-        <div className="game-page">
+      <div className="game-of-things game-page">
+        <div className="game-page__content">
           {this.renderInner()}
         </div>
 
