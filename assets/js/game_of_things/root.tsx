@@ -11,7 +11,7 @@ import RoundResults from './round_results';
 import Modal from './modal';
 import Popup from './popup';
 import { setCookie, getCookie } from '../cookies';
-import { limitText } from '../utilities';
+import { limitText, scrollToTop } from '../utilities';
 
 interface IProps {
   gameId: string,
@@ -110,7 +110,6 @@ export default class Root extends React.Component<IProps, IState> {
 
   @bind
   handleJoinSuccess(response: any) {
-    console.log('join success', response);
     const playerId = response.player_id;
 
     setCookie(this.playerIdCookieName(), playerId, 1);
@@ -128,8 +127,6 @@ export default class Root extends React.Component<IProps, IState> {
 
   @bind
   handleGameUpdated(gameState: any) {
-    console.log('game updated', gameState);
-
     this.updateGameState(gameState);
   }
 
@@ -152,10 +149,23 @@ export default class Root extends React.Component<IProps, IState> {
     return `${this.props.gameId}-playerId`;
   }
 
-  updateGameState(newState: Partial<IGameState>, callback?: () => void) {
+  updateGameState(newState: IGameState, callback?: () => void) {
+    const prevGame = this.state.connected && this.game;
+
     this.setState({
       gameState: Object.assign({}, this.state.gameState, newState)
-    }, callback);
+    }, () => {
+      prevGame && this.resetScroll(prevGame, this.game);
+
+      callback && callback();
+    });
+  }
+
+  resetScroll(prevGame: Game, nextGame: Game) {
+    if (prevGame.status !== nextGame.status ||
+      nextGame.isMyTurn && prevGame.lastGuess?.key !== nextGame.lastGuess?.key) {
+      scrollToTop();
+    }
   }
 
   get game() {

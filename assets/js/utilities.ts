@@ -5,3 +5,7 @@ export function limitText(text: string, limit: number) {
 
   return text;
 }
+
+export function scrollToTop() {
+  window.scrollTo(0, 0);
+}
