@@ -14,8 +14,7 @@ interface IState {
   nameInput: string;
 }
 
-// TODO change back to
-const minPlayers = 2;
+const minPlayers = 3;
 
 export default class Lobby extends React.Component<IProps, IState> {
   constructor(props: IProps) {
@@ -64,6 +63,14 @@ export default class Lobby extends React.Component<IProps, IState> {
     );
   }
 
+  renderNoPlayersYet() {
+    if (this.props.game.playerIds.length === 0) {
+      return <li>No players yet!</li>;
+    }
+
+    return null;
+  }
+
   renderPlayerList() {
     const { game } = this.props;
 
@@ -71,22 +78,26 @@ export default class Lobby extends React.Component<IProps, IState> {
       <div className="lobby__members">
         <h3 className="lobby__members-header">Players</h3>
         <ul className="lobby__members-list">
+          {this.renderNoPlayersYet()}
           {game.playerIds.map(playerId => (<li key={playerId}>{game.nameFor(playerId)}</li>))}
         </ul>
       </div>
     );
   }
 
+  get readyToStart() {
+    const { game } = this.props;
+
+    return game.numPlayers >= minPlayers;
+  }
+
   renderStartGame() {
     const { game } = this.props;
 
-    if (game.numPlayers < minPlayers) {
-      return null;
-    }
-
     return (
       <div className="lobby__start">
-        <button onClick={this.props.onStartGame}>
+        {!this.readyToStart && <div className="button-info">Need at least 3 players</div>}
+        <button onClick={this.props.onStartGame} disabled={!this.readyToStart}>
           Start Game
         </button>
       </div>
@@ -106,8 +117,9 @@ export default class Lobby extends React.Component<IProps, IState> {
 
         {this.renderPlayerList()}
         <PromptForm
-          onAddPrompt={this.props.onAddPrompt}
-        />
+          onAddPrompt={this.props.onAddPrompt}>
+          <p className="condensed-note">We have a bunch of prompts ready to go, but you can create your own to play with here!</p>
+        </PromptForm>
         {this.renderStartGame()}
       </div>
     );

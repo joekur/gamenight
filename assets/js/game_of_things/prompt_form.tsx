@@ -36,11 +36,11 @@ export default class PromptForm extends React.Component<IProps, IState> {
 
   render() {
     return (
-      <div class="lobby__prompts">
+      <div className="lobby__prompts">
         <h3 className="header">Add prompts:</h3>
+        {this.props.children}
         <form onSubmit={this.handleSubmit}>
           <textarea
-            placeholder="A prompt everyone will answer, for example - 'Something you shouldn't do while naked'"
             value={this.state.promptInput}
             onChange={this.handleChange} />
           <button type="submit">Add Prompt</button>
