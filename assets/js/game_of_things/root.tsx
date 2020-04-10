@@ -77,10 +77,7 @@ export default class Root extends React.Component<IProps, IState> {
 
   @bind
   handleRequestJoinGame(name: string) {
-    this.channel!.push('request_join', { name })
-      .receive('ok', this.handleJoinSuccess)
-      .receive('error', this.handleUnknownError)
-      .receive('timeout', this.handleUnknownError);
+    this.pushChannel('request_join', { name }, this.handleJoinSuccess);
   }
 
   @bind
@@ -99,11 +96,11 @@ export default class Root extends React.Component<IProps, IState> {
   }
 
   @bind
-  handleSubmitGuess(answerId: string, playerId: string) {
+  handleSubmitGuess(answerId: string, playerId: string, callback: Function) {
     this.pushChannel('guess', {
       answer_id: answerId,
       player_id: playerId,
-    });
+    }, () => { callback() });
   }
 
   @bind
@@ -141,10 +138,14 @@ export default class Root extends React.Component<IProps, IState> {
     console.error('UnknownError', response);
   }
 
-  pushChannel(event: string, payload: object) {
-    this.channel!.push(event, payload)
+  pushChannel(event: string, payload: object, onSuccess?: (response: any) => any) {
+    const push = this.channel!.push(event, payload)
       .receive('error', this.handleUnknownError)
       .receive('timeout', this.handleUnknownError);
+
+    if (onSuccess) {
+      push.receive('ok', onSuccess);
+    }
   }
 
   playerIdCookieName(): string {

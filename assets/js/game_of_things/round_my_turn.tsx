@@ -6,7 +6,7 @@ import CurrentPrompt from './current_prompt';
 
 interface IProps {
   game: Game,
-  onSubmitGuess: (answerId: string, playerId: string) => void,
+  onSubmitGuess: (answerId: string, playerId: string, callback: Function) => void,
 }
 
 interface IState {
@@ -49,9 +49,9 @@ export default class RoundMyTurn extends React.Component<IProps, IState> {
     if (this.state.selectedPlayerId && this.state.selectedPlayerId) {
       this.props.onSubmitGuess(
         this.state.selectedAnswerId!,
-        this.state.selectedPlayerId!
+        this.state.selectedPlayerId!,
+        () => { this.resetState() }
       );
-      this.resetState();
     }
   }
 
