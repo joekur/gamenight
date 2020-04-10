@@ -11,7 +11,7 @@ defmodule GamenightWeb.GameController do
   def show(conn, %{"id" => game_id}) do
     case Gamenight.GameOfThings.Game.find_game(game_id) do
       {pid, _} ->
-        render(conn, "show.html", game_id: game_id)
+        render(conn, "show.html", game_id: game_id |> String.upcase)
       _ ->
         redirect(conn, to: "/")
     end

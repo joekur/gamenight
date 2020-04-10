@@ -29,8 +29,4 @@ defmodule Gamenight.Application do
     GamenightWeb.Endpoint.config_change(changed, removed)
     :ok
   end
-
-  def service_name(service_id) do
-    {:via, Registry, {Gamenight.Registry, service_id}}
-  end
 end

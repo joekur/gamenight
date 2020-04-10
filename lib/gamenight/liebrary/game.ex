@@ -23,7 +23,7 @@ defmodule Gamenight.Liebrary.Game do
     game_id = Gamenight.SlugGenerator.new_slug # TODO what about random collisions?
     state = %Game{game_id: game_id}
 
-    {:ok, _pid} = GenServer.start_link(__MODULE__, state, name: service_name(game_id))
+    Gamenight.GameRegistry.start_link(__MODULE__, state, game_id, :liebrary)
 
     {:ok, game_id}
   end
@@ -121,7 +121,7 @@ defmodule Gamenight.Liebrary.Game do
   end
 
   defp try_call(game_id, message) do
-    case Gamenight.Liebrary.Game.find_game(game_id) do
+    case Game.find_game(game_id) do
       nil ->
         error_response("Game does not exist")
       {pid, _} ->

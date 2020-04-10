@@ -18,15 +18,14 @@ defmodule Gamenight.GameOfThings.Game do
   @min_prompts 1
 
   def find_game(game_id) do
-    Registry.lookup(Gamenight.Registry, game_id)
-      |> Enum.at(0)
+    Gamenight.GameRegistry.find_game(game_id)
   end
 
   def create_game do
     game_id = Gamenight.SlugGenerator.new_slug # TODO what about random collisions?
     state = %Game{game_id: game_id}
 
-    {:ok, _pid} = GenServer.start_link(__MODULE__, state, name: service_name(game_id))
+    Gamenight.GameRegistry.start_link(__MODULE__, state, game_id, :game_of_things)
 
     {:ok, game_id}
   end
@@ -255,8 +254,4 @@ defmodule Gamenight.GameOfThings.Game do
   defp get_player_ids(state) do
     state.players |> Map.keys
   end
-
-  defp service_name(game_id), do:
-    Gamenight.Application.service_name(game_id)
-
 end

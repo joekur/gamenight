@@ -45,6 +45,13 @@ defmodule Gamenight.GameOfThings.GameTest do
     state.round.current_player
   end
 
+  test "it can find a game" do
+    {:ok, game_id} = Game.create_game
+
+    assert Game.find_game(game_id) != nil
+    assert Game.find_game(String.downcase(game_id)) != nil
+  end
+
   test "it can create a new game" do
     {:ok, game_id} = Game.create_game
     {:ok, state} = Game.get_state(game_id)
