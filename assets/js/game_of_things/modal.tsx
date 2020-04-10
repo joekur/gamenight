@@ -21,12 +21,10 @@ function unfixBody() {
 
 export default class Modal extends React.Component<IProps, {}> {
   componentDidMount() {
-    console.log('mounted modal');
     fixBody();
   }
 
   componentWillUnmount() {
-    console.log('unmounted modal');
     unfixBody();
   }
 
