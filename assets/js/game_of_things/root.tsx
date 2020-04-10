@@ -96,11 +96,11 @@ export default class Root extends React.Component<IProps, IState> {
   }
 
   @bind
-  handleSubmitGuess(answerId: string, playerId: string, callback: Function) {
+  handleSubmitGuess(answerId: string, playerId: string) {
     this.pushChannel('guess', {
       answer_id: answerId,
       player_id: playerId,
-    }, () => { callback() });
+    });
   }
 
   @bind
@@ -200,6 +200,10 @@ export default class Root extends React.Component<IProps, IState> {
     );
   }
 
+  get gamePageKey() {
+    return this.game.lastGuess?.key;
+  }
+
   renderInner() {
     const game = this.game;
 
@@ -218,12 +222,14 @@ export default class Root extends React.Component<IProps, IState> {
     } else if (game.status === EGameStatus.RoundGuessing) {
       if (game.isMyTurn) {
         return <RoundMyTurn
+          key={this.gamePageKey}
           game={game}
           onSubmitGuess={this.handleSubmitGuess}
         />;
       }
 
       return <RoundWaiting
+        key={this.gamePageKey}
         game={game}
       />;
     } else if (game.status === EGameStatus.RoundResults) {

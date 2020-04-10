@@ -18,7 +18,7 @@ export default class RoundWaiting extends React.Component<IProps, {}> {
   renderPoints() {
     return this.props.game.playerPoints.map(score => {
       return (
-        <div>
+        <div key={`score-${score.player.id}`}>
           {score.player.name}: {score.points} points
         </div>
       );
