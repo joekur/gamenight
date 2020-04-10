@@ -1,4 +1,5 @@
 import * as React from 'react';
+import bind from 'bind-decorator';
 
 interface IProps {
   onClose?: () => void,
@@ -28,12 +29,20 @@ export default class Modal extends React.Component<IProps, {}> {
     unfixBody();
   }
 
+  @bind
+  handleClose(e: MouseEvent) {
+    e.preventDefault();
+
+    const { onClose } = this.props;
+    onClose && onClose();
+  }
+
   render() {
     const { onClose, children } = this.props;
 
     return (
       <div className="modal">
-        {onClose && <a className="modal__close" onClick={onClose}><i className="fas fa-times"></i></a>}
+        {onClose && <a className="modal__close" onClick={this.handleClose}><i className="fas fa-times"></i></a>}
         <div className="modal__body">
           {children}
         </div>

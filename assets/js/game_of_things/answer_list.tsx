@@ -9,6 +9,14 @@ interface IProps {
 }
 
 export default class AnswerList extends React.Component<IProps, {}> {
+  @bind
+  handleClick(e: MouseEvent, guessId: string) {
+    e.preventDefault();
+
+    const { onClick } = this.props;
+    onClick && onClick(guessId);
+  }
+
   renderAnswers() {
     const { game, onClick, selectedId } = this.props;
 
@@ -19,7 +27,7 @@ export default class AnswerList extends React.Component<IProps, {}> {
       return (
         <li
           className={classes}
-          onClick={() => { onClick && onClick(guess.id) }}
+          onClick={(e) => { this.handleClick(e, guess.id) }}
           key={`guess-${guess.id}`}
         >
           {guess.text}

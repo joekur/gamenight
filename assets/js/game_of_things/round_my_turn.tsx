@@ -50,7 +50,7 @@ export default class RoundMyTurn extends React.Component<IProps, IState> {
   }
 
   @bind
-  handleCancelAnswerSelection(e: any) {
+  handleCancelAnswerSelection(e: MouseEvent) {
     e.preventDefault();
     this.resetState();
   }
@@ -88,9 +88,13 @@ export default class RoundMyTurn extends React.Component<IProps, IState> {
       <div>
         <div>
           <h3 className="header">You chose:</h3>
-          <p className="well">
-            {game.findAnswer(this.state.selectedAnswerId!).text}
-          </p>
+          <div className="choices">
+            <ul className="choices__list">
+              <li className="choices__choice choices__choice--selected">
+                {game.findAnswer(this.state.selectedAnswerId!).text}
+              </li>
+            </ul>
+          </div>
           <a
             href="#"
             onClick={this.handleCancelAnswerSelection}
@@ -99,7 +103,7 @@ export default class RoundMyTurn extends React.Component<IProps, IState> {
 
         <h3 className="header mt">Who do you think wrote it?</h3>
 
-        <div className="choices">
+        <div className="choices mb">
           <ul className="choices__list">
             {players.map(player => this.renderPlayerChoice(player))}
           </ul>
