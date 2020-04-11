@@ -21,6 +21,8 @@ Visit localhost:4000
 
 ### Playing with bots
 
+Start the server in iex so you can run commands in the terminal `$ iex -S phx.server`
+
 ```elixir
 # Starts a game with 4 bot players:
 bots = Gamenight.GameOfThings.Bots.create_game(4)
