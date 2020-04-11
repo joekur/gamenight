@@ -124,6 +124,21 @@ html, body, #react-root {
   }
 }
 
+.waiting-room__header {
+  font-size: 1.1em;
+  margin-bottom: 1em;
+}
+
+.waiting-room__list {
+  background: #effaff;
+  border-radius: 6px;
+  padding: 1em;
+
+  ul {
+    margin-bottom: 0;
+  }
+}
+
 .header {
   font-size: 1.7rem;
   font-weight: bold;

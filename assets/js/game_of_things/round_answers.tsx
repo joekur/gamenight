@@ -52,7 +52,6 @@ export default class PromptForm extends React.Component<IProps, IState> {
   renderPlayerStatuses() {
     return (
       <div>
-        <h3>Players</h3>
         <ul>
           {this.renderPlayerStatusItems()}
         </ul>
@@ -65,8 +64,11 @@ export default class PromptForm extends React.Component<IProps, IState> {
 
     return (
       <div className="game-card">
-        <div>Just sit pretty while everyone submits their answers...</div>
-        {this.renderPlayerStatuses()}
+        <div className="waiting-room__header">Just sit pretty while everyone submits their answers...</div>
+
+        <div className="waiting-room__list ">
+          {this.renderPlayerStatuses()}
+        </div>
       </div>
     );
   }
