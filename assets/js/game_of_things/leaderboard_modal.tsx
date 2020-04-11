@@ -32,13 +32,16 @@ export default class LeaderboardModal extends React.Component<IProps, IState> {
     let i = 0;
 
     return game.playerPoints.map(score => {
+      i += 1;
+
       let classes = 'leaderboard__player';
       const isOut = !game.playerStillInTheRound(score.player.id);
       if (isOut) {
         classes += ' leaderboard__player--out';
       }
-
-      i += 1;
+      if (i === 1 && game.clearWinner) {
+        classes += ' leaderboard__player--leader';
+      }
 
       return (
         <div

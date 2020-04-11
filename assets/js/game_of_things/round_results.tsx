@@ -18,13 +18,19 @@ export default class RoundWaiting extends React.Component<IProps, {}> {
   }
 
   renderPoints() {
+    const { game } = this.props;
     let i = 0;
 
-    return this.props.game.playerPoints.map(score => {
+    return game.playerPoints.map(score => {
       i += 1;
 
+      let classes = 'leaderboard__player';
+      if (i === 1 && game.clearWinner) {
+        classes += ' leaderboard__player--leader';
+      }
+
       return (
-        <div className="leaderboard__player" key={`score-${score.player.id}`}>
+        <div className={classes} key={`score-${score.player.id}`}>
           <span className="leaderboard__player__name">
             {i}. {score.player.name}
           </span>

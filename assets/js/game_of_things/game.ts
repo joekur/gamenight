@@ -158,6 +158,16 @@ export class Game {
     });
   }
 
+  get clearWinner(): boolean {
+    const points = this.playerPoints;
+    if (!points || points.length < 3) { return false; }
+
+    const first = points[0];
+    const second = points[1];
+
+    return first.points > second.points;
+  }
+
   get amStillInTheRound(): boolean {
     return this.playerStillInTheRound(this.playerId!);
   }
