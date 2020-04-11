@@ -47,6 +47,14 @@ html, body, #react-root {
   text-align: center;
 }
 
+.lobby__game-header__code {
+  background: #24649c;
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 10px #00000059;
+}
+
 .lobby__join {
   background: $white;
   border-radius: 6px;

@@ -17,7 +17,9 @@ defmodule GamenightWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    resources "/games", GameController, only: [:new, :show]
+    resources "/games", GameController, only: [:new]
+
+    get "/*path", GameController, :show
   end
 
   # Other scopes may use custom stacks.

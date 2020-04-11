@@ -5,10 +5,11 @@ defmodule GamenightWeb.GameController do
   def new(conn, _params) do
     {:ok, game_id} = Gamenight.GameOfThings.Game.create_game # TODO what if it's already started or theres an error?
 
-    redirect(conn, to: "/games/#{game_id}")
+    redirect(conn, to: "/#{game_id}")
   end
 
-  def show(conn, %{"id" => game_id}) do
+  def show(conn, %{"path" => path}) do
+    game_id = path |> List.first
     case Gamenight.GameOfThings.Game.find_game(game_id) do
       {pid, _} ->
         render(conn, "show.html", game_id: game_id |> String.upcase)
