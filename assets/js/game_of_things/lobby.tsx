@@ -15,6 +15,7 @@ interface IState {
 }
 
 const minPlayers = 3;
+const maxNameLength = 15;
 
 export default class Lobby extends React.Component<IProps, IState> {
   constructor(props: IProps) {
@@ -37,7 +38,10 @@ export default class Lobby extends React.Component<IProps, IState> {
 
   @bind
   handleChangeName(e: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ nameInput: e.target.value });
+    const newName = e.target.value;
+    if (newName && newName.length > 10) { return; }
+
+    this.setState({ nameInput: newName });
   }
 
   renderActivePlayerView() {
