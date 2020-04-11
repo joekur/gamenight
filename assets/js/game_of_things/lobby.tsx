@@ -89,6 +89,15 @@ export default class Lobby extends React.Component<IProps, IState> {
     );
   }
 
+  renderInstructions() {
+    return (
+      <div className="game-card">
+        <h3 className="header">Instructions</h3>
+        <p>This is how you play the game.</p>
+      </div>
+    );
+  }
+
   get readyToStart() {
     const { game } = this.props;
 
@@ -133,6 +142,7 @@ export default class Lobby extends React.Component<IProps, IState> {
         {game.amPlayer ? this.renderActivePlayerView() : this.renderJoinGame()}
 
         {this.renderPlayerList()}
+        {this.renderInstructions()}
         {this.renderPromptForm()}
         {this.renderStartGame()}
       </div>
