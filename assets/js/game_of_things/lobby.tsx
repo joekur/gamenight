@@ -69,7 +69,7 @@ export default class Lobby extends React.Component<IProps, IState> {
 
   renderNoPlayersYet() {
     if (this.props.game.playerIds.length === 0) {
-      return <li>No players yet!</li>;
+      return 'No players yet - be the first to join!';
     }
 
     return null;
