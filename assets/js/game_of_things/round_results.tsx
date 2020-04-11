@@ -18,10 +18,19 @@ export default class RoundWaiting extends React.Component<IProps, {}> {
   }
 
   renderPoints() {
+    let i = 0;
+
     return this.props.game.playerPoints.map(score => {
+      i += 1;
+
       return (
-        <div key={`score-${score.player.id}`}>
-          {score.player.name}: {score.points} points
+        <div className="leaderboard__player" key={`score-${score.player.id}`}>
+          <span className="leaderboard__player__name">
+            {i}. {score.player.name}
+          </span>
+          <span className="leaderboard__player__score">
+            {score.points}
+          </span>
         </div>
       );
     });
@@ -31,9 +40,12 @@ export default class RoundWaiting extends React.Component<IProps, {}> {
     return (
       <div>
         <h3>Round over!</h3>
-        <div className="scores">
-          <h4>Scores</h4>
-          {this.renderPoints()}
+
+        <div className="game-card">
+          <h3 className="header">Scores</h3>
+          <div className="leaderboard">
+            {this.renderPoints()}
+          </div>
         </div>
 
         <PromptForm

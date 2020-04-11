@@ -6,7 +6,11 @@
 }
 
 .leaderboard__player:first-child {
-  background: #eee;
+  padding: 5px 0;
+  margin-bottom: 5px;
+  font-weight: bold;
+  border-top: 2px solid #389e26;
+  border-bottom: 2px solid #389e26;
 }
 
 .leaderboard__player--out {
