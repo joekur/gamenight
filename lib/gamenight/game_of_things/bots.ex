@@ -15,11 +15,6 @@ defmodule Gamenight.GameOfThings.Bots do
     "Vadar",
   ]
 
-  @prompts [
-    "Things that go boo in the night.",
-    "Things that are terrible christmas gifts",
-  ]
-
   def create_game(num_bots) do
     {:ok, game_id} = Game.create_game
 
@@ -28,10 +23,6 @@ defmodule Gamenight.GameOfThings.Bots do
 
       [player_id | player_ids]
     end) |> Enum.reverse
-
-    Enum.each(@prompts, fn prompt ->
-      :ok = Game.add_prompt(game_id, player_ids |> List.first, prompt)
-    end)
 
     %Bots{game_id: game_id, player_ids: player_ids}
   end

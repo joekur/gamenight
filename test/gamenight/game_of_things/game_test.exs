@@ -80,6 +80,36 @@ defmodule Gamenight.GameOfThings.GameTest do
     :ok = Game.add_prompt(game_id, player_id, "First prompt")
   end
 
+  test "after using custom prompts it cycles through our default list" do
+    {:ok, game_id} = Game.create_game
+    Game.request_join(game_id, "Alice")
+    Game.request_join(game_id, "Bob")
+    Game.request_join(game_id, "George")
+    :ok = Game.start_game(game_id)
+
+    {:ok, state} = Game.get_state(game_id)
+    prompt_1 = state.round.prompt
+
+    assert prompt_1 != nil
+
+    # submit answers and guess to proceed to the next round:
+    Enum.each(player_ids(game_id), fn player_id ->
+      :ok = Game.submit_answer(game_id, player_id, "answer #{player_id}")
+    end)
+    current_player = current_player(game_id)
+    other_players = player_ids(game_id) |> List.delete(current_player)
+    Enum.each(other_players, fn player_id ->
+      :ok = Game.guess(game_id, current_player, player_id, player_id)
+    end)
+    :ok = Game.start_next_round(game_id, player_ids(game_id) |> List.first)
+
+    {:ok, state} = Game.get_state(game_id)
+    prompt_2 = state.round.prompt
+
+    assert prompt_1 != prompt_2
+    assert prompt_2 != nil
+  end
+
   test "after starting the game players can submit answers" do
     game_id = started_game()
 

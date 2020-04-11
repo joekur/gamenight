@@ -2,7 +2,7 @@ defmodule Gamenight.GameOfThings.Prompts do
   use Agent
 
   def start_link(_opts) do
-    Agent.start_link(fn -> load_prompts() end)
+    Agent.start_link(fn -> load_prompts() end, name: __MODULE__)
   end
 
   def random_seed(prompts) do

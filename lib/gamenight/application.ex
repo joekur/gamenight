@@ -14,7 +14,8 @@ defmodule Gamenight.Application do
       GamenightWeb.Endpoint,
       # Starts a worker by calling: Gamenight.Worker.start_link(arg)
       # {Gamenight.Worker, arg},
-      {Registry, [keys: :unique, name: Gamenight.Registry]}
+      {Registry, [keys: :unique, name: Gamenight.Registry]},
+      Gamenight.GameOfThings.Prompts
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

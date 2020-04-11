@@ -2,6 +2,7 @@ defmodule Gamenight.GameOfThings.Game do
   use GenServer
 
   alias __MODULE__
+  alias Gamenight.GameOfThings.Prompts
 
   @derive Jason.Encoder
   defstruct [
@@ -9,13 +10,13 @@ defmodule Gamenight.GameOfThings.Game do
     status: :lobby,
     players: %{},
     round: %{},
-    prompts: [],
+    custom_prompts: [],
     scores: %{},
+    prompts_seed: nil
   ]
 
   # TODO change back to 3
-  @min_players 2
-  @min_prompts 1
+  @min_players 3
 
   def find_game(game_id) do
     Gamenight.GameRegistry.find_game(game_id)
@@ -86,8 +87,8 @@ defmodule Gamenight.GameOfThings.Game do
   end
 
   def handle_call({:add_prompt, _player_id, prompt}, _from, state) do
-    prompts = [prompt | state.prompts]
-    state = Map.put(state, :prompts, prompts)
+    prompts = [prompt | state.custom_prompts]
+    state = Map.put(state, :custom_prompts, prompts)
 
     {:reply, :ok, state}
   end
@@ -96,8 +97,6 @@ defmodule Gamenight.GameOfThings.Game do
     cond do
       num_players(state) < @min_players ->
         {:reply, error_response("Not enough players"), state}
-      num_prompts(state) < @min_prompts ->
-        {:reply, error_response("Not enough prompts"), state}
       true ->
         state = state
                 |> setup_game()
@@ -179,10 +178,6 @@ defmodule Gamenight.GameOfThings.Game do
     state.players |> Map.keys |> length
   end
 
-  defp num_prompts(state) do
-    state.prompts |> length
-  end
-
   defp error_response(message) do
     {:error, %{message: message}}
   end
@@ -201,26 +196,34 @@ defmodule Gamenight.GameOfThings.Game do
   end
 
   defp setup_game(state) do
-    prompts = state.prompts |> Enum.shuffle
-
     scores = Enum.reduce(state |> get_player_ids, %{}, fn player_id, acc ->
       Map.put(acc, player_id, 0)
     end)
 
     state
-    |> Map.put(:prompts, prompts)
+    |> Map.put(:custom_prompts, state.custom_prompts |> Enum.shuffle)
     |> Map.put(:scores, scores)
+    |> Map.put(:prompts_seed, Prompts.random_seed(Prompts))
   end
 
   defp start_round(state) do
-    [prompt | rest] = state.prompts
+    {prompt, state} = take_next_prompt(state)
 
     round = %{prompt: prompt, answers: %{}, last_guess: nil}
 
     state
-    |> Map.put(:prompts, rest)
     |> Map.put(:round, round)
     |> Map.put(:status, :round_answers)
+  end
+
+  defp take_next_prompt(state) do
+    if state.custom_prompts |> length > 0 do
+      [prompt | rest] = state.custom_prompts
+      {prompt, %{state | custom_prompts: rest}}
+    else
+      {:ok, prompt, seed} = Prompts.next_prompt(Prompts, state.prompts_seed)
+      {prompt, %{state | prompts_seed: seed}}
+    end
   end
 
   defp check_all_answers_in(state) do
