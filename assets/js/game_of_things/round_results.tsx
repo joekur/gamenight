@@ -38,8 +38,8 @@ export default class RoundWaiting extends React.Component<IProps, {}> {
 
   render() {
     return (
-      <div>
-        <h3>Round over!</h3>
+      <div className="turn">
+        <h3 className="turn__inner turn__inner--noone">Round over!</h3>
 
         <div className="game-card">
           <h3 className="header">Scores</h3>

@@ -211,6 +211,11 @@ html, body, #react-root {
       background: #81da6a;
       border-bottom: 2px solid #4d9439;
     }
+
+    &.turn__inner--noone {
+      background: #6a7dda;
+      border-bottom: 2px solid #4d5ca6;
+    }
   }
 
   .turn__out {
@@ -249,4 +254,21 @@ html, body, #react-root {
   text-align: center;
   padding-bottom: 5px;
   color: $note-gray;
+}
+
+.rules__list {
+  background: #effaff;
+  border-radius: 6px;
+  padding: 1em;
+
+  ul {
+    list-style: list-item outside none;
+    margin-bottom: 0;
+  }
+
+  li {
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
