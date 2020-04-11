@@ -15,7 +15,7 @@ defmodule Gamenight.GameOfThings.Prompts do
     prompt = fetch_prompt(prompts, index)
     {:ok, prompt, new_seed}
   end
-  def next_prompt(prompts, []), do: :error
+  def next_prompt(_prompts, []), do: :error
 
   def fetch_prompt(prompts, index) do
     Agent.get(prompts, &Enum.at(&1, index))
@@ -29,7 +29,7 @@ defmodule Gamenight.GameOfThings.Prompts do
     "#{:code.priv_dir(:gamenight)}/data/game_of_things/prompts.csv"
                   |> File.stream!
                   |> CSV.decode(headers: true)
-                  |> Stream.map(fn {ok, row} -> row["prompt"] end)
+                  |> Stream.map(fn {:ok, row} -> row["prompt"] end)
                   |> Enum.to_list
   end
 end
