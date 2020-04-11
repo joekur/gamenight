@@ -92,8 +92,16 @@ export default class Lobby extends React.Component<IProps, IState> {
   renderInstructions() {
     return (
       <div className="game-card">
-        <h3 className="header">Instructions</h3>
-        <p>This is how you play the game.</p>
+        <h3 className="header">Rules are the worst, but here they are:</h3>
+
+        <ol className="rules__list">
+          <li>1.) The true objective of the game is laughter.</li>
+          <li>2.) All PLAYERS write a response to each prompt. There are no right answers, so write whatever your heart desires.</li>
+          <li>3.) When it is your turn you will try to match a response to the player who wrote it. If you're right, keep guessing until you get it wrong. If you get it wrong, do better.</li>
+          <li>4.) You remain in the round until someone matches you up with your response (So, don't try to be too obvious).</li>
+          <li>5.) The ROUND ENDS when only one PLAYER has not been matched to his/her response.</li>
+        </ol>
+
       </div>
     );
   }
