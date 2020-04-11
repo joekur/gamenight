@@ -246,6 +246,7 @@ export default class Root extends React.Component<IProps, IState> {
       return <RoundResults
         game={game}
         onNextRound={this.handleNextRound}
+        onAddPrompt={this.handleAddPrompt}
       />;
     }
 

@@ -3,10 +3,11 @@ import bind from 'bind-decorator';
 
 interface IProps {
   onAddPrompt: (prompt: string) => void,
+  title?: string,
 }
 
 interface IState {
-  promptInput: string;
+  promptInput: string,
 }
 
 export default class PromptForm extends React.Component<IProps, IState> {
@@ -35,9 +36,11 @@ export default class PromptForm extends React.Component<IProps, IState> {
   }
 
   render() {
+    const { title } = this.props;
+
     return (
-      <div className="lobby__prompts">
-        <h3 className="header">Add prompts:</h3>
+      <div className="game-card">
+        <h3 className="header">{title || 'Add prompts:'}</h3>
         {this.props.children}
         <form onSubmit={this.handleSubmit}>
           <textarea
