@@ -159,7 +159,11 @@ export class Game {
   }
 
   get amStillInTheRound(): boolean {
-    return this.state.round.active_players.includes(this.playerId!);
+    return this.playerStillInTheRound(this.playerId!);
+  }
+
+  playerStillInTheRound(playerId: string): boolean {
+    return this.state.round.active_players.includes(playerId);
   }
 
   get currentPrompt(): string {

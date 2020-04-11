@@ -32,6 +32,7 @@ export default class Modal extends React.Component<IProps, {}> {
   @bind
   handleClose(e: MouseEvent) {
     e.preventDefault();
+    e.stopPropagation();
 
     const { onClose } = this.props;
     onClose && onClose();

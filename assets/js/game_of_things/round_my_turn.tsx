@@ -3,6 +3,7 @@ import bind from 'bind-decorator';
 import { Game, IPlayer } from './game';
 import AnswerList from './answer_list';
 import CurrentPrompt from './current_prompt';
+import LeaderboardModal from './leaderboard_modal';
 
 interface IProps {
   game: Game,
@@ -120,10 +121,15 @@ export default class RoundMyTurn extends React.Component<IProps, IState> {
   }
 
   render() {
+    const { game } = this.props;
+
     return (
       <div>
         <div className="turn">
-          <div className="turn__inner turn__inner--mine">Your turn!</div>
+          <div className="turn__inner turn__inner--mine">
+            Your turn!
+            <LeaderboardModal game={game} />
+          </div>
         </div>
         <CurrentPrompt game={this.props.game} />
         {this.renderAnswerList()}

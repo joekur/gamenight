@@ -3,15 +3,13 @@ import bind from 'bind-decorator';
 import { Game } from './game';
 import AnswerList from './answer_list';
 import CurrentPrompt from './current_prompt';
+import LeaderboardModal from './leaderboard_modal';
 
 interface IProps {
   game: Game,
 }
 
-interface IState {
-}
-
-export default class RoundWaiting extends React.Component<IProps, IState> {
+export default class RoundWaiting extends React.Component<IProps, {}> {
   renderWhoseTurn() {
     const { game } = this.props;
     const player = game.currentPlayer;
@@ -20,6 +18,7 @@ export default class RoundWaiting extends React.Component<IProps, IState> {
       <div className="turn">
         <div className="turn__inner">
           {player.name} is guessing...
+          <LeaderboardModal game={game} />
         </div>
         {this.renderOutOfTheRound()}
       </div>

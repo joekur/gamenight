@@ -1,0 +1,21 @@
+.leaderboard {
+  text-align: left;
+}
+
+.leaderboard__player {
+}
+
+.leaderboard__player:first-child {
+  background: #eee;
+}
+
+.leaderboard__player--out {
+  color: #aaa;
+}
+
+.leaderboard__player__name {
+}
+
+.leaderboard__player__score {
+  float: right;
+}
