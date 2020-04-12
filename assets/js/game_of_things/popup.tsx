@@ -1,23 +1,47 @@
 import * as React from 'react';
+import bind from 'bind-decorator';
 
 interface IProps {
   onClose?: () => void,
   cssModifier?: string,
 }
 
-const Popup: React.SFC<IProps> = ({ onClose, cssModifier, children }) => {
-  const handleClick = (e: MouseEvent) => {
+const gamePageId = 'game_page_content';
+
+export default class Popup extends React.Component<IProps, {}> {
+  private outerRef = React.createRef<HTMLDivElement>();
+
+  @bind
+  handleClick(e: React.MouseEvent) {
+    const { onClose } = this.props;
+
     e.preventDefault();
     onClose && onClose();
   }
 
-  return (
-    <div className={`popup ${cssModifier}`}>
-      {onClose && <a className="popup__close" onClick={handleClick}><i className="fas fa-times"></i></a>}
+  componentDidMount() {
+    const div = this.outerRef.current;
+    if (!div) { return; }
 
-      {children}
-    </div>
-  );
+    const height = div.offsetHeight;
+    const el = document.getElementById(gamePageId);
+    if (el) { el.style.paddingBottom = `${height + 10}px` ; }
+  }
+
+  componentWillUnmount() {
+    const el = document.getElementById(gamePageId);
+    if (el) { el.style.paddingBottom = ''; }
+  }
+
+  render() {
+    const { onClose, cssModifier, children } = this.props
+
+    return (
+      <div className={`popup ${cssModifier}`} ref={this.outerRef}>
+        {onClose && <a className="popup__close" onClick={this.handleClick}><i className="fas fa-times"></i></a>}
+
+        {children}
+      </div>
+    );
+  }
 }
-
-export default Popup;
