@@ -166,12 +166,19 @@ defmodule Gamenight.GameOfThings.Game do
 
   defp handle_wrong_guess(state) do
     current_player = state.round.current_player
-    current_player_index = state.round.active_players
-                           |> Enum.find_index(&(&1 == current_player))
-    next_index = current_player_index + 1
-    next_index = if (next_index >= length(state.round.active_players)), do: 0, else: next_index
+    next_player = next_element_in_list(state.round.active_players, current_player)
 
-    put_in(state.round.current_player, state.round.active_players |> Enum.at(next_index))
+    put_in(state.round.current_player, next_player)
+  end
+
+  # Returns the element in @list following the provided @element, with wraparound.
+  # Ie - for a list [1,2,3], the next element after 2 is 3, and the next after 3 is 1
+  defp next_element_in_list(list, element) do
+    element_index = list |> Enum.find_index(&(&1 == element))
+    next_index = element_index + 1
+    next_index = if (next_index >= length(list)), do: 0, else: next_index
+
+    list |> Enum.at(next_index)
   end
 
   defp num_players(state) do
@@ -208,8 +215,23 @@ defmodule Gamenight.GameOfThings.Game do
 
   defp start_round(state) do
     {prompt, state} = take_next_prompt(state)
+    player_ids = state |> get_player_ids
 
-    round = %{prompt: prompt, answers: %{}, last_guess: nil}
+    current_player = if state.round |> Map.has_key?(:current_player) do
+      # continue turns leaving off after the last player of the last round
+      next_element_in_list(player_ids, state.round.current_player)
+    else
+      player_ids |> List.first
+    end
+
+    round = %{
+      prompt: prompt,
+      answers: %{},
+      active_players: player_ids,
+      answer_ids: player_ids |> Enum.shuffle, # this is the order we'll show the answers
+      current_player: current_player,
+      last_guess: nil
+    }
 
     state
     |> Map.put(:round, round)
@@ -231,27 +253,9 @@ defmodule Gamenight.GameOfThings.Game do
 
     if answer_count == num_players(state) do
       %{state | status: :round_guessing}
-      |> setup_guessing()
     else
       state
     end
-  end
-
-  defp setup_guessing(state) do
-    round = state.round
-
-    # this is the order that players will take turns
-    active_players = state |> get_player_ids |> Enum.shuffle
-    # this is the order we will show the answer list to players
-    answer_ids = active_players |> Enum.shuffle
-    current_player = active_players |> hd
-
-    round = round
-            |> Map.put(:active_players, active_players)
-            |> Map.put(:answer_ids, answer_ids)
-            |> Map.put(:current_player, current_player)
-
-    %{state | round: round}
   end
 
   defp get_player_ids(state) do
