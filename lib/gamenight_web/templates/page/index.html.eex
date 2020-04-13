@@ -1,1 +1,7 @@
-<%= link("New Game", to: "/games/new") %>
+<%= link("New Game - Game of Things", to: "/games/new?type=#{Gamenight.Games.types.game_of_things}") %>
+<br>
+
+<%= link("New Game - Liebrary", to: "/games/new?type=#{Gamenight.Games.types.liebrary}") %>
+<br>
+
+<%= link("New Game - Telestrations", to: "/games/new?type=#{Gamenight.Games.types.telestrations}") %>

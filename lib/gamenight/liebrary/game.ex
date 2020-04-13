@@ -202,7 +202,4 @@ defmodule Gamenight.Liebrary.Game do
     state.players |> Map.keys
   end
 
-  defp service_name(game_id), do:
-    Gamenight.Application.service_name(game_id)
-
 end

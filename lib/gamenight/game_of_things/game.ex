@@ -26,7 +26,7 @@ defmodule Gamenight.GameOfThings.Game do
     game_id = Gamenight.SlugGenerator.new_slug # TODO what about random collisions?
     state = %Game{game_id: game_id}
 
-    Gamenight.GameRegistry.start_link(__MODULE__, state, game_id, :game_of_things)
+    Gamenight.GameRegistry.start_link(__MODULE__, state, game_id, Gamenight.Games.types.game_of_things)
 
     {:ok, game_id}
   end

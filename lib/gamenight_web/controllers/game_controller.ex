@@ -2,19 +2,30 @@ defmodule GamenightWeb.GameController do
   use GamenightWeb, :controller
   plug :put_layout, "game.html"
 
-  def new(conn, _params) do
-    {:ok, game_id} = Gamenight.GameOfThings.Game.create_game # TODO what if it's already started or theres an error?
+  def new(conn, params) do
+    {:ok, game_id} = create_game(params["type"])
 
     redirect(conn, to: "/#{game_id}")
   end
 
   def show(conn, %{"path" => path}) do
     game_id = path |> List.first
-    case Gamenight.GameOfThings.Game.find_game(game_id) do
-      {_pid, _} ->
-        render(conn, "show.html", game_id: game_id |> String.upcase)
+    case Gamenight.GameRegistry.find_game(game_id) do
+      {_pid, type} ->
+        render(conn, "show.html", game_id: game_id |> String.upcase, game_type: type)
       _ ->
         redirect(conn, to: "/")
+    end
+  end
+
+  defp create_game(type) do
+    case type do
+      "game_of_things" ->
+        Gamenight.GameOfThings.Game.create_game
+      "liebrary" ->
+        Gamenight.Liebrary.Game.create_game
+      "telestrations" ->
+        Gamenight.Telestrations.Game.create_game
     end
   end
 end
