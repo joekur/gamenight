@@ -32,8 +32,6 @@ defmodule Gamenight.GameOfThings.Game do
   end
 
   def get_state(game_id) do
-    # TODO we may not want to expose some of the state,
-    # such as the current book's actual title
     try_call(game_id, :get_state)
   end
 
