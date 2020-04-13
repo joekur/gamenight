@@ -2,6 +2,7 @@ import * as React from 'react';
 import bind from 'bind-decorator';
 import { Game, IPlayer } from './game';
 import AnswerList from './answer_list';
+import ChoiceList from './choice_list';
 import CurrentPrompt from './current_prompt';
 import LeaderboardModal from './leaderboard_modal';
 
@@ -39,6 +40,16 @@ export default class RoundMyTurn extends React.Component<IProps, IState> {
   }
 
   @bind
+  handleCancelAnswerSelection() {
+    this.setState({ selectedAnswerId: null });
+  }
+
+  @bind
+  handleCancelPlayerSelection() {
+    this.setState({ selectedPlayerId: null });
+  }
+
+  @bind
   handleSubmit(e: any) {
     e.preventDefault();
 
@@ -50,73 +61,33 @@ export default class RoundMyTurn extends React.Component<IProps, IState> {
     }
   }
 
-  @bind
-  handleCancelAnswerSelection(e: MouseEvent) {
-    e.preventDefault();
-    this.resetState();
-  }
-
   renderAnswerList() {
-    if (this.state.selectedAnswerId) { return null; }
-
-    return <AnswerList
-      game={this.props.game}
-      onClick={this.handleSelectAnswer}
-      selectedId={this.state.selectedAnswerId}
-    />;
-  }
-
-  renderPlayerChoice(player: IPlayer) {
-    const classes = `choices__choice choices__choice--clickable ${player.id === this.state.selectedPlayerId && 'choices__choice--selected'}`;
-    return (
-      <li
-        key={`player-choice-${player.id}`}
-        className={classes}
-        onClick={() => { this.handleSelectPlayer(player.id) }}
-      >
-        {player.name}
-      </li>
-    );
-  }
-
-  renderPlayerList() {
-    if (!this.state.selectedAnswerId) { return null; }
-
     const { game } = this.props;
     const players = game.otherActivePlayers;
 
     return (
-      <div>
-        <div>
-          <h3 className="header">You chose:</h3>
-          <div className="choices">
-            <ul className="choices__list">
-              <li className="choices__choice choices__choice--selected">
-                {game.findAnswer(this.state.selectedAnswerId!).text}
-              </li>
-            </ul>
-          </div>
-          <a
-            href="#"
-            onClick={this.handleCancelAnswerSelection}
-          >←Choose a different answer</a>
-        </div>
+      <ChoiceList
+        choices={game.answerList}
+        selectedId={this.state.selectedAnswerId}
+        onClick={this.handleSelectAnswer}
+        onCancelSelection={this.handleCancelAnswerSelection}
+        title="Answers:"
+      />
+    );
+  }
 
-        <h3 className="header mt">Who do you think wrote it?</h3>
+  renderPlayerList() {
+    const { game } = this.props;
+    const players = game.otherActivePlayers;
 
-        <div className="choices mb">
-          <ul className="choices__list">
-            {players.map(player => this.renderPlayerChoice(player))}
-          </ul>
-        </div>
-
-        <button
-          disabled={!this.state.selectedPlayerId}
-          onClick={this.handleSubmit}
-        >
-          Submit
-        </button>
-      </div>
+    return (
+      <ChoiceList
+        choices={players.map(player => ({ id: player.id, text: player.name }))}
+        selectedId={this.state.selectedPlayerId}
+        onClick={this.handleSelectPlayer}
+        onCancelSelection={this.handleCancelPlayerSelection}
+        title="Remaining Players:"
+      />
     );
   }
 
@@ -134,6 +105,12 @@ export default class RoundMyTurn extends React.Component<IProps, IState> {
         <CurrentPrompt game={this.props.game} />
         {this.renderAnswerList()}
         {this.renderPlayerList()}
+        <button
+          disabled={!this.state.selectedPlayerId || !this.state.selectedAnswerId}
+          onClick={this.handleSubmit}
+        >
+          Submit
+        </button>
       </div>
     );
   };
