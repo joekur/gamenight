@@ -1,0 +1,17 @@
+.drawing {
+}
+
+.drawing__swatch {
+  display: inline-block;
+  height: 30px;
+  width: 30px;
+  border: 2px solid black;
+}
+
+.drawing__slider {
+  width: 100px;
+}
+
+.drawing__swatch--selected {
+  border-color: #ffb100 !important;
+}
