@@ -14,6 +14,7 @@ interface IState {
 }
 
 const aspectRatio = 3.0 / 4;
+const lsKey = 'draw-history';
 
 export default class Drawing extends React.Component<IProps, IState> {
   private outerRef = React.createRef<HTMLDivElement>();
@@ -29,6 +30,17 @@ export default class Drawing extends React.Component<IProps, IState> {
 
   componentDidMount() {
     this.setState({ outerWidth: this.outerRef.current!.clientWidth });
+
+    setTimeout(() => {
+      const prevDrawingData = window.localStorage.getItem(lsKey);
+      if (!!prevDrawingData) {
+        this.canvas.loadSaveData(prevDrawingData, true);
+      }
+    }, 100);
+  }
+
+  get canvas() {
+    return this.canvasRef.current;
   }
 
   @bind
@@ -37,9 +49,15 @@ export default class Drawing extends React.Component<IProps, IState> {
     console.log('canvas data', this.canvasRef.current.canvasContainer.children[1].toDataURL());
   }
 
+  @bind
+  handleCanvasUpdate(canvas: CanvasDraw) {
+    const saveData = canvas.getSaveData();
+    window.localStorage.setItem(lsKey, saveData);
+  }
+
   render() {
     return (
-      <div ref={this.outerRef}>
+      <div ref={this.outerRef} className="canvas-container noselect">
         <CanvasDraw
           ref={this.canvasRef}
           canvasWidth="100%"
@@ -48,6 +66,7 @@ export default class Drawing extends React.Component<IProps, IState> {
           brushRadius={5}
           hideGrid
           hideInterface
+          onChange={this.handleCanvasUpdate}
         />
         <button onClick={this.handleSubmit} className="mt-2">
           Submit

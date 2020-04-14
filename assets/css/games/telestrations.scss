@@ -1,0 +1,7 @@
+.game-page--telestrations {
+  .game-page__content {
+    // we need extra to avoid accidental swipes while drawing
+    // activating the browser back/forward functionality
+    padding: 24px;
+  }
+}

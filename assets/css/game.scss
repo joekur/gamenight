@@ -6,10 +6,10 @@ html, body, #react-root {
   overflow: auto; // prevents margin collapsing
   background: #D6EDFF;
   min-height: 100%;
+}
 
-  .game-page__content {
-    padding: 0 10px 10px 10px;
-  }
+.game-page__content {
+  padding: 0 10px 10px 10px;
 }
 
 .game-card {
@@ -270,4 +270,14 @@ html, body, #react-root {
       margin-bottom: 0;
     }
   }
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
 }
