@@ -2,8 +2,8 @@ import * as React from 'react';
 import bind from 'bind-decorator';
 
 interface IProps {
-  onClose?: () => void,
-  cssModifier?: string,
+  onClose?: () => void;
+  cssModifier?: string;
 }
 
 const gamePageId = 'game_page_content';

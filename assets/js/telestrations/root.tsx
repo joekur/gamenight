@@ -4,17 +4,18 @@ import { Channel, Socket } from 'phoenix';
 import { Game, IGameState, EGameStatus } from './game';
 import { setCookie, getCookie } from '../cookies';
 
-import Modal from '../shared/modal';
 import Lobby from './lobby';
+import Drawing from './drawing';
+import Modal from '../shared/modal';
 
 interface IProps {
-  gameId: string,
+  gameId: string;
 }
 
 interface IState {
-  connected: boolean,
-  gameState?: IGameState,
-  playerId: string | null,
+  connected: boolean;
+  gameState?: IGameState;
+  playerId: string | null;
 }
 
 export default class Root extends React.Component<IProps, IState> {
@@ -74,6 +75,7 @@ export default class Root extends React.Component<IProps, IState> {
 
   @bind
   updateGameState(gameState: Partial<IGameState>) {
+    console.log('Updated state', gameState);
     this.setState({
       gameState: Object.assign({}, this.state.gameState, gameState)
     });
@@ -129,11 +131,15 @@ export default class Root extends React.Component<IProps, IState> {
   renderInner() {
     const game = this.game;
 
-    if (game.status === EGameStatus.Lobby) {
+    if (false && game.status === EGameStatus.Lobby) {
       return <Lobby
         game={game}
         onRequestJoinGame={this.handleRequestJoinGame}
         onStartGame={this.handleStartGame}
+      />;
+    } else if (true || game.status === EGameStatus.Writing) {
+      return <Drawing
+        game={game}
       />;
     }
 
