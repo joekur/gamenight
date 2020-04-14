@@ -8,8 +8,8 @@ import RoundAnswers from './round_answers';
 import RoundMyTurn from './round_my_turn';
 import RoundWaiting from './round_waiting';
 import RoundResults from './round_results';
-import Modal from './modal';
-import Popup from './popup';
+import Modal from '../shared/modal';
+import Popup from '../shared/popup';
 import { setCookie, getCookie } from '../cookies';
 import { limitText, scrollToTop } from '../utilities';
 

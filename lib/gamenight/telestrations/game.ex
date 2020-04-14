@@ -17,8 +17,8 @@ defmodule Gamenight.Telestrations.Game do
   defmodule Round do
     @derive Jason.Encoder
     defstruct [
-      stories: %{}, # player_id => %Story{}
       step: 0,
+      stories: %{}, # player_id => %Story{}
       submitted: %{}, # player_id => bool
       current_storyteller: nil,
     ]

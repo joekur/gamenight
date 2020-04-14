@@ -1,7 +1,7 @@
 import * as React from 'react';
 import bind from 'bind-decorator';
 import { Game } from './game';
-import Modal from './modal';
+import Modal from '../shared/modal';
 
 interface IProps {
   game: Game,
@@ -22,7 +22,7 @@ export default class LeaderboardModal extends React.Component<IProps, IState> {
   }
 
   @bind
-  handleCloseLeaderboard(e?: MouseEvent) {
+  handleCloseLeaderboard(e?: React.MouseEvent) {
     e?.stopPropagation();
     this.setState({ open: false });
   }
