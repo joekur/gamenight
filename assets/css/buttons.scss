@@ -60,24 +60,12 @@ input[type='submit'][disabled] {
   }
 }
 
-.button,
-.button-outline,
-button.button-outline,
-input[type='button'],
-.button-outline,
-input[type='reset'],
-.button-outline,
-input[type='submit']
 .button-outline {
   background-color:transparent;
   color:#2eb67d;
 }
 
-.button,
-.button-outline,
-input[type='button'],
-input[type='reset'],
-input[type='submit'] {
+.button-outline {
 
   &:focus,
   &:hover {
@@ -88,39 +76,20 @@ input[type='submit'] {
   }
 }
 
-.button,
-.button-outline[disabled],
-button.button-outline[disabled],
-input[type='button'].button-outline[disabled],
-input[type='reset'].button-outline[disabled],
-input[type='submit'].button-outline[disabled] {
-
+.button-outline[disabled] {
   &:focus,
   &:hover {
     border-color:inherit;
     color:#2eb67d;
   }
 }
-.button.button-clear,
-button.button-clear,
-input[type='button'].button-clear,
-input[type='reset'].button-clear,
-input[type='submit']
 .button-clear {
   background-color:transparent;
   border-color:transparent;
   color:#2eb67d;
 }
 
-.button
-.button-clear,
-button.button-clear,
-input[type='button'],
-input[type='button'],
-input[type='reset'],
-input[type='reset'],
-input[type='submit']{
-
+.button-clear {
   &:focus,
   &:hover {
     background-color:transparent;
@@ -128,18 +97,7 @@ input[type='submit']{
   }
 }
 
-.button,
-.button-clear[disabled],
-button.button-clear,
-input[type='button'],
-.button-clear[disabled],
-input[type='button'],
-.button-clear[disabled],
-input[type='reset'],
-.button-clear[disabled],
-input[type='submit'],
-button-clear[disabled] {
-
+.button-clear[disabled] {
   &:focus,
   &:hover {
     color:#2eb67d;

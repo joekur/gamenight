@@ -8,51 +8,41 @@
         <article class="card">
           <div class="card-content">
             <h2>Game of Things</h2>
-            <div class="card-label"><i class="fas fa-clock"></i> Playing Time: 45 min.</div>
-            <div class="card-label"><i class="fas fa-users"></i> Players: 4 - 15</div>
+            <div class="card-label"><i class="fas fa-clock"></i> 45m</div>
+            <div class="card-label"><i class="fas fa-users"></i> 3+</div>
             <p>A game where you learn that your friends are actually all closet comedians.</p>
-
-            <div class="card-footer">
-              <button type="submit">
-                <%= link("New Game", to: "/games/new?type=#{Gamenight.Games.types.game_of_things}") %>
-              </button>
-            </div>
-
           </div><!-- .card-content -->
+
+          <div class="card-footer">
+            <%= link("New Game", to: "/games/new?type=#{Gamenight.Games.types.game_of_things}", class: "button wide") %>
+          </div>
 
         </article><!-- .card -->
 
         <article class="card">
           <div class="card-content">
             <h2>Liebrary</h2>
-            <span class="card-label"><i class="fas fa-clock"></i> Playing Time: 60 min.</span>
-            <span class="card-label"><i class="fas fa-users"></i> Players: 3 - 6</span>
+            <span class="card-label"><i class="fas fa-clock"></i> 60m</span>
+            <span class="card-label"><i class="fas fa-users"></i> 3+</span>
             <p>The kind of game that smarty pants folks or book nerds really enjoy and others might really hate.</p>
+          </div><!-- .card-content -->
 
           <div class="card-footer">
-            <button type="submit">
-              <%= link("New Game", to: "/games/new?type=#{Gamenight.Games.types.game_of_things}") %>
-            </button>
+            <%= link("New Game", to: "/games/new?type=#{Gamenight.Games.types.game_of_things}", class: "button wide") %>
           </div>
-
-          </div><!-- .card-content -->
         </article><!-- .card -->
 
         <article class="card">
           <div class="card-content">
             <h2>Telestrations</h2>
-            <span class="card-label"><i class="fas fa-clock"></i> Playing Time: 30 min.</span>
-            <span class="card-label"><i class="fas fa-users"></i> Players: 4 - 8</span>
+            <span class="card-label"><i class="fas fa-clock"></i> 30m</span>
+            <span class="card-label"><i class="fas fa-users"></i> 4+</span>
             <p>A group drawing game where the worst drawers are actually the best drawers. Sorry to all those who paid for art school (like me).</p>
-
-
-            <div class="card-footer">
-              <button type="submit">
-                <%= link("New Game", to: "/games/new?type=#{Gamenight.Games.types.telestrations}") %>
-              </button>
-            </div>
-
           </div><!-- .card-content -->
+
+          <div class="card-footer">
+            <%= link("New Game", to: "/games/new?type=#{Gamenight.Games.types.telestrations}", class: "button wide") %>
+          </div>
         </article><!-- .card -->
 
       </section><!-- .cards -->
