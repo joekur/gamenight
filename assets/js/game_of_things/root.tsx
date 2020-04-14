@@ -201,6 +201,7 @@ export default class Root extends React.Component<IProps, IState> {
 
     return (
       <Popup
+        key={`popup-${lastGuess.key}`}
         cssModifier={lastGuess.correct ? 'popup--success' : 'popup--error'}
         onClose={this.handleCloseLastGuess}
       >
