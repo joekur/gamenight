@@ -1,7 +1,61 @@
-<%= link("New Game - Game of Things", to: "/games/new?type=#{Gamenight.Games.types.game_of_things}") %>
-<br>
 
-<%= link("New Game - Liebrary", to: "/games/new?type=#{Gamenight.Games.types.liebrary}") %>
-<br>
+<div class="outer-wrap">
+  <div class="content">
 
-<%= link("New Game - Telestrations", to: "/games/new?type=#{Gamenight.Games.types.telestrations}") %>
+    <main class="main-area">
+
+      <section class="cards">
+        <article class="card">
+          <div class="card-content">
+            <h2>Game of Things</h2>
+            <div class="card-label"><i class="fas fa-clock"></i> Playing Time: 45 min.</div>
+            <div class="card-label"><i class="fas fa-users"></i> Players: 4 - 15</div>
+            <p>A game where you learn that your friends are actually all closet comedians.</p>
+
+            <div class="card-footer">
+              <button type="submit">
+                <%= link("New Game", to: "/games/new?type=#{Gamenight.Games.types.game_of_things}") %>
+              </button>
+            </div>
+
+          </div><!-- .card-content -->
+
+        </article><!-- .card -->
+
+        <article class="card">
+          <div class="card-content">
+            <h2>Liebrary</h2>
+            <span class="card-label"><i class="fas fa-clock"></i> Playing Time: 60 min.</span>
+            <span class="card-label"><i class="fas fa-users"></i> Players: 3 - 6</span>
+            <p>The kind of game that smarty pants folks or book nerds really enjoy and others might really hate.</p>
+
+          <div class="card-footer">
+            <button type="submit">
+              <%= link("New Game", to: "/games/new?type=#{Gamenight.Games.types.game_of_things}") %>
+            </button>
+          </div>
+
+          </div><!-- .card-content -->
+        </article><!-- .card -->
+
+        <article class="card">
+          <div class="card-content">
+            <h2>Telestrations</h2>
+            <span class="card-label"><i class="fas fa-clock"></i> Playing Time: 30 min.</span>
+            <span class="card-label"><i class="fas fa-users"></i> Players: 4 - 8</span>
+            <p>A group drawing game where the worst drawers are actually the best drawers. Sorry to all those who paid for art school (like me).</p>
+
+
+            <div class="card-footer">
+              <button type="submit">
+                <%= link("New Game", to: "/games/new?type=#{Gamenight.Games.types.telestrations}") %>
+              </button>
+            </div>
+
+          </div><!-- .card-content -->
+        </article><!-- .card -->
+
+      </section><!-- .cards -->
+    </main>
+  </div><!-- .content -->
+</div><!-- .outer-wrap -->
