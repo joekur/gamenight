@@ -1,5 +1,7 @@
 import Config
 
+config :gamenight, :google_tracking, true
+
 config :gamenight, GamenightWeb.Endpoint,
   server: true,
   http: [port: {:system, "PORT"}], # Needed for Phoenix 1.2 and 1.4. Doesn't hurt for 1.3.
