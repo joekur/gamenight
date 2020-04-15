@@ -28,7 +28,7 @@
           </div><!-- .card-content -->
 
           <div class="card-footer">
-            <%= link("New Game", to: "/games/new?type=#{Gamenight.Games.types.game_of_things}", class: "button wide") %>
+            <%= link("New Game", to: "/games/new?type=#{Gamenight.Games.types.liebrary}", class: "button wide") %>
           </div>
         </article><!-- .card -->
 

@@ -54,7 +54,7 @@ export default class Lobby extends React.Component<IProps, IState> {
 
   renderJoinGame() {
     return (
-      <div className="lobby__join">
+      <div className="game-card">
         <form onSubmit={this.handleSubmitJoinGame}>
           <input
             type="text"
@@ -79,7 +79,7 @@ export default class Lobby extends React.Component<IProps, IState> {
     const { game } = this.props;
 
     return (
-      <div className="lobby__members">
+      <div className="game-card">
         <h3 className="lobby__members-header">Players</h3>
         <ul className="lobby__members-list">
           {this.renderNoPlayersYet()}

@@ -14,7 +14,8 @@ html, body, #react-root {
 
 .game-card {
   background: $white;
-  border-radius: 6px;
+  border-radius: 5px 5px 4px 4px;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.06);
   margin-top: 1em;
   padding: 1em;
 
@@ -67,13 +68,6 @@ html, body, #react-root {
   text-align: center;
 }
 
-.lobby__members {
-  background: $white;
-  border-radius: 6px;
-  margin-top: 1em;
-  padding: 1em;
-}
-
 .lobby__members-header {
   border-bottom: 1px dashed #3985c7;
   padding-bottom: 1em;
@@ -87,9 +81,11 @@ html, body, #react-root {
 
   li {
     margin-bottom: 5px;
+    list-style: circle;
+    margin-left: 15px;
 
     &:last-child {
-      margin: 0;
+      margin-bottom: 0;
     }
   }
 }

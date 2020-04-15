@@ -16,11 +16,12 @@ interface IState {
   brushColor: string;
 }
 
-const aspectRatio = 3.0 / 3.0;
+const aspectRatio = 1.0;
 const lsKey = 'draw-history';
 
 const minBrushRadius = 1;
 const maxBrushRadius = 15;
+const startingBrushRadius = 4;
 
 const colors = [
   '#444',
@@ -59,7 +60,7 @@ export default class Drawing extends React.Component<IProps, IState> {
 
     this.state = {
       outerWidth: document.body.clientWidth,
-      brushSize: 10,
+      brushSize: (startingBrushRadius - minBrushRadius) * 100 / (maxBrushRadius - minBrushRadius),
       brushColor: colors[0],
     };
   }
