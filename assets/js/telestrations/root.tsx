@@ -5,6 +5,8 @@ import { Game, IGameState, EGameStatus } from './game';
 import { setCookie, getCookie } from '../cookies';
 
 import Lobby from './lobby';
+import Waiting from './waiting';
+import Writing from './writing';
 import Drawing from './drawing';
 import Modal from '../shared/modal';
 
@@ -48,7 +50,7 @@ export default class Root extends React.Component<IProps, IState> {
     this.socket.connect();
     (window as any).socket = this.socket;
 
-    const topic = `game_of_things:${this.props.gameId}`;
+    const topic = `telestrations:${this.props.gameId}`;
 
     this.channel = this.socket.channel(topic, params) as Channel;
     (window as any).channel = this.channel;
@@ -86,7 +88,6 @@ export default class Root extends React.Component<IProps, IState> {
     this.pushChannel('request_join', { name }, this.handleJoinSuccess);
   }
 
-
   @bind
   handleJoinSuccess(response: any) {
     const playerId = response.player_id;
@@ -101,6 +102,11 @@ export default class Root extends React.Component<IProps, IState> {
   @bind
   handleStartGame() {
     this.pushChannel('start_game', {});
+  }
+
+  @bind
+  handleSubmitStory(story: string) {
+    this.pushChannel('write_story', { text: story });
   }
 
   pushChannel(event: string, payload: object, onSuccess?: (response: any) => any) {
@@ -131,13 +137,27 @@ export default class Root extends React.Component<IProps, IState> {
   renderInner() {
     const game = this.game;
 
-    if (false && game.status === EGameStatus.Lobby) {
+    // escape hatch to quickly test drawing UI
+    if (window.location.search === '?draw') {
+      return <Drawing
+        game={game}
+      />;
+    }
+
+    if (game.status === EGameStatus.Lobby) {
       return <Lobby
         game={game}
         onRequestJoinGame={this.handleRequestJoinGame}
         onStartGame={this.handleStartGame}
       />;
-    } else if (true || game.status === EGameStatus.Writing) {
+    } else if (game.waitingOnOthers) {
+      return <Waiting game={game} />;
+    } else if (game.status === EGameStatus.Writing) {
+      return <Writing
+        game={game}
+        onSubmit={this.handleSubmitStory}
+      />;
+    } else if (game.status === EGameStatus.Drawing) {
       return <Drawing
         game={game}
       />;

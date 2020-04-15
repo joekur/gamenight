@@ -4,8 +4,8 @@ import { Game } from './game';
 import CurrentPrompt from './current_prompt';
 
 interface IProps {
-  game: Game,
-  onSubmitAnswer: (answer: string) => void,
+  game: Game;
+  onSubmitAnswer: (answer: string) => void;
 }
 
 interface IState {

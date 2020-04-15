@@ -8,7 +8,6 @@ import { Slider } from '@material-ui/core';
 
 interface IProps {
   game: Game;
-  pageWidth: number;
 }
 
 interface IState {

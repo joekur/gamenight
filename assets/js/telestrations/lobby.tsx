@@ -12,7 +12,7 @@ interface IState {
   nameInput: string;
 }
 
-const minPlayers = 3;
+const minPlayers = 4;
 const maxNameLength = 15;
 
 export default class Lobby extends React.Component<IProps, IState> {
@@ -77,7 +77,7 @@ export default class Lobby extends React.Component<IProps, IState> {
     const { game } = this.props;
 
     return (
-      <div className="lobby__members">
+      <div className="game-card">
         <h3 className="lobby__members-header">Players</h3>
         <ul className="lobby__members-list">
           {this.renderNoPlayersYet()}
@@ -112,7 +112,7 @@ export default class Lobby extends React.Component<IProps, IState> {
 
     return (
       <div className="game-card">
-        {!this.readyToStart && <div className="button-info">Need at least 3 players</div>}
+        {!this.readyToStart && <div className="button-info">Need at least {minPlayers} players</div>}
         <button onClick={this.props.onStartGame} disabled={!this.readyToStart}>
           Start Game
         </button>

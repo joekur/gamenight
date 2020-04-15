@@ -8,6 +8,7 @@ export enum EGameStatus {
 
 interface IRound {
   step: number;
+  submitted: IPlayersMap<boolean>;
 }
 
 export interface IPlayer {
@@ -58,5 +59,18 @@ export class Game {
 
   get amPlayer() {
     return !!this.playerId;
+  }
+
+  hasSubmitted(playerId: string): boolean {
+    return this.state.round.submitted[playerId];
+  }
+
+  get iHaveSubmitted(): boolean {
+    return this.hasSubmitted(this.playerId!);
+  }
+
+  get waitingOnOthers(): boolean {
+    return [EGameStatus.Writing, EGameStatus.Drawing, EGameStatus.Interpreting].includes(this.status)
+      && this.iHaveSubmitted;
   }
 }

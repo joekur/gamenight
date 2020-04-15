@@ -255,11 +255,8 @@ html, body, #react-root {
   background: #effaff;
   border-radius: 6px;
   padding: 1em;
-
-  ul {
-    list-style: list-item outside none;
-    margin-bottom: 0;
-  }
+  margin-bottom: 0;
+  list-style: list-item outside none;
 
   li {
     &:last-child {

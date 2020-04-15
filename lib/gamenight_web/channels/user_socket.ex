@@ -4,6 +4,7 @@ defmodule GamenightWeb.UserSocket do
   ## Channels
   channel "liebrary:*", GamenightWeb.LiebraryChannel
   channel "game_of_things:*", GamenightWeb.GameOfThingsChannel
+  channel "telestrations:*", GamenightWeb.TelestrationsChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

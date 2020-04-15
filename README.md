@@ -23,6 +23,7 @@ Visit localhost:4000
 
 Start the server in iex so you can run commands in the terminal `$ iex -S phx.server`
 
+Game of Things:
 ```elixir
 # Starts a game with 4 bot players:
 bots = Gamenight.GameOfThings.Bots.create_game(4)
@@ -35,4 +36,18 @@ Gamenight.GameOfThings.Bots.answer(bots)
 # To have the current bot player make an answer, pass either
 # 'true' for a correct guess or 'false' for an incorrect:
 Gamenight.GameOfThings.Bots.take_turn(bots, true)
+```
+
+Telestrations:
+```elixir
+# Starts a game with 4 bot players:
+bots = Gamenight.Telestrations.Bots.create_game(4)
+
+# At this point you can join yourself, and start the game
+
+# Submits a "story" for each player:
+Gamenight.Telestrations.Bots.write_stories(bots)
+
+# Submits a "drawing" for each player:
+Gamenight.Telestrations.Bots.draw_stories(bots)
 ```
