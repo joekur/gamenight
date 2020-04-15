@@ -1,6 +1,7 @@
 import * as React from 'react';
 import bind from 'bind-decorator';
 import { Game } from './game';
+import Icon from '../shared/icon';
 
 import CanvasDraw from 'react-canvas-draw-joekur';
 import { Slider } from '@material-ui/core';
@@ -140,7 +141,7 @@ export default class Drawing extends React.Component<IProps, IState> {
         <div className="drawing__swatches">
           {this.renderSwatches()}
         </div>
-        <button onClick={this.handleUndo}>Undo</button>
+        <button className="button button--secondary button--no-pad" onClick={this.handleUndo}><Icon icon="undo" /></button>
       </div>
     );
   }

@@ -2,7 +2,7 @@
 button,
 input[type='button'],
 input[type='reset'],
-input[type='submit']{
+input[type='submit'] {
   background-color:#2eb67d;
   border:0.1rem solid #2eb67d;
   border-radius:.4rem;
@@ -23,15 +23,17 @@ input[type='submit']{
   @media (max-width: 600px) {
     width: 100%;
   }
-}
 
-input[type='button'],
-input[type='reset'],
-input[type='submit'] {
-  background-color:#39AC6E;
-  border-color:#39AC6E;
-  color:#fff;
-  outline:0;
+  &.button--secondary {
+    background-color: #efefef;
+    color: #444;
+    border-color: #c7c7c7;
+  }
+
+  &.button--no-pad {
+    padding: 0 1.2rem;
+    width: auto;
+  }
 }
 
 .button[disabled],
@@ -44,15 +46,7 @@ input[type='submit'][disabled]{
 }
 
 
-.button[disabled],
-button[disabled],
-input[type='button'][disabled],
-input[type='button'][disabled],
-input[type='reset'][disabled],
-input[type='reset'][disabled],
-input[type='submit'][disabled],
-input[type='submit'][disabled] {
-
+.button[disabled] {
   &:focus,
   &:hover {
     background-color:#2eb67d;
@@ -63,13 +57,9 @@ input[type='submit'][disabled] {
 .button-outline {
   background-color:transparent;
   color:#2eb67d;
-}
-
-.button-outline {
 
   &:focus,
   &:hover {
-
     background-color:transparent;
     border-color:#606c76;
     color:#606c76;
@@ -83,13 +73,12 @@ input[type='submit'][disabled] {
     color:#2eb67d;
   }
 }
+
 .button-clear {
   background-color:transparent;
   border-color:transparent;
   color:#2eb67d;
-}
 
-.button-clear {
   &:focus,
   &:hover {
     background-color:transparent;
