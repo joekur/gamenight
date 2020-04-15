@@ -26,6 +26,12 @@ const startingBrushRadius = 4;
 const colors = [
   '#444',
   '#fff',
+  '#bf5e19',
+  '#ff6553',
+  '#ffcc78',
+  '#bf5eff',
+  '#4bc485',
+  '#45a4ff',
 ]
 
 interface ISwatchProps {
