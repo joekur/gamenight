@@ -106,12 +106,26 @@ defmodule Gamenight.Telestrations.GameTest do
 
   describe ".get_player_state" do
     test "returns current writing/drawing throughout the steps" do
-      game_id = started_game()
+      {:ok, game_id} = Game.create_game
+
+      Game.request_join(game_id, "Alice")
+      Game.request_join(game_id, "Bob")
+      Game.request_join(game_id, "George")
+
       player_id = game_id |> player_ids |> List.first
 
       {:ok, state} = Game.get_player_state(game_id, player_id)
       assert state.me.current_writing == nil
       assert state.me.current_drawing == nil
+
+      Game.start_game(game_id)
+
+      {:ok, state} = Game.get_player_state(game_id, player_id)
+      assert state.me.current_writing == nil
+      assert state.me.current_drawing == nil
+
+      assert Map.has_key?(state.round, :stories) == false
+      assert Map.has_key?(state.round, :submitted) == true
 
       Enum.each(game_id |> player_ids, fn player_id ->
         :ok = Game.write_story(game_id, player_id, "story #{player_id}")

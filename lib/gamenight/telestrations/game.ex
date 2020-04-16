@@ -84,6 +84,15 @@ defmodule Gamenight.Telestrations.Game do
   end
 
   def handle_call({:get_player_state, player_id}, _from, state) do
+    # Don't return large 'stories' key
+    round = if state.round do
+      {_, round} = state.round |> Map.from_struct |> pop_in([:stories])
+      round
+    else
+      nil
+    end
+    player_state = %{state |> Map.from_struct | round: round}
+
     player_state = if player_id != nil do
       additional = %{
         me: %{
@@ -92,9 +101,9 @@ defmodule Gamenight.Telestrations.Game do
         },
       }
 
-      Map.merge(Map.from_struct(state), additional)
+      player_state |> Map.merge(additional)
     else
-      state
+      player_state
     end
 
     {:reply, {:ok, player_state}, state}

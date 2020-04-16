@@ -8,13 +8,7 @@ export enum EGameStatus {
 
 interface IRound {
   step: number;
-  stories: IPlayersMap<IStory>;
   submitted: IPlayersMap<boolean>;
-}
-
-interface IStory {
-  writings: IWritingResp[];
-  drawings: IDrawingResp[];
 }
 
 interface IWriting {
