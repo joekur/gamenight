@@ -148,21 +148,38 @@ export default class Drawing extends React.Component<IProps, IState> {
     );
   }
 
+  renderWriting() {
+    const { game } = this.props;
+    const currentWriting = game.currentWritingToDraw;
+
+    return (
+      <div className="game-card">
+        {currentWriting.player.name}:
+        <p>
+          {currentWriting.text}
+        </p>
+      </div>
+    );
+  }
+
   render() {
     return (
-      <div ref={this.outerRef} className="drawing noselect">
-        <CanvasDraw
-          ref={this.canvasRef}
-          canvasWidth={this.state.outerWidth}
-          canvasHeight={this.state.outerWidth / aspectRatio}
-          lazyRadius={1}
-          brushRadius={this.brushRadius}
-          brushColor={this.state.brushColor}
-          hideGrid
-          hideInterface
-          onChange={this.handleCanvasUpdate}
-        />
-        {this.renderControls()}
+      <div>
+        {this.renderWriting()}
+        <div ref={this.outerRef} className="drawing noselect">
+          <CanvasDraw
+            ref={this.canvasRef}
+            canvasWidth={this.state.outerWidth}
+            canvasHeight={this.state.outerWidth / aspectRatio}
+            lazyRadius={1}
+            brushRadius={this.brushRadius}
+            brushColor={this.state.brushColor}
+            hideGrid
+            hideInterface
+            onChange={this.handleCanvasUpdate}
+          />
+          {this.renderControls()}
+        </div>
         <button onClick={this.handleSubmit} className="mt-2">
           Submit
         </button>
