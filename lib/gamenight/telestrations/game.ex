@@ -87,7 +87,8 @@ defmodule Gamenight.Telestrations.Game do
     player_state = if player_id != nil do
       additional = %{
         me: %{
-          original_author: current_original_author(state, player_id),
+          current_writing: current_writing(state, player_id),
+          current_drawing: current_drawing(state, player_id),
         },
       }
 
@@ -194,6 +195,26 @@ defmodule Gamenight.Telestrations.Game do
     # left by which "step" we are in
     if Enum.member?([@statuses.writing, @statuses.drawing, @statuses.interpreting], state.status) do
       next_element(state.player_ids, player_id, -1 * state.round.step)
+    else
+      nil
+    end
+  end
+
+  defp current_writing(state, player_id) do
+    author = current_original_author(state, player_id)
+
+    if author && state.status == @statuses.drawing do
+      state.round.stories[author].writings |> List.last
+    else
+      nil
+    end
+  end
+
+  defp current_drawing(state, player_id) do
+    author = current_original_author(state, player_id)
+
+    if author && state.status == @statuses.interpreting do
+      state.round.stories[author].drawings |> List.last
     else
       nil
     end

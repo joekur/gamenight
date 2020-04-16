@@ -47,7 +47,8 @@ export interface IPlayersMap<T> {
 }
 
 interface IMe {
-  original_author: string;
+  current_writing: IWritingResp;
+  current_drawing: IDrawingResp;
 }
 
 export interface IGameState {
@@ -106,10 +107,7 @@ export class Game {
   }
 
   get currentWritingToDraw(): IWriting {
-    const originalAuthor = this.state.me.original_author;
-
-    const writing = this.state.round.stories[originalAuthor].writings.slice(-1)[0];
-
+    const writing = this.state.me.current_writing;
     return {
       player: this.findPlayer(writing.player_id),
       text: writing.text,

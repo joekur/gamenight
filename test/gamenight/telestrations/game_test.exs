@@ -103,4 +103,31 @@ defmodule Gamenight.Telestrations.GameTest do
     assert state.status == Game.statuses.show_and_tell
     assert state.round.current_storyteller != nil
   end
+
+  describe ".get_player_state" do
+    test "returns current writing/drawing throughout the steps" do
+      game_id = started_game()
+      player_id = game_id |> player_ids |> List.first
+
+      {:ok, state} = Game.get_player_state(game_id, player_id)
+      assert state.me.current_writing == nil
+      assert state.me.current_drawing == nil
+
+      Enum.each(game_id |> player_ids, fn player_id ->
+        :ok = Game.write_story(game_id, player_id, "story #{player_id}")
+      end)
+
+      {:ok, state} = Game.get_player_state(game_id, player_id)
+      assert state.me.current_writing != nil
+      assert state.me.current_drawing == nil
+
+      Enum.each(game_id |> player_ids, fn player_id ->
+        :ok = Game.draw_story(game_id, player_id, "src #{player_id}")
+      end)
+
+      {:ok, state} = Game.get_player_state(game_id, player_id)
+      assert state.me.current_writing == nil
+      assert state.me.current_drawing != nil
+    end
+  end
 end
