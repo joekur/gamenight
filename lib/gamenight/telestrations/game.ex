@@ -67,6 +67,7 @@ defmodule Gamenight.Telestrations.Game do
   end
 
   def get_state(game_id), do: try_call(game_id, :get_state)
+  def get_player_state(game_id, player_id), do: try_call(game_id, {:get_player_state, player_id})
   def request_join(game_id, player_name), do: try_call(game_id, {:request_join, player_name})
   def start_game(game_id), do: try_call(game_id, :start_game)
   def write_story(game_id, player_id, writing), do: try_call(game_id, {:write_story, player_id, writing})
@@ -80,6 +81,22 @@ defmodule Gamenight.Telestrations.Game do
 
   def handle_call(:get_state, _from, state) do
     {:reply, {:ok, state}, state}
+  end
+
+  def handle_call({:get_player_state, player_id}, _from, state) do
+    player_state = if player_id != nil do
+      additional = %{
+        me: %{
+          original_author: current_original_author(state, player_id),
+        },
+      }
+
+      Map.merge(Map.from_struct(state), additional)
+    else
+      state
+    end
+
+    {:reply, {:ok, player_state}, state}
   end
 
   def handle_call({:request_join, player_name}, _from, state) do
@@ -175,7 +192,11 @@ defmodule Gamenight.Telestrations.Game do
   defp current_original_author(state, player_id) do
     # Stories are passed to the right, therefore we move back to the
     # left by which "step" we are in
-    next_element(state.player_ids, player_id, -1 * state.round.step)
+    if Enum.member?([@statuses.writing, @statuses.drawing, @statuses.interpreting], state.status) do
+      next_element(state.player_ids, player_id, -1 * state.round.step)
+    else
+      nil
+    end
   end
 
   defp next_element(list, el, by) do

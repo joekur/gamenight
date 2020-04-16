@@ -51,7 +51,6 @@ defmodule Gamenight.Telestrations.Bots do
   end
 
   def broadcast_updated(bots) do
-    {:ok, state} = Game.get_state(bots.game_id)
-    GamenightWeb.Endpoint.broadcast("telestrations:#{bots.game_id}", "game_updated", state)
+    GamenightWeb.Endpoint.broadcast("telestrations:#{bots.game_id}", "game_updated", %{})
   end
 end

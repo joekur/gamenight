@@ -3,13 +3,16 @@ defmodule GamenightWeb.TelestrationsChannel do
 
   alias Gamenight.Telestrations.Game
 
+  intercept ["game_updated"]
+
   def join("telestrations:" <> game_id, payload, socket) do
     if authorized?(payload) do
       socket = assign(socket, :game_id, game_id)
       socket = assign(socket, :player_id, payload["player_id"])
 
       # TODO handle games that don't exist
-      case Game.get_state(socket.assigns.game_id) do
+      resp = Game.get_player_state(socket.assigns.game_id, socket.assigns.player_id)
+      case resp do
         {:ok, game_state} ->
           {:ok, game_state, socket}
         {:error, resp} ->
@@ -78,9 +81,16 @@ defmodule GamenightWeb.TelestrationsChannel do
     {:reply, msg, socket}
   end
 
+  def handle_out("game_updated", _, socket) do
+    {:ok, state} = Game.get_player_state(socket.assigns.game_id, socket.assigns.player_id)
+
+    push(socket, "game_updated", state)
+
+    {:noreply, socket}
+  end
+
   defp broadcast_game_updated(socket) do
-    {:ok, game_state} = Game.get_state(socket.assigns.game_id)
-    broadcast socket, "game_updated", game_state
+    broadcast socket, "game_updated", %{}
   end
 
   # Add authorization logic here as required.

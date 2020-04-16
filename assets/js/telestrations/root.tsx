@@ -113,7 +113,7 @@ export default class Root extends React.Component<IProps, IState> {
   @bind
   handleSubmitDrawing(drawingBase64: string) {
     const compressed = LZString.compress(drawingBase64)
-    this.pushChannel('draw_story', { src: compressed });
+    this.pushChannel('draw_story', { src: drawingBase64 });
   }
 
   pushChannel(event: string, payload: object, onSuccess?: (response: any) => any) {
