@@ -25,6 +25,6 @@ defmodule Gamenight.Telestrations.BotsTest do
     Bots.draw_stories(bots)
 
     {:ok, state} = Game.get_state(game_id)
-    assert state.status == Game.statuses().writing
+    assert state.status == Game.statuses().interpreting
   end
 end

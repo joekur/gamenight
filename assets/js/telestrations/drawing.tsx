@@ -1,13 +1,14 @@
 import * as React from 'react';
 import bind from 'bind-decorator';
 import { Game } from './game';
-import Icon from '../shared/icon';
 
 import CanvasDraw from 'react-canvas-draw-joekur';
 import { Slider } from '@material-ui/core';
+import Icon from '../shared/icon';
 
 interface IProps {
   game: Game;
+  onSubmit: (drawingBase64: string) => void;
 }
 
 interface IState {
@@ -95,7 +96,9 @@ export default class Drawing extends React.Component<IProps, IState> {
   @bind
   handleSubmit(e: React.MouseEvent) {
     e.preventDefault();
-    console.log('canvas data', this.canvasRef.current.canvasContainer.children[1].toDataURL());
+
+    const drawingBase64 = this.canvasRef.current.canvasContainer.children[1].toDataURL()
+    this.props.onSubmit(drawingBase64);
   }
 
   @bind

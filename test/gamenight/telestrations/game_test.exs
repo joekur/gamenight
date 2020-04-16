@@ -92,7 +92,7 @@ defmodule Gamenight.Telestrations.GameTest do
     end)
 
     {:ok, state} = Game.get_state(game_id)
-    assert state.status == Game.statuses.writing
+    assert state.status == Game.statuses.interpreting
     assert state.round.step == 2
 
     Enum.each(game_id |> player_ids, fn player_id ->

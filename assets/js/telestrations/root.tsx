@@ -3,6 +3,7 @@ import bind from 'bind-decorator';
 import { Channel, Socket } from 'phoenix';
 import { Game, IGameState, EGameStatus } from './game';
 import { setCookie, getCookie } from '../cookies';
+import LZString from 'lz-string';
 
 import Lobby from './lobby';
 import Waiting from './waiting';
@@ -109,6 +110,12 @@ export default class Root extends React.Component<IProps, IState> {
     this.pushChannel('write_story', { text: story });
   }
 
+  @bind
+  handleSubmitDrawing(drawingBase64: string) {
+    const compressed = LZString.compress(drawingBase64)
+    this.pushChannel('draw_story', { src: compressed });
+  }
+
   pushChannel(event: string, payload: object, onSuccess?: (response: any) => any) {
     const push = this.channel!.push(event, payload)
       .receive('error', this.handleUnknownError)
@@ -141,6 +148,7 @@ export default class Root extends React.Component<IProps, IState> {
     if (window.location.search === '?draw') {
       return <Drawing
         game={game}
+        onSubmit={() => {}}
       />;
     }
 
@@ -160,6 +168,7 @@ export default class Root extends React.Component<IProps, IState> {
     } else if (game.status === EGameStatus.Drawing) {
       return <Drawing
         game={game}
+        onSubmit={this.handleSubmitDrawing}
       />;
     }
 

@@ -153,10 +153,10 @@ defmodule Gamenight.Telestrations.Game do
     if state.round.step == length(state.player_ids) - 1 do
       state |> start_show_and_tell
     else
-      next_status = if state.status == @statuses.writing do
-        @statuses.drawing
+      next_status = if state.status == @statuses.drawing do
+        @statuses.interpreting
       else
-        @statuses.writing
+        @statuses.drawing
       end
 
       state = update_in(state.round.step, &(&1 + 1))

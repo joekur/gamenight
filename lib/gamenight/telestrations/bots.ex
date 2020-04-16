@@ -42,8 +42,6 @@ defmodule Gamenight.Telestrations.Bots do
   end
 
   def draw_stories(bots) do
-    {:ok, state} = Game.get_state(bots.game_id)
-
     bots.player_ids
     |> Enum.each(fn player_id ->
       :ok = Game.draw_story(bots.game_id, player_id, @drawing_src)
