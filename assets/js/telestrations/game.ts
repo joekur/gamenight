@@ -107,4 +107,12 @@ export class Game {
       text: writing.text,
     };
   }
+
+  get currentDrawingToInterpret(): IDrawing {
+    const drawing = this.state.me.current_drawing;
+    return {
+      player: this.findPlayer(drawing.player_id),
+      src: drawing.src,
+    };
+  }
 }

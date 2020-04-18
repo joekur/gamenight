@@ -3,12 +3,12 @@ import bind from 'bind-decorator';
 import { Channel, Socket } from 'phoenix';
 import { Game, IGameState, EGameStatus } from './game';
 import { setCookie, getCookie } from '../cookies';
-import LZString from 'lz-string';
 
 import Lobby from './lobby';
 import Waiting from './waiting';
 import Writing from './writing';
 import Drawing from './drawing';
+import Interpreting from './interpreting';
 import Modal from '../shared/modal';
 
 interface IProps {
@@ -112,7 +112,6 @@ export default class Root extends React.Component<IProps, IState> {
 
   @bind
   handleSubmitDrawing(drawingBase64: string) {
-    const compressed = LZString.compress(drawingBase64)
     this.pushChannel('draw_story', { src: drawingBase64 });
   }
 
@@ -169,6 +168,11 @@ export default class Root extends React.Component<IProps, IState> {
       return <Drawing
         game={game}
         onSubmit={this.handleSubmitDrawing}
+      />;
+    } else if (game.status === EGameStatus.Interpreting) {
+      return <Interpreting
+        game={game}
+        onSubmit={this.handleSubmitStory}
       />;
     }
 

@@ -154,10 +154,7 @@ export default class Drawing extends React.Component<IProps, IState> {
 
     return (
       <div className="game-card">
-        {currentWriting.player.name}:
-        <p>
-          {currentWriting.text}
-        </p>
+        {currentWriting.text}
       </div>
     );
   }

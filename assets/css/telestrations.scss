@@ -5,3 +5,17 @@
     padding: 0 24px 24px 24px;
   }
 }
+
+.drawing-img {
+  background: white;
+  overflow: hidden;
+  border-radius: 5px;
+  margin-top: 1em;
+
+  img {
+    display: block;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}

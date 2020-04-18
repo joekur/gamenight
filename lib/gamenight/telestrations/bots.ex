@@ -15,8 +15,6 @@ defmodule Gamenight.Telestrations.Bots do
     "Vadar",
   ]
 
-  @drawing_src "foo drawing src"
-
   def create_game(num_bots) do
     {:ok, game_id} = Game.create_game
 
@@ -44,13 +42,19 @@ defmodule Gamenight.Telestrations.Bots do
   def draw_stories(bots) do
     bots.player_ids
     |> Enum.each(fn player_id ->
-      :ok = Game.draw_story(bots.game_id, player_id, @drawing_src)
+      :ok = Game.draw_story(bots.game_id, player_id, get_drawing_data())
     end)
 
     broadcast_updated(bots)
   end
 
-  def broadcast_updated(bots) do
+  defp broadcast_updated(bots) do
     GamenightWeb.Endpoint.broadcast("telestrations:#{bots.game_id}", "game_updated", %{})
+  end
+
+  defp get_drawing_data do
+    path = "#{:code.priv_dir(:gamenight)}/data/telestrations/bot_drawing.png"
+    {:ok, src} = File.read(path)
+    src
   end
 end
