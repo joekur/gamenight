@@ -19,7 +19,6 @@ interface IState {
 }
 
 const aspectRatio = 1.0;
-const lsKey = 'draw-history';
 
 const minBrushRadius = 1;
 const maxBrushRadius = 15;
@@ -79,11 +78,15 @@ export default class Drawing extends React.Component<IProps, IState> {
     this.setState({ outerWidth: this.outerRef.current!.clientWidth });
 
     setTimeout(() => {
-      const prevDrawingData = window.localStorage.getItem(lsKey);
+      const prevDrawingData = window.localStorage.getItem(this.localStorageKey);
       if (!!prevDrawingData) {
         this.canvas.loadSaveData(prevDrawingData, true);
       }
     }, 100);
+  }
+
+  get localStorageKey() {
+    return `draw-history:${this.props.game.id}`;
   }
 
   get canvas() {
@@ -108,7 +111,7 @@ export default class Drawing extends React.Component<IProps, IState> {
   @bind
   handleCanvasUpdate(canvas: CanvasDraw) {
     const saveData = canvas.getSaveData();
-    window.localStorage.setItem(lsKey, saveData);
+    window.localStorage.setItem(this.localStorageKey, saveData);
   }
 
   @bind
