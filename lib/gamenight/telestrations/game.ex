@@ -10,6 +10,7 @@ defmodule Gamenight.Telestrations.Game do
       player_ids: [],
       player_names: %{}, # player_id => name
       round: nil, # %Round{}
+      direction: -1,
       status: :lobby,
     ]
   end
@@ -75,6 +76,7 @@ defmodule Gamenight.Telestrations.Game do
   def write_story(game_id, player_id, writing), do: try_call(game_id, {:write_story, player_id, writing})
   def draw_story(game_id, player_id, drawing_src), do: try_call(game_id, {:draw_story, player_id, drawing_src})
   def step_forward_storytelling(game_id), do: try_call(game_id, :step_forward_storytelling)
+  def start_next_round(game_id), do: try_call(game_id, :start_next_round)
 
 ##### Server
 
@@ -136,7 +138,7 @@ defmodule Gamenight.Telestrations.Game do
       num_players(state) < @min_players ->
         {:reply, error_response("Not enough players"), state}
       true ->
-        state = state |> start_first_round()
+        state = state |> start_round()
         {:reply, :ok, state}
     end
   end
@@ -178,6 +180,14 @@ defmodule Gamenight.Telestrations.Game do
     else
       {:reply, :ok, put_in(state.round.storytelling_step, next_step)}
     end
+  end
+
+  def handle_call(:start_next_round, _from, state) do
+    state = state
+            |> start_round()
+            |> Map.put(:direction, state.direction * -1)
+
+    {:reply, :ok, state}
   end
 
   def next_storyteller(state) do
@@ -231,7 +241,7 @@ defmodule Gamenight.Telestrations.Game do
     # Stories are passed to the right, therefore we move back to the
     # left by which "step" we are in
     if Enum.member?([@statuses.writing, @statuses.drawing, @statuses.interpreting], state.status) do
-      next_element(state.player_ids, player_id, -1 * state.round.step)
+      next_element(state.player_ids, player_id, state.direction * state.round.step)
     else
       nil
     end
@@ -290,7 +300,7 @@ defmodule Gamenight.Telestrations.Game do
     list |> Enum.at(result_index)
   end
 
-  defp start_first_round(state) do
+  defp start_round(state) do
     round = %Round{
       step: 0,
       stories: build_player_map(state, %Story{}),

@@ -163,6 +163,11 @@ defmodule Gamenight.Telestrations.GameTest do
 
     {:ok, state} = Game.get_state(game_id)
     assert state.status == Game.statuses().round_end
+
+    :ok = Game.start_next_round(game_id)
+
+    {:ok, state} = Game.get_state(game_id)
+    assert state.status == Game.statuses().writing
   end
 
   describe ".get_player_state" do

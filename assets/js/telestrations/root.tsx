@@ -10,6 +10,7 @@ import Writing from './writing';
 import Drawing from './drawing';
 import Interpreting from './interpreting';
 import ShowAndTell from './show_and_tell';
+import RoundEnd from './round_end';
 import Modal from '../shared/modal';
 
 interface IProps {
@@ -122,6 +123,10 @@ export default class Root extends React.Component<IProps, IState> {
       this.pushChannel('step_forward_storytelling', {});
     }
   }
+  @bind
+  handleNextRound() {
+    this.pushChannel('start_next_round', {});
+  }
 
   pushChannel(event: string, payload: object, onSuccess?: (response: any) => any) {
     const push = this.channel!.push(event, payload)
@@ -186,6 +191,11 @@ export default class Root extends React.Component<IProps, IState> {
       return <ShowAndTell
         game={game}
         onStepForward={this.handleStepForwardShowAndTell}
+      />;
+    } else if (game.status === EGameStatus.RoundEnd) {
+      return <RoundEnd
+        game={game}
+        onNextRound={this.handleNextRound}
       />;
     }
 

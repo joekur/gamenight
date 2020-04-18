@@ -89,6 +89,14 @@ defmodule GamenightWeb.TelestrationsChannel do
     {:reply, msg, socket}
   end
 
+  def handle_in("start_next_round", _payload, socket) do
+    msg = Game.start_next_round(socket.assigns.game_id)
+
+    broadcast_game_updated(socket)
+
+    {:reply, msg, socket}
+  end
+
   def handle_out("game_updated", _, socket) do
     {:ok, state} = Game.get_player_state(socket.assigns.game_id, socket.assigns.player_id)
 
