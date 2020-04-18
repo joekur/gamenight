@@ -19,3 +19,23 @@
     margin: 0 auto;
   }
 }
+
+.show-and-tell__player {
+  padding: 2px 8px;
+  color: white;
+  background: #1b89d8;
+  position: absolute;
+  top: -12px;
+  left: -8px;
+  border-radius: 4px;
+}
+
+.show-and-tell__step {
+  padding: 2px 8px;
+  background: #fbfbfb;
+  border: 1px solid #eee;
+  position: absolute;
+  top: -12px;
+  right: -8px;
+  border-radius: 4px;
+}

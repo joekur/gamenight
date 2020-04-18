@@ -40,8 +40,10 @@ export default class Interpreting extends React.Component<IProps, IState> {
 
     return (
       <div>
-        <div className="drawing-img">
-          <img src={game.currentDrawingToInterpret.src} />
+        <div className="game-card">
+          <div className="drawing-img">
+            <img src={game.currentDrawingToInterpret.src} />
+          </div>
         </div>
 
         <div className="game-card">

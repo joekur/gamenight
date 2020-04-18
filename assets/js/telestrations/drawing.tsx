@@ -78,7 +78,7 @@ export default class Drawing extends React.Component<IProps, IState> {
     setTimeout(() => {
       const prevDrawingData = window.localStorage.getItem(lsKey);
       if (!!prevDrawingData) {
-        // this.canvas.loadSaveData(prevDrawingData, true);
+        this.canvas.loadSaveData(prevDrawingData, true);
       }
     }, 100);
   }
@@ -98,6 +98,7 @@ export default class Drawing extends React.Component<IProps, IState> {
     e.preventDefault();
 
     const drawingBase64 = this.canvasRef.current.canvasContainer.children[1].toDataURL()
+    window.localStorage.clear();
     this.props.onSubmit(drawingBase64);
   }
 

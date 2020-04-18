@@ -9,6 +9,7 @@ import Waiting from './waiting';
 import Writing from './writing';
 import Drawing from './drawing';
 import Interpreting from './interpreting';
+import ShowAndTell from './show_and_tell';
 import Modal from '../shared/modal';
 
 interface IProps {
@@ -115,6 +116,13 @@ export default class Root extends React.Component<IProps, IState> {
     this.pushChannel('draw_story', { src: drawingBase64 });
   }
 
+  @bind
+  handleStepForwardShowAndTell() {
+    if (this.game.iAmShowAndTeller) {
+      this.pushChannel('step_forward_storytelling', {});
+    }
+  }
+
   pushChannel(event: string, payload: object, onSuccess?: (response: any) => any) {
     const push = this.channel!.push(event, payload)
       .receive('error', this.handleUnknownError)
@@ -173,6 +181,11 @@ export default class Root extends React.Component<IProps, IState> {
       return <Interpreting
         game={game}
         onSubmit={this.handleSubmitStory}
+      />;
+    } else if (game.status === EGameStatus.ShowAndTell) {
+      return <ShowAndTell
+        game={game}
+        onStepForward={this.handleStepForwardShowAndTell}
       />;
     }
 

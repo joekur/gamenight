@@ -48,6 +48,11 @@ defmodule Gamenight.Telestrations.Bots do
     broadcast_updated(bots)
   end
 
+  def step_forward_show_and_tell(bots) do
+    :ok = Game.step_forward_storytelling(bots.game_id)
+    broadcast_updated(bots)
+  end
+
   defp broadcast_updated(bots) do
     GamenightWeb.Endpoint.broadcast("telestrations:#{bots.game_id}", "game_updated", %{})
   end

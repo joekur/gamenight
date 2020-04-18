@@ -4,11 +4,14 @@ export enum EGameStatus {
   Drawing = 'drawing',
   Interpreting = 'interpreting',
   ShowAndTell = 'show_and_tell',
+  RoundEnd = 'round_end',
 }
 
 interface IRound {
   step: number;
   submitted: IPlayersMap<boolean>;
+  current_storyteller: string;
+  storytelling_step: number;
 }
 
 interface IWriting {
@@ -43,6 +46,8 @@ export interface IPlayersMap<T> {
 interface IMe {
   current_writing: IWritingResp;
   current_drawing: IDrawingResp;
+  storytelling_writing: IWritingResp | null;
+  storytelling_drawing: IDrawingResp | null;
 }
 
 export interface IGameState {
@@ -102,6 +107,10 @@ export class Game {
 
   get currentWritingToDraw(): IWriting {
     const writing = this.state.me.current_writing;
+    return this.buildWriting(writing);
+  }
+
+  buildWriting(writing: IWritingResp): IWriting {
     return {
       player: this.findPlayer(writing.player_id),
       text: writing.text,
@@ -110,9 +119,44 @@ export class Game {
 
   get currentDrawingToInterpret(): IDrawing {
     const drawing = this.state.me.current_drawing;
+    return this.buildDrawing(drawing);
+  }
+
+  buildDrawing(drawing: IDrawingResp): IDrawing {
     return {
       player: this.findPlayer(drawing.player_id),
       src: drawing.src,
     };
+  }
+
+  get iAmShowAndTeller(): boolean {
+    return this.state.status === EGameStatus.ShowAndTell
+      && this.state.round.current_storyteller === this.playerId;
+  }
+
+  get currentShowAndTeller(): IPlayer {
+    const playerId = this.state.round.current_storyteller;
+
+    return this.findPlayer(playerId);
+  }
+
+  get showAndTellWriting(): IWriting | null {
+    const writing = this.state.me.storytelling_writing;
+
+    return writing && this.buildWriting(writing);
+  }
+
+  get showAndTellDrawing(): IDrawing | null {
+    const drawing = this.state.me.storytelling_drawing;
+
+    return drawing && this.buildDrawing(drawing);
+  }
+
+  get storytellingStep() {
+    return this.state.round.storytelling_step + 1;
+  }
+
+  get totalStorytellingSteps() {
+    return this.players.length;
   }
 }

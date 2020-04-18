@@ -126,7 +126,7 @@ export default class Lobby extends React.Component<IProps, IState> {
     return (
       <div className="lobby">
         <div className="lobby__game-id lobby__game-header">
-          Join at gamenight.lol/ <span className="lobby__game-header__code">{game.id}</span>
+          Join at gamenight.lol/<span className="lobby__game-header__code">{game.id}</span>
         </div>
 
         {game.amPlayer ? this.renderActivePlayerView() : this.renderJoinGame()}
