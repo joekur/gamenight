@@ -1,6 +1,7 @@
 import * as React from 'react';
 import bind from 'bind-decorator';
 import { Game } from './game';
+import { scrollToTop } from '../utilities';
 
 interface IProps {
   game: Game;
@@ -18,6 +19,10 @@ export default class Interpreting extends React.Component<IProps, IState> {
     this.state = {
       writing: '',
     };
+  }
+
+  componentDidMount() {
+    scrollToTop();
   }
 
   @bind

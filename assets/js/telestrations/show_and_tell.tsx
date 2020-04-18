@@ -1,6 +1,7 @@
 import * as React from 'react';
 import bind from 'bind-decorator';
 import { Game } from './game';
+import { scrollToTop } from '../utilities';
 
 interface IProps {
   game: Game;
@@ -8,6 +9,10 @@ interface IProps {
 }
 
 export default class ShowAndTell extends React.Component<IProps, {}> {
+  componentDidMount() {
+    scrollToTop();
+  }
+
   renderWhoIsStoryteller() {
     const { game } = this.props;
 

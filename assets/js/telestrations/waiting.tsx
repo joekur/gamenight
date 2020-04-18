@@ -1,12 +1,17 @@
 import * as React from 'react';
 import bind from 'bind-decorator';
 import { Game, EGameStatus } from './game';
+import { scrollToTop } from '../utilities';
 
 interface IProps {
   game: Game,
 }
 
 export default class Waiting extends React.Component<IProps, {}> {
+  componentDidMount() {
+    scrollToTop();
+  }
+
   renderPlayerStatusItems() {
     const { game } = this.props;
 

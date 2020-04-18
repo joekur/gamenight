@@ -5,6 +5,7 @@ import { Game } from './game';
 import CanvasDraw from 'react-canvas-draw-joekur';
 import { Slider } from '@material-ui/core';
 import Icon from '../shared/icon';
+import { scrollToTop } from '../utilities';
 
 interface IProps {
   game: Game;
@@ -73,6 +74,8 @@ export default class Drawing extends React.Component<IProps, IState> {
   }
 
   componentDidMount() {
+    scrollToTop();
+
     this.setState({ outerWidth: this.outerRef.current!.clientWidth });
 
     setTimeout(() => {
