@@ -50,4 +50,6 @@ Gamenight.Telestrations.Bots.write_stories(bots)
 
 # Submits a "drawing" for each player:
 Gamenight.Telestrations.Bots.draw_stories(bots)
+
+Gamenight.Telestrations.Bots.step_forward_show_and_tell(bots)
 ```
