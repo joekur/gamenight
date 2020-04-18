@@ -21,6 +21,7 @@ defmodule Gamenight.Telestrations.Game do
       stories: %{}, # player_id => %Story{}
       submitted: %{}, # player_id => bool
       current_storyteller: nil,
+      storytelling_step: 0,
     ]
   end
 
@@ -48,6 +49,7 @@ defmodule Gamenight.Telestrations.Game do
     drawing: :drawing,
     interpreting: :interpreting,
     show_and_tell: :show_and_tell,
+    round_end: :round_end,
   }
   def statuses, do: @statuses
 
@@ -72,6 +74,7 @@ defmodule Gamenight.Telestrations.Game do
   def start_game(game_id), do: try_call(game_id, :start_game)
   def write_story(game_id, player_id, writing), do: try_call(game_id, {:write_story, player_id, writing})
   def draw_story(game_id, player_id, drawing_src), do: try_call(game_id, {:draw_story, player_id, drawing_src})
+  def step_forward_storytelling(game_id), do: try_call(game_id, :step_forward_storytelling)
 
 ##### Server
 
@@ -98,6 +101,8 @@ defmodule Gamenight.Telestrations.Game do
         me: %{
           current_writing: current_writing(state, player_id),
           current_drawing: current_drawing(state, player_id),
+          storytelling_writing: current_storytelling_writing(state),
+          storytelling_drawing: current_storytelling_drawing(state),
         },
       }
 
@@ -164,6 +169,29 @@ defmodule Gamenight.Telestrations.Game do
     {:reply, :ok, state}
   end
 
+  def handle_call(:step_forward_storytelling, _from, state) do
+    next_step = state.round.storytelling_step + 1
+
+    if next_step > length(state.player_ids) - 1 do
+      state = state |> next_storyteller
+      {:reply, :ok, state}
+    else
+      {:reply, :ok, put_in(state.round.storytelling_step, next_step)}
+    end
+  end
+
+  def next_storyteller(state) do
+    current_storyteller = state.round.current_storyteller
+    next_storyteller = next_element(state.player_ids, current_storyteller, 1)
+
+    if next_storyteller == state.player_ids |> List.first do # we've looped back around
+      %{state | status: @statuses.round_end}
+    else
+      state = put_in(state.round.storytelling_step, 0)
+      put_in(state.round.current_storyteller, next_storyteller)
+    end
+  end
+
   defp check_all_submitted(state) do
     all_submitted = state.round.submitted
                     |> Map.values
@@ -228,6 +256,32 @@ defmodule Gamenight.Telestrations.Game do
       nil
     end
   end
+
+  defp current_storytelling_writing(%{status: :show_and_tell} = state) do
+    step = state.round.storytelling_step
+    author = state.round.current_storyteller
+
+    if rem(step, 2) == 0 do
+      index = div(step, 2)
+      state.round.stories[author].writings |> Enum.at(index)
+    else
+      nil
+    end
+  end
+  defp current_storytelling_writing(_), do: nil
+
+  defp current_storytelling_drawing(%{status: :show_and_tell} = state) do
+    step = state.round.storytelling_step
+    author = state.round.current_storyteller
+
+    if rem(step, 2) == 1 do
+      index = div(step, 2)
+      state.round.stories[author].drawings |> Enum.at(index)
+    else
+      nil
+    end
+  end
+  defp current_storytelling_drawing(_), do: nil
 
   defp next_element(list, el, by) do
     element_index = list |> Enum.find_index(&(&1 == el))

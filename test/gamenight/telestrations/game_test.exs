@@ -104,6 +104,67 @@ defmodule Gamenight.Telestrations.GameTest do
     assert state.round.current_storyteller != nil
   end
 
+  test "show and tell cycles through readers and steps through the writing/drawings" do
+    # 3 players
+    game_id = started_game()
+    player_ids = game_id |> player_ids
+    Enum.each(player_ids, fn player_id ->
+      :ok = Game.write_story(game_id, player_id, "story #{player_id}")
+    end)
+    Enum.each(game_id |> player_ids, fn player_id ->
+      :ok = Game.draw_story(game_id, player_id, "src #{player_id}")
+    end)
+    Enum.each(player_ids, fn player_id ->
+      :ok = Game.write_story(game_id, player_id, "story #{player_id}")
+    end)
+
+    {:ok, state} = Game.get_state(game_id)
+    storyteller = state.round.current_storyteller
+    assert state.round.storytelling_step == 0
+    {:ok, me_state} = Game.get_player_state(game_id, storyteller)
+    assert me_state.me.storytelling_writing.player_id == storyteller
+    assert me_state.me.storytelling_writing.text == "story #{storyteller}"
+    assert me_state.me.storytelling_drawing == nil
+
+    :ok = Game.step_forward_storytelling(game_id)
+
+    {:ok, state} = Game.get_state(game_id)
+    assert state.round.storytelling_step == 1
+    assert state.round.current_storyteller == storyteller
+    {:ok, me_state} = Game.get_player_state(game_id, storyteller)
+    assert me_state.me.storytelling_writing == nil
+    assert me_state.me.storytelling_drawing.player_id != storyteller
+
+    :ok = Game.step_forward_storytelling(game_id)
+
+    {:ok, state} = Game.get_state(game_id)
+    assert state.round.storytelling_step == 2
+    assert state.round.current_storyteller == storyteller
+    {:ok, me_state} = Game.get_player_state(game_id, storyteller)
+    assert me_state.me.storytelling_writing.player_id != storyteller
+    assert me_state.me.storytelling_drawing == nil
+
+    :ok = Game.step_forward_storytelling(game_id)
+
+    {:ok, state} = Game.get_state(game_id)
+    assert state.round.storytelling_step == 0
+    assert state.round.current_storyteller != storyteller
+    new_storyteller = state.round.current_storyteller
+    {:ok, me_state} = Game.get_player_state(game_id, new_storyteller)
+    assert me_state.me.storytelling_writing.player_id == new_storyteller
+    assert me_state.me.storytelling_drawing == nil
+
+    :ok = Game.step_forward_storytelling(game_id) # -> author 1, step 1
+    :ok = Game.step_forward_storytelling(game_id) # -> author 1, step 2
+    :ok = Game.step_forward_storytelling(game_id) # -> author 2, step 0
+    :ok = Game.step_forward_storytelling(game_id) # -> author 2, step 1
+    :ok = Game.step_forward_storytelling(game_id) # -> author 2, step 2
+    :ok = Game.step_forward_storytelling(game_id) # -> end this round
+
+    {:ok, state} = Game.get_state(game_id)
+    assert state.status == Game.statuses().round_end
+  end
+
   describe ".get_player_state" do
     test "returns current writing/drawing throughout the steps" do
       {:ok, game_id} = Game.create_game
