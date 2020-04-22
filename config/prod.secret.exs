@@ -30,6 +30,19 @@ config :gamenight, GamenightWeb.Endpoint,
   ],
   secret_key_base: secret_key_base
 
+sentry_dsn = System.get_env("SENTRY_DSN") ||
+  raise("environment variable SENTRY_DSN is missing.")
+
+config :sentry,
+  dsn: sentry_dsn,
+  environment_name: :prod,
+  enable_source_code_context: true,
+  root_source_code_path: File.cwd!,
+  tags: %{
+    env: "production"
+  },
+  included_environments: [:prod]
+
 # ## Using releases (Elixir v1.9+)
 #
 # If you are doing OTP releases, you need to instruct Phoenix
