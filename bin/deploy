@@ -1,1 +1,1 @@
-git push gigalixir master
+mix sentry_recompile && git push gigalixir master

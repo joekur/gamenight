@@ -1,5 +1,7 @@
 defmodule GamenightWeb.Router do
   use GamenightWeb, :router
+  use Plug.ErrorHandler
+  use Sentry.Plug
 
   pipeline :browser do
     plug :accepts, ["html"]
