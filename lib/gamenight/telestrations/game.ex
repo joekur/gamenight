@@ -10,7 +10,6 @@ defmodule Gamenight.Telestrations.Game do
       player_ids: [],
       player_names: %{}, # player_id => name
       round: nil, # %Round{}
-      direction: -1,
       status: :lobby,
     ]
   end
@@ -135,6 +134,8 @@ defmodule Gamenight.Telestrations.Game do
 
   def handle_call(:start_game, _from, state) do
     cond do
+      state.status != :lobby ->
+        {:reply, error_response("Game already started"), state}
       num_players(state) < @min_players ->
         {:reply, error_response("Not enough players"), state}
       true ->
@@ -183,9 +184,7 @@ defmodule Gamenight.Telestrations.Game do
   end
 
   def handle_call(:start_next_round, _from, state) do
-    state = state
-            |> start_round()
-            |> Map.put(:direction, state.direction * -1)
+    state = state |> start_round()
 
     {:reply, :ok, state}
   end
@@ -241,7 +240,7 @@ defmodule Gamenight.Telestrations.Game do
     # Stories are passed to the right, therefore we move back to the
     # left by which "step" we are in
     if Enum.member?([@statuses.writing, @statuses.drawing, @statuses.interpreting], state.status) do
-      next_element(state.player_ids, player_id, state.direction * state.round.step)
+      next_element(state.player_ids, player_id, -1 * state.round.step)
     else
       nil
     end
@@ -308,6 +307,7 @@ defmodule Gamenight.Telestrations.Game do
     }
 
     state
+    |> Map.put(:player_ids, state.player_ids |> Enum.shuffle)
     |> Map.put(:status, @statuses.writing)
     |> Map.put(:round, round)
   end
