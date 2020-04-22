@@ -19,10 +19,13 @@ config :gamenight, GamenightWeb.Endpoint,
   live_view: [signing_salt: "1j4rrrEZ"]
 
 # Configures Elixir's Logger
+config :logger,
+  backends: [:console, Sentry.LoggerBackend]
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
-  metadata: [:request_id],
-  backends: [:console, Sentry.LoggerBackend]
+  metadata: [:request_id]
+config :logger, Sentry.LoggerBackend,
+  include_logger_metadata: true
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
