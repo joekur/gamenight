@@ -190,6 +190,10 @@ defmodule Gamenight.Telestrations.Game do
     {:reply, :ok, state}
   end
 
+  def terminate(_reason, state) do
+    Sentry.Context.set_extra_context(%{game_state: state})
+  end
+
   def next_storyteller(state) do
     current_storyteller = state.round.current_storyteller
     next_storyteller = next_element(state.player_ids, current_storyteller, 1)
