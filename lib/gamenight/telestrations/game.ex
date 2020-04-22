@@ -190,8 +190,9 @@ defmodule Gamenight.Telestrations.Game do
     {:reply, :ok, state}
   end
 
-  def terminate(_reason, state) do
+  def handle_call(:update_sentry_context, _from, state) do
     Sentry.Context.set_extra_context(%{game_state: state})
+    {:reply, :ok, state}
   end
 
   def next_storyteller(state) do
@@ -321,6 +322,7 @@ defmodule Gamenight.Telestrations.Game do
       nil ->
         error_response("Game does not exist")
       {pid, _} ->
+        GenServer.call(pid, :update_sentry_context)
         GenServer.call(pid, message)
     end
   end
