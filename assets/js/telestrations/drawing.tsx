@@ -103,6 +103,10 @@ export default class Drawing extends React.Component<IProps, IState> {
   handleSubmit(e: React.MouseEvent) {
     e.preventDefault();
 
+    if(JSON.parse(this.canvasRef.current.getSaveData()).lines.length === 0) {
+      return;
+    }
+
     const drawingBase64 = this.canvasRef.current.canvasContainer.children[1].toDataURL()
     window.localStorage.clear();
     this.props.onSubmit(drawingBase64);
