@@ -1,36 +1,7 @@
-
 <div class="outer-wrap">
   <div class="content">
-
     <main class="main-area">
-
       <section class="cards">
-        <article class="card">
-          <div class="card-content">
-            <h2>Game of Things</h2>
-            <div class="card-label"><i class="fas fa-clock"></i> 45m</div>
-            <div class="card-label"><i class="fas fa-users"></i> 3+</div>
-            <p>A game where you learn that your friends are actually all closet comedians.</p>
-          </div><!-- .card-content -->
-
-          <div class="card-footer">
-            <%= link("New Game", to: "/games/new?type=#{Gamenight.Games.types.game_of_things}", class: "button wide") %>
-          </div>
-
-        </article><!-- .card -->
-
-        <article class="card">
-          <div class="card-content">
-            <h2>Liebrary</h2>
-            <span class="card-label"><i class="fas fa-clock"></i> 60m</span>
-            <span class="card-label"><i class="fas fa-users"></i> 3+</span>
-            <p>The kind of game that smarty pants folks or book nerds really enjoy and others might really hate.</p>
-          </div><!-- .card-content -->
-
-          <div class="card-footer">
-            <%= link("New Game", to: "/games/new?type=#{Gamenight.Games.types.liebrary}", class: "button wide") %>
-          </div>
-        </article><!-- .card -->
 
         <article class="card">
           <div class="card-content">
@@ -42,6 +13,31 @@
 
           <div class="card-footer">
             <%= link("New Game", to: "/games/new?type=#{Gamenight.Games.types.telestrations}", class: "button wide") %>
+          </div>
+        </article><!-- .card -->
+        <article class="card">
+          <div class="card-content">
+            <h2>Game of Things</h2>
+            <div class="card-label"><i class="fas fa-clock"></i> 45m</div>
+            <div class="card-label"><i class="fas fa-users"></i> 3+</div>
+            <p>A game where you learn that your friends are actually all closet comedians.</p>
+          </div><!-- .card-content -->
+
+          <div class="card-footer">
+            <%= link("New Game", to: "/games/new?type=#{Gamenight.Games.types.game_of_things}", class: "button wide") %>
+          </div>
+        </article><!-- .card -->
+
+        <article class="card">
+          <div class="card-content">
+            <h2>Liebrary</h2>
+            <span class="card-label"><i class="fas fa-clock"></i> 60m</span>
+            <span class="card-label"><i class="fas fa-users"></i> 3+</span>
+            <p>The kind of game that smarty pants folks or book nerds really enjoy and others might really hate.</p>
+          </div><!-- .card-content -->
+
+          <div class="card-footer">
+            <%= link("Under Construction", to: "/games/new?type=#{Gamenight.Games.types.liebrary}", class: "button wide", disabled: true) %>
           </div>
         </article><!-- .card -->
 
