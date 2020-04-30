@@ -20,6 +20,7 @@ defmodule GamenightWeb.Router do
 
     get "/", PageController, :index
     resources "/games", GameController, only: [:new]
+    get "/join", GameController, :join
 
     get "/*path", GameController, :show
   end

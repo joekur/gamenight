@@ -8,6 +8,10 @@ defmodule GamenightWeb.GameController do
     redirect(conn, to: "/#{game_id}")
   end
 
+  def join(conn, %{"game_id" => game_id}) do
+    redirect(conn, to: "/#{game_id}")
+  end
+
   def show(conn, %{"path" => path}) do
     game_id = path |> List.first
     case Gamenight.GameRegistry.find_game(game_id) do
