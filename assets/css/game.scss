@@ -2,6 +2,11 @@ html, body, #react-root {
   height: 100%;
 }
 
+.game-form {
+  background: $white;
+  padding: 2em;
+}
+
 .game-page {
   overflow: auto; // prevents margin collapsing
   background: #D6EDFF;

@@ -1,6 +1,21 @@
+<section class="game-form">
+  <h1>Join a game:</h1>
+  <form action="" method="get">
+    <div>
+      <label for="name">Room Code</label>
+      <input type="text" name="name" id="name" required>
+    </div>
+    <div>
+      <%= link("play", to: "/games/new?type=#{Gamenight.Games.types.telestrations}", class: "button") %>
+    </div>
+  </form>
+</section>
+
+
 <div class="outer-wrap">
   <div class="content">
     <main class="main-area">
+
       <section class="cards">
 
         <article class="card">
