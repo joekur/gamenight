@@ -7,6 +7,7 @@ defmodule Gamenight.Telestrations.Game do
     @derive Jason.Encoder
     defstruct [
       game_id: nil,
+      vip: nil,
       player_ids: [],
       player_names: %{}, # player_id => name
       round: nil, # %Round{}
@@ -124,6 +125,7 @@ defmodule Gamenight.Telestrations.Game do
       true ->
         player_id = UUID.uuid4()
         state = state
+                |> Map.put(:vip, state.vip || player_id)
                 |> Map.put(:player_ids, append_to_tail(state.player_ids, player_id))
                 |> Map.put(:player_names, Map.put(state.player_names, player_id, player_name))
 

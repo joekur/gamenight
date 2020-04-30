@@ -110,12 +110,20 @@ export default class Lobby extends React.Component<IProps, IState> {
     const { game } = this.props;
     if (!game.amPlayer) { return null; }
 
+    if (game.iAmVIP) {
+      return (
+        <div className="game-card">
+          {!this.readyToStart && <div className="button-info">Need at least {minPlayers} players</div>}
+          <button onClick={this.props.onStartGame} disabled={!this.readyToStart}>
+            Start Game
+          </button>
+        </div>
+      );
+    }
+
     return (
-      <div className="game-card">
-        {!this.readyToStart && <div className="button-info">Need at least {minPlayers} players</div>}
-        <button onClick={this.props.onStartGame} disabled={!this.readyToStart}>
-          Start Game
-        </button>
+      <div className="game-card centered">
+        Waiting on {game.vip.name} to start the game.
       </div>
     );
   }

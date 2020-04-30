@@ -38,8 +38,14 @@ defmodule Gamenight.Telestrations.GameTest do
     assert String.length(player_id) > 1
 
     {:ok, state} = Game.get_state(game_id)
+    assert state.vip == player_id
     assert state.player_ids == [player_id]
     assert state.player_names[player_id] == name
+
+    Game.request_join(game_id, "Sue")
+    {:ok, state} = Game.get_state(game_id)
+    assert state.vip == player_id
+    assert state.player_ids |> length == 2
   end
 
   test "it can start the game with 3 players" do

@@ -52,6 +52,7 @@ interface IMe {
 
 export interface IGameState {
   status: EGameStatus;
+  vip: string;
   player_ids: string[];
   player_names: IPlayersMap<string>;
   round: IRound;
@@ -132,6 +133,14 @@ export class Game {
   get iAmShowAndTeller(): boolean {
     return this.state.status === EGameStatus.ShowAndTell
       && this.state.round.current_storyteller === this.playerId;
+  }
+
+  get iAmVIP(): boolean {
+    return this.amPlayer && this.state.vip === this.playerId;
+  }
+
+  get vip(): IPlayer {
+    return this.findPlayer(this.state.vip);
   }
 
   get currentShowAndTeller(): IPlayer {
