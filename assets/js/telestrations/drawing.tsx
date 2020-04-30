@@ -145,10 +145,25 @@ export default class Drawing extends React.Component<IProps, IState> {
     });
   }
 
+  renderBrushPreview() {
+    const styles = {
+      borderWidth: this.brushRadius + 'px',
+      background: this.state.brushColor,
+      borderColor: this.state.brushColor,
+    };
+
+    return (
+      <div className="drawing__brush-preview pull-left">
+        <div className="drawing__brush-preview__brush" style={styles}/>
+      </div>
+    );
+  }
+
   renderControls() {
     return (
       <div className="drawing__controls">
         <div className="clearfix">
+          {this.renderBrushPreview()}
           <div className="drawing__slider pull-left">
             <Slider value={this.state.brushSize} onChange={this.handleChangeBrushSize} aria-labelledby="continuous-slider" />
           </div>
