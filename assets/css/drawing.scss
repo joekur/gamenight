@@ -14,5 +14,12 @@
 }
 
 .drawing__swatch--selected {
-  border-color: #ffb100 !important;
+  margin-bottom: 5px;
+  filter: drop-shadow(0 5px 4px #00000077);
+}
+
+.drawing__controls {
+  background: #00000014;
+  padding: 10px;
+  margin-top: 15px;
 }

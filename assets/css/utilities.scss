@@ -15,6 +15,9 @@ $spacing: 10px;
 .mt-2 {
   margin-top: $spacing * 2;
 }
+.mt-3 {
+  margin-top: $spacing * 3;
+}
 .mb-2 {
   margin-bottom: $spacing * 2;
 }
@@ -31,4 +34,18 @@ $spacing: 10px;
 
 .centered {
   text-align: center;
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
 }

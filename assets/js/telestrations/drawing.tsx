@@ -148,13 +148,17 @@ export default class Drawing extends React.Component<IProps, IState> {
   renderControls() {
     return (
       <div className="drawing__controls">
-        <div className="drawing__slider">
-          <Slider value={this.state.brushSize} onChange={this.handleChangeBrushSize} aria-labelledby="continuous-slider" />
+        <div className="clearfix">
+          <div className="drawing__slider pull-left">
+            <Slider value={this.state.brushSize} onChange={this.handleChangeBrushSize} aria-labelledby="continuous-slider" />
+          </div>
+          <div className="pull-right">
+            <button className="button button--secondary button--no-pad" onClick={this.handleUndo}><Icon icon="undo" /></button>
+          </div>
         </div>
         <div className="drawing__swatches">
           {this.renderSwatches()}
         </div>
-        <button className="button button--secondary button--no-pad" onClick={this.handleUndo}><Icon icon="undo" /></button>
       </div>
     );
   }
@@ -188,7 +192,7 @@ export default class Drawing extends React.Component<IProps, IState> {
           />
           {this.renderControls()}
         </div>
-        <button onClick={this.handleSubmit} className="mt-2">
+        <button onClick={this.handleSubmit} className="mt-3 wide">
           Submit
         </button>
       </div>
