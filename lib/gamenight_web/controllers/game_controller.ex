@@ -8,13 +8,19 @@ defmodule GamenightWeb.GameController do
     redirect(conn, to: "/#{game_id}")
   end
 
+  def join(conn, %{"game_id" => game_id}) do
+    redirect(conn, to: "/#{game_id}")
+  end
+
   def show(conn, %{"path" => path}) do
     game_id = path |> List.first
     case Gamenight.GameRegistry.find_game(game_id) do
       {_pid, type} ->
         render(conn, "show.html", game_id: game_id |> String.upcase, game_type: type)
       _ ->
-        redirect(conn, to: "/")
+        conn
+        |> put_flash(:error, "Game not found")
+        |> redirect(to: "/")
     end
   end
 

@@ -1,6 +1,19 @@
+<section class="game-form">
+  <h1>Join a game:</h1>
+  <form action="/join" method="get" autocomplete="off">
+    <div>
+      <label for="game_id">Room Code</label>
+      <input type="text" name="game_id" class="uppercase" required>
+    </div>
+    <input type="submit" value="Join" class="button wide" />
+  </form>
+</section>
+
+
 <div class="outer-wrap">
   <div class="content">
     <main class="main-area">
+
       <section class="cards">
 
         <article class="card">
