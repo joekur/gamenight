@@ -15,15 +15,6 @@
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
   <body>
-    <header>
-      <section>
-        <nav role="navigation">
-          <ul>
-            <li><%= link("Home", to: "/") %></li>
-          </ul>
-        </nav>
-      </section>
-    </header>
     <main role="main" class="game-library">
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
