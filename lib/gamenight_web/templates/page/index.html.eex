@@ -5,7 +5,7 @@
       <label for="game_id">Room Code</label>
       <input type="text" name="game_id" class="uppercase" required>
     </div>
-    <input type="submit" value="Play" class="button wide" />
+    <input type="submit" value="Join" class="button wide" />
   </form>
 </section>
 

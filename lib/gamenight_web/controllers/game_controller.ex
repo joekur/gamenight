@@ -18,7 +18,9 @@ defmodule GamenightWeb.GameController do
       {_pid, type} ->
         render(conn, "show.html", game_id: game_id |> String.upcase, game_type: type)
       _ ->
-        redirect(conn, to: "/")
+        conn
+        |> put_flash(:error, "Game not found")
+        |> redirect(to: "/")
     end
   end
 
