@@ -8,6 +8,7 @@ import Lobby from './lobby';
 import Waiting from './waiting';
 import Writing from './writing';
 import Drawing from './drawing';
+import Canvas from './canvas';
 import Interpreting from './interpreting';
 import ShowAndTell from './show_and_tell';
 import RoundEnd from './round_end';
@@ -158,10 +159,12 @@ export default class Root extends React.Component<IProps, IState> {
 
     // escape hatch to quickly test drawing UI
     if (window.location.search === '?draw') {
-      return <Drawing
-        game={game}
-        onSubmit={() => {}}
-      />;
+      return (
+        <div>
+          <Canvas onChange={() => {}} />
+          <div style={{height: '800px'}} />
+        </div>
+      );
     }
 
     if (game.status === EGameStatus.Lobby) {

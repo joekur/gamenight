@@ -27,6 +27,12 @@ defmodule Gamenight.Telestrations.Bots do
     %Bots{game_id: game_id, player_ids: player_ids}
   end
 
+  def start_game(bots) do
+    :ok = Game.start_game(bots.game_id)
+
+    broadcast_updated(bots)
+  end
+
   def write_stories(bots) do
     {:ok, state} = Game.get_state(bots.game_id)
 

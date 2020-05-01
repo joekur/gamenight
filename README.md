@@ -44,6 +44,7 @@ Telestrations:
 bots = Gamenight.Telestrations.Bots.create_game(4)
 
 # At this point you can join yourself, and start the game
+Gamenight.Telestrations.Bots.start_game(bots)
 
 # Submits a "story" for each player:
 Gamenight.Telestrations.Bots.write_stories(bots)
