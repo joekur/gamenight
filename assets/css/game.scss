@@ -2,9 +2,30 @@ html, body, #react-root {
   height: 100%;
 }
 
-.game-form {
-  background: $white;
+.hero-header {
+  height: 350px;
+  background: linear-gradient(150deg, #8465ff 15%, #5a89c4 70%, #268cde 100%);
+  color: $white;
+  margin: 0 auto;
   padding: 2em;
+  text-align: center;
+
+   @media (max-width: 600px) {
+    padding: 1em .5em;
+    height: 300px;
+  }
+}
+
+.hero-form {
+  background: $white;
+  border-radius: 6px;
+  color: #4c555a;
+  padding: 2em;
+  width: 100%;
+  margin: 0 auto;
+  max-width: 600px;
+
+
 }
 
 .game-page {
