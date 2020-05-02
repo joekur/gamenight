@@ -2,10 +2,12 @@ import * as React from 'react';
 import bind from 'bind-decorator';
 import { Game } from './game';
 import { scrollToTop } from '../utilities';
+import Icon from '../shared/icon';
 
 interface IProps {
   game: Game;
   onStepForward: () => void;
+  onStepBack: () => void;
 }
 
 export default class ShowAndTell extends React.Component<IProps, {}> {
@@ -67,16 +69,38 @@ export default class ShowAndTell extends React.Component<IProps, {}> {
     );
   }
 
+  renderButtons() {
+    const { game } = this.props;
+
+    const nextText = game.storytellingStep === game.totalStorytellingSteps ? 'Finish' : 'Next';
+
+    const backBtn = (
+      <div className="col">
+        <button className="button button--secondary wide" onClick={this.props.onStepBack}>
+          <Icon icon="arrow-left" /> Prev
+        </button>
+      </div>
+    );
+
+    return (
+      <div className="flex-grid">
+        {game.storytellingStep > 1 ? backBtn : null}
+        <div className="col">
+          <button className="button wide" onClick={this.props.onStepForward}>
+            {nextText} <Icon icon="arrow-right" />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   renderStepForward() {
     const { game } = this.props;
 
     if (game.iAmShowAndTeller) {
-      const text = game.storytellingStep === game.totalStorytellingSteps ? 'Finish' : 'Next';
       return (
         <div className="game-card">
-          <button className="button" onClick={this.props.onStepForward}>
-            {text}
-          </button>
+          {this.renderButtons()}
         </div>
       );
     }

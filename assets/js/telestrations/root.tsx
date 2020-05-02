@@ -124,6 +124,14 @@ export default class Root extends React.Component<IProps, IState> {
       this.pushChannel('step_forward_storytelling', {});
     }
   }
+
+  @bind
+  handleStepBackShowAndTell() {
+    if (this.game.iAmShowAndTeller) {
+      this.pushChannel('step_back_storytelling', {});
+    }
+  }
+
   @bind
   handleNextRound() {
     this.pushChannel('start_next_round', {});
@@ -194,6 +202,7 @@ export default class Root extends React.Component<IProps, IState> {
       return <ShowAndTell
         game={game}
         onStepForward={this.handleStepForwardShowAndTell}
+        onStepBack={this.handleStepBackShowAndTell}
       />;
     } else if (game.status === EGameStatus.RoundEnd) {
       return <RoundEnd

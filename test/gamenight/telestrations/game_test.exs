@@ -132,7 +132,7 @@ defmodule Gamenight.Telestrations.GameTest do
     assert me_state.me.storytelling_writing.text == "story #{storyteller}"
     assert me_state.me.storytelling_drawing == nil
 
-    :ok = Game.step_forward_storytelling(game_id)
+    :ok = Game.step_forward_storytelling(game_id, state.round.current_storyteller) # -> author 0, step 1
 
     {:ok, state} = Game.get_state(game_id)
     assert state.round.storytelling_step == 1
@@ -141,7 +141,7 @@ defmodule Gamenight.Telestrations.GameTest do
     assert me_state.me.storytelling_writing == nil
     assert me_state.me.storytelling_drawing.player_id != storyteller
 
-    :ok = Game.step_forward_storytelling(game_id)
+    :ok = Game.step_forward_storytelling(game_id, state.round.current_storyteller) # -> author 0, step 2
 
     {:ok, state} = Game.get_state(game_id)
     assert state.round.storytelling_step == 2
@@ -150,7 +150,7 @@ defmodule Gamenight.Telestrations.GameTest do
     assert me_state.me.storytelling_writing.player_id != storyteller
     assert me_state.me.storytelling_drawing == nil
 
-    :ok = Game.step_forward_storytelling(game_id)
+    :ok = Game.step_forward_storytelling(game_id, state.round.current_storyteller) # -> author 1, step 0
 
     {:ok, state} = Game.get_state(game_id)
     assert state.round.storytelling_step == 0
@@ -160,12 +160,13 @@ defmodule Gamenight.Telestrations.GameTest do
     assert me_state.me.storytelling_writing.player_id == new_storyteller
     assert me_state.me.storytelling_drawing == nil
 
-    :ok = Game.step_forward_storytelling(game_id) # -> author 1, step 1
-    :ok = Game.step_forward_storytelling(game_id) # -> author 1, step 2
-    :ok = Game.step_forward_storytelling(game_id) # -> author 2, step 0
-    :ok = Game.step_forward_storytelling(game_id) # -> author 2, step 1
-    :ok = Game.step_forward_storytelling(game_id) # -> author 2, step 2
-    :ok = Game.step_forward_storytelling(game_id) # -> end this round
+    :ok = Game.step_forward_storytelling(game_id, state.round.current_storyteller) # -> author 1, step 1
+    :ok = Game.step_forward_storytelling(game_id, state.round.current_storyteller) # -> author 1, step 2
+    :ok = Game.step_forward_storytelling(game_id, state.round.current_storyteller) # -> author 2, step 0
+    {:ok, state} = Game.get_state(game_id)
+    :ok = Game.step_forward_storytelling(game_id, state.round.current_storyteller) # -> author 2, step 1
+    :ok = Game.step_forward_storytelling(game_id, state.round.current_storyteller) # -> author 2, step 2
+    :ok = Game.step_forward_storytelling(game_id, state.round.current_storyteller) # -> end this round
 
     {:ok, state} = Game.get_state(game_id)
     assert state.status == Game.statuses().round_end

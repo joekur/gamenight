@@ -82,7 +82,21 @@ defmodule GamenightWeb.TelestrationsChannel do
   end
 
   def handle_in("step_forward_storytelling", _payload, socket) do
-    msg = Game.step_forward_storytelling(socket.assigns.game_id)
+    msg = Game.step_forward_storytelling(
+      socket.assigns.game_id,
+      socket.assigns.player_id
+    )
+
+    broadcast_game_updated(socket)
+
+    {:reply, msg, socket}
+  end
+
+  def handle_in("step_back_storytelling", _payload, socket) do
+    msg = Game.step_back_storytelling(
+      socket.assigns.game_id,
+      socket.assigns.player_id
+    )
 
     broadcast_game_updated(socket)
 

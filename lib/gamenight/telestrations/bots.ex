@@ -55,7 +55,9 @@ defmodule Gamenight.Telestrations.Bots do
   end
 
   def step_forward_show_and_tell(bots) do
-    :ok = Game.step_forward_storytelling(bots.game_id)
+    {:ok, state} = Game.get_state(bots.game_id)
+
+    :ok = Game.step_forward_storytelling(bots.game_id, state.round.current_storyteller)
     broadcast_updated(bots)
   end
 

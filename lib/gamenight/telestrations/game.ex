@@ -75,7 +75,8 @@ defmodule Gamenight.Telestrations.Game do
   def start_game(game_id), do: try_call(game_id, :start_game)
   def write_story(game_id, player_id, writing), do: try_call(game_id, {:write_story, player_id, writing})
   def draw_story(game_id, player_id, drawing_src), do: try_call(game_id, {:draw_story, player_id, drawing_src})
-  def step_forward_storytelling(game_id), do: try_call(game_id, :step_forward_storytelling)
+  def step_forward_storytelling(game_id, player_id), do: try_call(game_id, {:step_forward_storytelling, player_id})
+  def step_back_storytelling(game_id, player_id), do: try_call(game_id, {:step_back_storytelling, player_id})
   def start_next_round(game_id), do: try_call(game_id, :start_next_round)
 
 ##### Server
@@ -176,14 +177,34 @@ defmodule Gamenight.Telestrations.Game do
     {:reply, :ok, state}
   end
 
-  def handle_call(:step_forward_storytelling, _from, state) do
-    next_step = state.round.storytelling_step + 1
+  def handle_call({:step_forward_storytelling, player_id}, _from, state) do
+    cond do
+      state.status != @statuses.show_and_tell ->
+        {:reply, error_response("Not currently show-and-telling"), state}
+      player_id != state.round.current_storyteller ->
+        {:reply, error_response("You are not the current show-and-teller"), state}
+      true ->
+        next_step = state.round.storytelling_step + 1
 
-    if next_step > length(state.player_ids) - 1 do
-      state = state |> next_storyteller
-      {:reply, :ok, state}
-    else
-      {:reply, :ok, put_in(state.round.storytelling_step, next_step)}
+        if next_step > length(state.player_ids) - 1 do
+          state = state |> next_storyteller
+          {:reply, :ok, state}
+        else
+          {:reply, :ok, put_in(state.round.storytelling_step, next_step)}
+        end
+    end
+  end
+
+  def handle_call({:step_back_storytelling, player_id}, _from, state) do
+    cond do
+      state.status != @statuses.show_and_tell ->
+        {:reply, error_response("Not currently show-and-telling"), state}
+      player_id != state.round.current_storyteller ->
+        {:reply, error_response("You are not the current show-and-teller"), state}
+      state.round.storytelling_step == 0 ->
+        {:reply, error_response("Can not move back further"), state}
+      true ->
+        {:reply, :ok, update_in(state.round.storytelling_step, &(&1 - 1))}
     end
   end
 
