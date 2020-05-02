@@ -2,9 +2,40 @@ html, body, #react-root {
   height: 100%;
 }
 
-.game-form {
-  background: $white;
+.hero-header {
+  height: 300px;
+  background: linear-gradient(150deg, #8465ff 15%, #5a89c4 70%, #268cde 100%);
+  color: $white;
+  margin: 0 auto;
   padding: 2em;
+  text-align: center;
+
+  h1 {
+    padding-top: .5em;
+    margin-bottom: 0;
+  }
+
+   @media (max-width: 600px) {
+    padding: 1em .5em;
+    height: 250px;
+  }
+}
+
+.hero-form {
+  border-radius: 6px;
+  color: #4c555a;
+  padding: 2em;
+  width: 100%;
+  margin: 0 auto;
+  max-width: 600px;
+
+  @media (max-width: 600px) {
+    padding: 1em;
+  }
+}
+
+.hero-form__input {
+  background: $white;
 }
 
 .game-page {
