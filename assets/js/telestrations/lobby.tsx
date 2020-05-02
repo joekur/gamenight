@@ -90,7 +90,7 @@ export default class Lobby extends React.Component<IProps, IState> {
   renderInstructions() {
     return (
       <div className="game-card">
-        <h3 className="header">Rules are the worst, but here they are:</h3>
+        <h3 className="header">How To Play</h3>
 
         <ol className="rules__list">
           <li>Need some rules here!</li>

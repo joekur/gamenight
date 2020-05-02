@@ -1,6 +1,6 @@
 import * as React from 'react';
 import bind from 'bind-decorator';
-import { Game } from './game';
+import { Game, IDrawing } from './game';
 import { scrollToTop } from '../utilities';
 import Icon from '../shared/icon';
 
@@ -59,11 +59,18 @@ export default class ShowAndTell extends React.Component<IProps, {}> {
 
     const drawing = game.showAndTellDrawing!;
     return (
-      <div className="game-card mt-2">
-        <div className="show-and-tell__player">{drawing.player.name}</div>
-        {this.renderStep()}
-        <div className="drawing-img">
-          <img src={drawing.src} />
+      <div className="clearfix">
+        <div className="game-card mt-2">
+          <div className="show-and-tell__player">{drawing.player.name}</div>
+          {this.renderStep()}
+          <div className="drawing-img">
+            <img src={drawing.src} />
+          </div>
+          <a
+            href={drawing.src}
+            className="button button--secondary wide mt-2"
+            download={`${drawing.player.name}-drawing.png`}
+          ><Icon icon="download" /> Download</a>
         </div>
       </div>
     );

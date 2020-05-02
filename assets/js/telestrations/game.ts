@@ -24,7 +24,7 @@ interface IWritingResp {
   player_id: string;
 }
 
-interface IDrawing {
+export interface IDrawing {
   player: IPlayer;
   src: string;
 }

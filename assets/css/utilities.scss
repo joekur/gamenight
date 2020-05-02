@@ -36,10 +36,8 @@ $spacing: 10px;
   text-align: center;
 }
 
-.clearfix::after {
-  content: "";
-  clear: both;
-  display: table;
+.clearfix {
+  @include clearfix;
 }
 
 .pull-left {
