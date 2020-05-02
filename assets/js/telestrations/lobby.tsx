@@ -93,7 +93,10 @@ export default class Lobby extends React.Component<IProps, IState> {
         <h3 className="header">Rules are the worst, but here they are:</h3>
 
         <ol className="rules__list">
-          <li>Need some rules here!</li>
+          <li>1.) <b>Telestrations is a goofy game of drawing telephone.</b> Everyone will start the game by writing a sentence or phrase that they would like the next person to draw.</li>
+          <li>2.) The next person will draw what they read. This will continue until everyone has gotten the chance to write or draw for each story.</li>
+           <li>3.) At the end, each person will take turns narrating their story that the group created together.</li>
+           <li>4.) There's no keeping score - everyone wins! Just try not to have your drink come through your nose when you laugh... because that's gross.</li>
         </ol>
 
       </div>
