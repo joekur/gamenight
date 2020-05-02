@@ -1,8 +1,8 @@
 <section class="hero-header">
   <h1>Join a game:</h1>
-  <form class="hero-form" action="/join" method="get" autocomplete="off" >
+  <form class="hero-form" action="/join" method="get" autocomplete="off" spellcheck="false" autocorrect="off" >
     <div>
-      <input class="hero-form__input" placeholder="Enter your room code" type="text" name="game_id" class="uppercase" required>
+      <input class="hero-form__input uppercase" placeholder="room code" type="text" name="game_id" required>
     </div>
     <input type="submit" value="Join" class="button wide" />
   </form>
