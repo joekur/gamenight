@@ -4,6 +4,7 @@ import { Game } from './game';
 
 import { scrollToTop } from '../utilities';
 import Canvas from './canvas';
+import PassOrder from './pass_order';
 import CanvasDraw from 'react-canvas-draw-joekur';
 
 interface IProps {
@@ -65,6 +66,7 @@ export default class Drawing extends React.Component<IProps, {}> {
   render() {
     return (
       <div>
+        <PassOrder game={this.props.game} />
         {this.renderWriting()}
         <Canvas
           ref={this.canvasRef}

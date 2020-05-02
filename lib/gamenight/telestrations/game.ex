@@ -103,6 +103,8 @@ defmodule Gamenight.Telestrations.Game do
         me: %{
           current_writing: current_writing(state, player_id),
           current_drawing: current_drawing(state, player_id),
+          receiving_from_player_id: receiving_from_player_id(state, player_id),
+          passing_to_player_id: passing_to_player_id(state, player_id),
           storytelling_writing: current_storytelling_writing(state),
           storytelling_drawing: current_storytelling_drawing(state),
         },
@@ -241,7 +243,7 @@ defmodule Gamenight.Telestrations.Game do
   defp current_original_author(state, player_id) do
     # Stories are passed to the right, therefore we move back to the
     # left by which "step" we are in
-    if Enum.member?([@statuses.writing, @statuses.drawing, @statuses.interpreting], state.status) do
+    if game_on?(state) do
       next_element(state.player_ids, player_id, -1 * state.round.step)
     else
       nil
@@ -266,6 +268,26 @@ defmodule Gamenight.Telestrations.Game do
     else
       nil
     end
+  end
+
+  defp receiving_from_player_id(state, player_id) do
+    if game_on?(state) do
+      next_element(state.player_ids, player_id, -1)
+    else
+      nil
+    end
+  end
+
+  defp passing_to_player_id(state, player_id) do
+    if game_on?(state) do
+      next_element(state.player_ids, player_id, 1)
+    else
+      nil
+    end
+  end
+
+  defp game_on?(state) do
+    Enum.member?([@statuses.writing, @statuses.drawing, @statuses.interpreting], state.status)
   end
 
   defp current_storytelling_writing(%{status: :show_and_tell} = state) do

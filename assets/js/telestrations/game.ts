@@ -46,6 +46,8 @@ export interface IPlayersMap<T> {
 interface IMe {
   current_writing: IWritingResp;
   current_drawing: IDrawingResp;
+  receiving_from_player_id: string | null;
+  passing_to_player_id: string | null;
   storytelling_writing: IWritingResp | null;
   storytelling_drawing: IDrawingResp | null;
 }
@@ -167,5 +169,23 @@ export class Game {
 
   get totalStorytellingSteps() {
     return this.players.length;
+  }
+
+  get receivingFromPlayer(): IPlayer | null {
+    const id = this.state.me.receiving_from_player_id;
+    if (id) {
+      return this.findPlayer(id);
+    }
+
+    return null;
+  }
+
+  get passingToPlayer(): IPlayer | null {
+    const id = this.state.me.passing_to_player_id;
+    if (id) {
+      return this.findPlayer(id);
+    }
+
+    return null;
   }
 }

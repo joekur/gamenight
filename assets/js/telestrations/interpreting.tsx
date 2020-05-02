@@ -1,6 +1,7 @@
 import * as React from 'react';
 import bind from 'bind-decorator';
 import { Game } from './game';
+import PassOrder from './pass_order';
 import { scrollToTop } from '../utilities';
 
 interface IProps {
@@ -45,6 +46,8 @@ export default class Interpreting extends React.Component<IProps, IState> {
 
     return (
       <div>
+        <PassOrder game={this.props.game} />
+
         <div className="game-card">
           <div className="drawing-img">
             <img src={game.currentDrawingToInterpret.src} />

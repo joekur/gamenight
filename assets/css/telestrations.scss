@@ -39,3 +39,20 @@
   right: -8px;
   border-radius: 4px;
 }
+
+.pass-order {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.pass-order__player {
+  padding: 0 8px;
+}
+
+.pass-order__player--me {
+  background: #45a4ff;
+  color: white;
+  margin: 0 8px;
+  padding: 5px 8px;
+  border-radius: 5px;
+}
