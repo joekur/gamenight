@@ -110,6 +110,22 @@ defmodule Gamenight.Telestrations.GameTest do
     assert state.round.current_storyteller != nil
   end
 
+  test "it doesn't allow submitting writing or drawing twice" do
+    # 3 players
+    game_id = started_game()
+    player_id = game_id |> player_ids() |> List.first
+
+    :ok = Game.write_story(game_id, player_id, "story #{player_id}")
+    {:error, _} = Game.write_story(game_id, player_id, "story #{player_id}")
+
+    Enum.each(game_id |> player_ids, fn player_id ->
+      Game.write_story(game_id, player_id, "story #{player_id}")
+    end)
+
+    :ok = Game.draw_story(game_id, player_id, "src #{player_id}")
+    {:error, _} = Game.draw_story(game_id, player_id, "src #{player_id}")
+  end
+
   test "show and tell cycles through readers and steps through the writing/drawings" do
     # 3 players
     game_id = started_game()

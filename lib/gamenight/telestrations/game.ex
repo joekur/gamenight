@@ -139,7 +139,7 @@ defmodule Gamenight.Telestrations.Game do
 
   def handle_call(:start_game, _from, state) do
     cond do
-      state.status != :lobby ->
+      state.status != @statuses.lobby ->
         {:reply, error_response("Game already started"), state}
       num_players(state) < @min_players ->
         {:reply, error_response("Not enough players"), state}
@@ -150,31 +150,45 @@ defmodule Gamenight.Telestrations.Game do
   end
 
   def handle_call({:write_story, player_id, text}, _from, state) do
-    original_author = current_original_author(state, player_id)
-    writing = %Writing{player_id: player_id, text: text}
+    cond do
+      !Enum.member?([@statuses.writing, @statuses.interpreting], state.status) ->
+        {:reply, error_response("Invalid request"), state}
+      state.round.submitted[player_id] ->
+        {:reply, error_response("Already submitted"), state}
+      true ->
+        original_author = current_original_author(state, player_id)
+        writing = %Writing{player_id: player_id, text: text}
 
-    state = update_in(
-      state.round.stories[original_author].writings,
-      &(append_to_tail(&1, writing))
-    )
-    state = put_in(state.round.submitted[player_id], true)
-            |> check_all_submitted
+        state = update_in(
+          state.round.stories[original_author].writings,
+          &(append_to_tail(&1, writing))
+        )
+        state = put_in(state.round.submitted[player_id], true)
+                |> check_all_submitted
 
-    {:reply, :ok, state}
+        {:reply, :ok, state}
+    end
   end
 
   def handle_call({:draw_story, player_id, drawing_src}, _from, state) do
-    original_author = current_original_author(state, player_id)
-    drawing = %Drawing{player_id: player_id, src: drawing_src}
+    cond do
+      state.status != @statuses.drawing ->
+        {:reply, error_response("Invalid request"), state}
+      state.round.submitted[player_id] ->
+        {:reply, error_response("Already submitted"), state}
+      true ->
+        original_author = current_original_author(state, player_id)
+        drawing = %Drawing{player_id: player_id, src: drawing_src}
 
-    state = update_in(
-      state.round.stories[original_author].drawings,
-      &(append_to_tail(&1, drawing))
-    )
-    state = put_in(state.round.submitted[player_id], true)
-            |> check_all_submitted
+        state = update_in(
+          state.round.stories[original_author].drawings,
+          &(append_to_tail(&1, drawing))
+        )
+        state = put_in(state.round.submitted[player_id], true)
+                |> check_all_submitted
 
-    {:reply, :ok, state}
+        {:reply, :ok, state}
+    end
   end
 
   def handle_call({:step_forward_storytelling, player_id}, _from, state) do
