@@ -5096,10 +5096,10 @@ randomfill@^1.0.3:
     randombytes "^2.0.5"
     safe-buffer "^5.1.0"
 
-react-canvas-draw-joekur@1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/react-canvas-draw-joekur/-/react-canvas-draw-joekur-1.1.3.tgz#9d81ffba6b3652df9b914701ca946c1775749d65"
-  integrity sha512-oOe1IvRIvKvWwYpNu5NX1okKLEYTsKXwmOGZpIXTMAQHsKUGTuGpZuBKYRjMAFPhm0Cb64Pi9CAcv3lJVQXbvw==
+react-canvas-draw-joekur@1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/react-canvas-draw-joekur/-/react-canvas-draw-joekur-1.1.4.tgz#5322b791d9da52b9376303e8ed8b635ff9bb91a7"
+  integrity sha512-6NmWBOuZLkIg+hiFVVEwgUcyHlxNEf98DWlYNL2KzossyWCvUKgcvIeQSjePne41+THqUHXdnR/gDyYzKbWXaA==
   dependencies:
     catenary-curve "^1.0.1"
     lazy-brush "^1.0.1"
