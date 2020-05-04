@@ -59,6 +59,7 @@
   &.popup--error {
     background: $error-background;
     border-top-color: $error-border;
+    color: #7b3638;
   }
 
   &.popup--success {

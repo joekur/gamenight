@@ -13,6 +13,7 @@ import Interpreting from './interpreting';
 import ShowAndTell from './show_and_tell';
 import RoundEnd from './round_end';
 import Modal from '../shared/modal';
+import Popup from '../shared/popup';
 
 interface IProps {
   gameId: string;
@@ -22,6 +23,7 @@ interface IState {
   connected: boolean;
   gameState?: IGameState;
   playerId: string | null;
+  lastToSubmitNotice: boolean;
 }
 
 export default class Root extends React.Component<IProps, IState> {
@@ -34,6 +36,7 @@ export default class Root extends React.Component<IProps, IState> {
     this.state = {
       connected: false,
       playerId: null,
+      lastToSubmitNotice: false,
     };
   }
 
@@ -81,10 +84,24 @@ export default class Root extends React.Component<IProps, IState> {
 
   @bind
   updateGameState(gameState: Partial<IGameState>) {
-    console.log('Updated state', gameState);
+    const prevGame = this.state.connected && this.game;
+
     this.setState({
       gameState: Object.assign({}, this.state.gameState, gameState)
+    }, () => {
+      prevGame && this.onGameUpdated(prevGame, this.game);
     });
+  }
+
+  onGameUpdated(prevGame: Game, nextGame: Game) {
+    if (prevGame.status !== nextGame.status) {
+      this.setState({ lastToSubmitNotice: false });
+    } else if (!prevGame.iAmLastToSubmit && nextGame.iAmLastToSubmit) {
+      this.setState({ lastToSubmitNotice: true });
+      setTimeout(() => {
+        this.setState({ lastToSubmitNotice: false });
+      }, 3000);
+    }
   }
 
   @bind
@@ -162,6 +179,16 @@ export default class Root extends React.Component<IProps, IState> {
     return new Game(this.props.gameId, this.state.playerId, this.state.gameState!);
   }
 
+  renderLastToSubmitNotice() {
+    if (this.state.lastToSubmitNotice) {
+      return (
+        <Popup cssModifier="popup--error">
+          ⏰ Hurry up! Everyone is waiting on you!
+        </Popup>
+      );
+    }
+  }
+
   renderInner() {
     const game = this.game;
 
@@ -221,6 +248,7 @@ export default class Root extends React.Component<IProps, IState> {
 
     return (
       <div className="game-page game-page--telestrations">
+        {this.renderLastToSubmitNotice()}
         <div className="game-page__content" id="game_page_content">
           {this.renderInner()}
         </div>

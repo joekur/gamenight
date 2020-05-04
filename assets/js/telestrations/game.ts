@@ -103,8 +103,12 @@ export class Game {
     return this.hasSubmitted(this.playerId!);
   }
 
+  get inSubmissionStatus(): boolean {
+    return [EGameStatus.Writing, EGameStatus.Drawing, EGameStatus.Interpreting].includes(this.status);
+  }
+
   get waitingOnOthers(): boolean {
-    return [EGameStatus.Writing, EGameStatus.Drawing, EGameStatus.Interpreting].includes(this.status)
+    return this.inSubmissionStatus
       && this.iHaveSubmitted;
   }
 
@@ -187,5 +191,12 @@ export class Game {
     }
 
     return null;
+  }
+
+  get iAmLastToSubmit(): boolean {
+    return this.state.round?.submitted &&
+      this.inSubmissionStatus &&
+      !this.iHaveSubmitted &&
+      Object.values(this.state.round.submitted).filter(x => x === false).length === 1;
   }
 }
