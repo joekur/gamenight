@@ -72,6 +72,7 @@ defmodule Gamenight.Telestrations.Game do
   def get_state(game_id), do: try_call(game_id, :get_state)
   def get_player_state(game_id, player_id), do: try_call(game_id, {:get_player_state, player_id})
   def request_join(game_id, player_name), do: try_call(game_id, {:request_join, player_name})
+  def leave_lobby(game_id, player_id), do: try_call(game_id, {:leave_lobby, player_id})
   def start_game(game_id), do: try_call(game_id, :start_game)
   def write_story(game_id, player_id, writing), do: try_call(game_id, {:write_story, player_id, writing})
   def draw_story(game_id, player_id, drawing_src), do: try_call(game_id, {:draw_story, player_id, drawing_src})
@@ -134,6 +135,25 @@ defmodule Gamenight.Telestrations.Game do
 
         response = %{player_id: player_id, name: player_name}
         {:reply, {:ok, response}, state}
+    end
+  end
+
+  def handle_call({:leave_lobby, player_id}, _from, state) do
+    cond do
+      state.status != :lobby ->
+        {:reply, error_response("Game has already started"), state}
+      true ->
+        state = state |> Map.put(:player_ids, state.player_ids |> List.delete(player_id))
+
+        vip = if state.vip == player_id do
+          state.player_ids |> List.first
+        else
+          state.vip
+        end
+
+        state = state |> Map.put(:vip, vip)
+
+        {:reply, :ok, state}
     end
   end
 

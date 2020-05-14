@@ -48,6 +48,25 @@ defmodule Gamenight.Telestrations.GameTest do
     assert state.player_ids |> length == 2
   end
 
+  test "players can leave the lobby before starting" do
+    {:ok, game_id} = Game.create_game
+    {:ok, %{player_id: john}} = Game.request_join(game_id, "John")
+    {:ok, %{player_id: mary}} = Game.request_join(game_id, "Mary")
+
+    :ok = Game.leave_lobby(game_id, john)
+
+    {:ok, state} = Game.get_state(game_id)
+    assert state.vip == mary
+    assert state.player_ids == [mary]
+
+    {:ok, %{player_id: sue}} = Game.request_join(game_id, "Sue")
+    :ok = Game.leave_lobby(game_id, sue)
+
+    {:ok, state} = Game.get_state(game_id)
+    assert state.vip == mary
+    assert state.player_ids == [mary]
+  end
+
   test "it can start the game with 3 players" do
     {:ok, game_id} = Game.create_game
     {:ok, _} = Game.request_join(game_id, "Bob")
