@@ -1,10 +1,11 @@
 import * as React from 'react';
 import bind from 'bind-decorator';
-import { Game } from './game';
+import { Game, IPlayer } from './game';
 
 interface IProps {
   game: Game,
   onRequestJoinGame: (name: string) => void,
+  onLeaveLobby: () => void,
   onStartGame: () => void,
 }
 
@@ -44,8 +45,13 @@ export default class Lobby extends React.Component<IProps, IState> {
 
   renderActivePlayerView() {
     return (
-      <div className="lobby__joined">
-        <b>You've successfully joined the game!</b>
+      <div className="centered">
+        <div className="lobby__joined">
+          <b>You've successfully joined the game!</b>
+        </div>
+        <button className="button button--danger button--small mt-1" onClick={this.props.onLeaveLobby}>
+          Leave Game
+        </button>
       </div>
     );
   }
@@ -78,12 +84,22 @@ export default class Lobby extends React.Component<IProps, IState> {
 
     return (
       <div className="game-card">
-        <h3 className="lobby__members-header">Players</h3>
+        <h3 className="lobby__members-header">
+          Players
+        </h3>
         <ul className="lobby__members-list">
           {this.renderNoPlayersYet()}
-          {game.players.map(player => (<li key={player.id}>{player.name}</li>))}
+          {game.players.map(player => this.renderPlayer(player))}
         </ul>
       </div>
+    );
+  }
+
+  renderPlayer(player: IPlayer) {
+    return (
+      <li key={player.id}>
+        {player.name}
+      </li>
     );
   }
 
@@ -117,7 +133,7 @@ export default class Lobby extends React.Component<IProps, IState> {
       return (
         <div className="game-card">
           {!this.readyToStart && <div className="button-info">Need at least {minPlayers} players</div>}
-          <button onClick={this.props.onStartGame} disabled={!this.readyToStart}>
+          <button onClick={this.props.onStartGame} disabled={!this.readyToStart} className="button wide">
             Start Game
           </button>
         </div>

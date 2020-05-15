@@ -49,6 +49,17 @@ defmodule GamenightWeb.TelestrationsChannel do
     end
   end
 
+  def handle_in("leave_lobby", _payload, socket) do
+    msg = Game.leave_lobby(
+      socket.assigns.game_id,
+      socket.assigns.player_id
+    )
+
+    broadcast_game_updated(socket)
+
+    {:reply, msg, socket}
+  end
+
   def handle_in("start_game", _payload, socket) do
     msg = Game.start_game(socket.assigns.game_id)
 

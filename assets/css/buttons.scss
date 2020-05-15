@@ -30,9 +30,22 @@ input[type='submit'] {
     border-color: #c7c7c7;
   }
 
+  &.button--danger {
+    background-color: $error-background;
+    color: #444;
+    border-color: $error-border;
+  }
+
   &.button--no-pad {
     padding: 0 1.2rem;
     width: auto;
+  }
+
+  &.button--small {
+    padding: 0 0.7rem;
+    line-height: 3rem;
+    width: auto;
+    height: 3rem;
   }
 }
 

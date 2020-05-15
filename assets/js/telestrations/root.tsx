@@ -2,7 +2,7 @@ import * as React from 'react';
 import bind from 'bind-decorator';
 import { Channel, Socket } from 'phoenix';
 import { Game, IGameState, EGameStatus } from './game';
-import { setCookie, getCookie } from '../cookies';
+import { setCookie, getCookie, eraseCookie } from '../cookies';
 
 import Lobby from './lobby';
 import Waiting from './waiting';
@@ -110,6 +110,14 @@ export default class Root extends React.Component<IProps, IState> {
   }
 
   @bind
+  handleLeaveLobby() {
+    this.pushChannel('leave_lobby', {}, () => {
+      eraseCookie(this.playerIdCookieName());
+      this.setState({ playerId: null });
+    });
+  }
+
+  @bind
   handleJoinSuccess(response: any) {
     const playerId = response.player_id;
 
@@ -206,6 +214,7 @@ export default class Root extends React.Component<IProps, IState> {
       return <Lobby
         game={game}
         onRequestJoinGame={this.handleRequestJoinGame}
+        onLeaveLobby={this.handleLeaveLobby}
         onStartGame={this.handleStartGame}
       />;
     } else if (game.waitingOnOthers) {
