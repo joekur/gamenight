@@ -3,9 +3,14 @@ defmodule GamenightWeb.GameController do
   plug :put_layout, "game.html"
 
   def new(conn, params) do
-    {:ok, game_id} = create_game(params["type"])
-
-    redirect(conn, to: "/#{game_id}")
+    case create_game(params["type"]) do
+      {:ok, game_id} ->
+        redirect(conn, to: "/#{game_id}")
+      :error ->
+        conn
+        |> put_flash(:error, "Could not create game - unknown game type")
+        |> redirect(to: "/")
+    end
   end
 
   def join(conn, %{"game_id" => game_id}) do
@@ -26,12 +31,10 @@ defmodule GamenightWeb.GameController do
 
   defp create_game(type) do
     case type do
-      "game_of_things" ->
-        Gamenight.GameOfThings.Game.create_game
-      "liebrary" ->
-        Gamenight.Liebrary.Game.create_game
-      "telestrations" ->
-        Gamenight.Telestrations.Game.create_game
+      "game_of_things" -> Gamenight.GameOfThings.Game.create_game
+      "liebrary" ->       Gamenight.Liebrary.Game.create_game
+      "telestrations" ->  Gamenight.Telestrations.Game.create_game
+      _ ->                :error
     end
   end
 end

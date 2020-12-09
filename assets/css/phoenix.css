@@ -46,6 +46,7 @@ select {
   border: 1px solid transparent;
   border-radius: 4px;
   margin: 0;
+  text-align: center;
 }
 .alert-info {
   color: #31708f;

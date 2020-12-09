@@ -19,6 +19,11 @@ defmodule GamenightWeb.GameControllerTest do
       game_id = redirected_to(conn) |> String.split("/") |> Enum.at(1)
       {_pid, :telestrations} = Gamenight.GameRegistry.find_game(game_id)
     end
+
+    test "it handles an unknown game type", %{conn: conn} do
+      conn = get(conn, "/games/new?type=foo")
+      assert redirected_to(conn) == "/"
+    end
   end
 
   describe "show" do
