@@ -4,6 +4,11 @@
   margin: 0 auto;
 }
 
+.coffee-footer {
+  display: flex;
+  justify-content: center;
+}
+
 /* Card Based Layout - Base styles */
 
 .cards {
@@ -93,7 +98,7 @@
 
 @media screen and (max-width: 39.9em) {
 
-  .main-area {padding: .5em;}
+  .main-area {padding: 1em;}
   .card {margin-bottom: 1em;}
 }
 
